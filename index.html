@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FBF3EA">
 <title>Naomi &amp; Moses — 07 November 2026, Seychelles</title>
 <meta name="description" content="Naomi and Moses invite you to celebrate their wedding on 07 November 2026 at Savoy Resort and Spa, Seychelles.">
 <meta property="og:title" content="Naomi &amp; Moses — 07 November 2026, Seychelles">
@@ -11,10 +12,21 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<!-- Cinematic film grain over the whole page -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Music toggle — appears once the invitation is opened -->
+<button id="music-toggle" class="music-toggle" type="button" aria-label="Play our song" aria-pressed="false" hidden>
+  <span class="mt-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
+  </span>
+  <span class="mt-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
 
 <!-- ============ OPENING SEQUENCE ============ -->
 <!-- Loading -> record/open card -> groove reveal -> hero -->
@@ -41,103 +53,260 @@
 <!-- ============ SITE CONTENT (hidden until opened) ============ -->
 <div id="site" hidden>
 
-  <header class="nav">
+  <header class="nav" id="nav">
     <a href="#home" class="nav-mark">N <span class="amp">&amp;</span> M</a>
-    <nav class="nav-links">
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
       <a href="#home">Home</a>
       <a href="#story">Our story</a>
       <a href="#wedding">Wedding</a>
+      <a href="#travel">Travel</a>
       <a href="#rsvp">RSVP</a>
     </nav>
-    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </header>
 
   <main>
 
-    <!-- Hero -->
+    <!-- ============ HERO ============ -->
     <section id="home" class="hero">
+      <span class="hero-blend" aria-hidden="true"></span>
+
+      <!-- spinning record + needle motif -->
+      <div class="hero-art" aria-hidden="true">
+        <span class="hero-record"></span>
+        <svg class="hero-needle" viewBox="0 0 120 150">
+          <path d="M12 14 C 34 34, 52 60, 62 84" class="needle-arm"/>
+          <path d="M62 84 L 74 96 L 80 110" class="needle-head"/>
+          <circle cx="12" cy="14" r="3.5" class="needle-pivot"/>
+        </svg>
+      </div>
+
+      <span class="note-deco n1" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
+      </span>
+      <span class="note-deco n2" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
+      </span>
+      <span class="note-deco n3" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>
+      </span>
+
       <p class="eyebrow reveal-up">07 November 2026 · Seychelles</p>
-      <h1 class="reveal-up">Naomi <span class="amp">&amp;</span> Moses</h1>
+
+      <h1 class="hero-title">
+        <span class="word w-n reveal-up">Naomi</span>
+        <span class="amp hero-amp reveal-up">&amp;</span>
+        <span class="word w-m reveal-up">Moses</span>
+      </h1>
+
       <p class="hero-tagline reveal-up">Two hearts. One melody. Forever.</p>
 
       <div class="countdown reveal-up" id="countdown" data-date="2026-11-07T15:30:00">
         <div class="countdown-unit"><span class="count-num" data-unit="days">00</span><span class="count-label">days</span></div>
+        <span class="count-colon" aria-hidden="true">·</span>
         <div class="countdown-unit"><span class="count-num" data-unit="hours">00</span><span class="count-label">hours</span></div>
+        <span class="count-colon" aria-hidden="true">·</span>
         <div class="countdown-unit"><span class="count-num" data-unit="minutes">00</span><span class="count-label">minutes</span></div>
+        <span class="count-colon" aria-hidden="true">·</span>
         <div class="countdown-unit"><span class="count-num" data-unit="seconds">00</span><span class="count-label">seconds</span></div>
       </div>
 
-      <a href="#story" class="scroll-cue reveal-up" aria-label="Scroll to our story">scroll</a>
+      <a href="#story" class="scroll-cue reveal-up" aria-label="Scroll to our story">
+        <span class="cue-line" aria-hidden="true"></span>scroll
+      </a>
     </section>
 
-    <!-- Our Story -->
+    <!-- sound-wave divider -->
+    <svg class="wave-fill wave-hero" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64 C240,110 480,18 720,46 C960,74 1200,110 1440,62 L1440,96 L0,96 Z"/>
+    </svg>
+
+    <!-- ============ OUR STORY ============ -->
     <section id="story" class="story">
-      <p class="eyebrow reveal-up">Chapter one</p>
-      <h2 class="reveal-up">Our story</h2>
+      <header class="section-head reveal-up">
+        <p class="eyebrow">Chapter one</p>
+        <h2>Our story</h2>
+        <p class="section-intro">Every great love is a song — this is how the melody of two choirs became one.</p>
+      </header>
 
-      <article class="story-chapter reveal-up">
-        <span class="chapter-num">01</span>
-        <div class="chapter-copy">
-          <h3>Where the melody began</h3>
-          <p>In the harmony of the choir, Moses found Naomi — and in her, his forever.</p>
-        </div>
-      </article>
+      <div class="timeline">
+        <span class="timeline-line" aria-hidden="true"></span>
 
-      <article class="story-chapter reveal-up">
-        <span class="chapter-num">02</span>
-        <div class="chapter-copy">
-          <h3>The journey</h3>
-          <p>Through every shared rhythm and quiet moment, our melody grew richer.</p>
-        </div>
-      </article>
+        <article class="story-chapter reveal-up">
+          <span class="chapter-num">01</span>
+          <div class="chapter-copy">
+            <h3>Where the melody began</h3>
+            <p>In the harmony of the choir, Moses found Naomi — and in her, his forever. Two voices, singing side by side, until the music grew into something far more than song.</p>
+          </div>
+        </article>
 
-      <article class="story-chapter reveal-up">
-        <span class="chapter-num">03</span>
-        <div class="chapter-copy">
-          <h3>The proposal</h3>
-          <p>Where the tide met the evening light, our prelude became our forever chorus.</p>
-        </div>
-      </article>
-    </section>
+        <article class="story-chapter reveal-up">
+          <span class="chapter-num">02</span>
+          <div class="chapter-copy">
+            <h3>The journey</h3>
+            <p>Through every shared rhythm and quiet moment, our melody grew richer — the laughs, the long talks, the way home became each other.</p>
+          </div>
+        </article>
 
-    <!-- Wedding details -->
-    <section id="wedding" class="details">
-      <p class="eyebrow reveal-up">The wedding</p>
-      <h2 class="reveal-up">07 November</h2>
-      <div class="details-grid reveal-up">
-        <div>
-          <h3>Exchange of vows</h3>
-          <p>Assemblies of God Church · 15:30</p>
-        </div>
-        <div>
-          <h3>Reception</h3>
-          <p>Savoy Resort &amp; Spa, Seychelles · 17:00</p>
-        </div>
+        <article class="story-chapter reveal-up">
+          <span class="chapter-num">03</span>
+          <div class="chapter-copy">
+            <h3>The proposal</h3>
+            <p>Where the tide met the evening light, our prelude became our forever chorus. She said yes, and the whole island seemed to sing along.</p>
+          </div>
+        </article>
       </div>
     </section>
 
-    <!-- RSVP -->
+    <!-- ============ QUOTE ============ -->
+    <section id="quote" class="quote">
+      <div class="quote-wave" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <blockquote class="reveal-up">
+        <p>“Our love is a song <br>we’ll keep humming for a lifetime.”</p>
+        <cite>— Naomi <span class="amp">&amp;</span> Moses</cite>
+      </blockquote>
+    </section>
+
+    <!-- ============ WEDDING DETAILS ============ -->
+    <svg class="wave-fill wave-peach" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,46 C240,0 480,92 720,64 C960,36 1200,0 1440,48 L1440,96 L0,96 Z"/>
+    </svg>
+
+    <section id="wedding" class="details">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">The wedding</p>
+        <h2>07 November 2026</h2>
+        <p class="section-intro">Two moments, one unforgettable day on the shores of the Indian Ocean.</p>
+      </header>
+
+      <div class="detail-cards">
+        <article class="detail-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="24" cy="24" r="3"/>
+              <path d="M24 27C20 31 16 31 14 29c-2.5-2.5-.6-9.5 4-14s12-3 14-.4c1.5 2-2.5 8.4-8 12.4Z"/>
+              <path d="M24 27c4 4 8 4 10 2 2.5-2.5.6-9.5-4-14s-12-3-14-.4"/>
+            </svg>
+          </span>
+          <h3>Exchange of vows</h3>
+          <p class="detail-place">Assemblies of God Church</p>
+          <p class="detail-time">15:30 · Saturday</p>
+        </article>
+
+        <article class="detail-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M10 26c0-4 4-6 8-6s8 2 8 6v12c0 2-1.5 3-3 3h-10c-1.5 0-3-1-3-3V26Z"/>
+              <path d="M10 28h16M18 18a6 6 0 0 1 12 0c0 5-3 9-8 12"/>
+            </svg>
+          </span>
+          <h3>Reception</h3>
+          <p class="detail-place">Savoy Resort &amp; Spa, Seychelles</p>
+          <p class="detail-time">17:00 · Beachside</p>
+        </article>
+      </div>
+
+      <p class="details-note reveal-up">Dress code: beach formal — light colours, barefoot elegance, and hearts full of joy.</p>
+    </section>
+
+    <svg class="wave-fill wave-cream" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64 C240,110 480,18 720,46 C960,74 1200,110 1440,62 L1440,96 L0,96 Z"/>
+    </svg>
+
+    <!-- ============ TRAVEL ============ -->
+    <section id="travel" class="travel">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">Getting there</p>
+        <h2>Travel &amp; stay</h2>
+        <p class="section-intro">A few notes to help you reach our little paradise.</p>
+      </header>
+
+      <div class="travel-grid">
+        <article class="travel-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M8 32h32l-6-8h-8l-4-8H12l-4 8v8Z"/>
+              <path d="M8 32v-8M38 32l-4-8"/>
+            </svg>
+          </span>
+          <h3>Flights</h3>
+          <p>Fly into Seychelles International Airport (SEZ). Direct routes from most major hubs — we recommend booking early for November.</p>
+        </article>
+
+        <article class="travel-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 22c0-6 5-10 12-10s12 4 12 10c0 5-4 9-9 13l-3 2-3-2c-5-4-9-8-9-13Z"/>
+              <circle cx="24" cy="21" r="4"/>
+            </svg>
+          </span>
+          <h3>Stay</h3>
+          <p>A room block is reserved at Savoy Resort &amp; Spa — mention “Naomi &amp; Moses” when booking. Hotels nearby also welcome the celebration.</p>
+        </article>
+
+        <article class="travel-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M14 34c-2-4-2-14 2-20M26 36c2-3 2-12-1-18M36 34c-1-4-1-12 1-18"/>
+              <circle cx="24" cy="24" r="16"/>
+            </svg>
+          </span>
+          <h3>Getting around</h3>
+          <p>Taxis and resort shuttles make the short trip from hotel to church easy. We’ll share a shuttle timetable closer to the day.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ RSVP ============ -->
     <section id="rsvp" class="rsvp">
-      <p class="eyebrow reveal-up">Kindly RSVP</p>
-      <h2 class="reveal-up">Will you join us?</h2>
-      <form class="rsvp-form reveal-up" id="rsvp-form">
-        <label>Full name<input type="text" name="name" required></label>
-        <label>Party size<input type="number" name="party_size" min="1" value="1" required></label>
-        <label>Dietary notes<input type="text" name="dietary"></label>
-        <button type="submit">Send RSVP</button>
-        <p class="form-status" id="form-status" role="status"></p>
+      <header class="section-head reveal-up">
+        <p class="eyebrow">Kindly RSVP</p>
+        <h2>Will you join us?</h2>
+        <p class="section-intro">Our melody is sweeter when you sing along. Let us know by 01 October 2026.</p>
+      </header>
+
+      <form class="rsvp-form reveal-up" id="rsvp-form" novalidate>
+        <label class="field">
+          <span class="field-label">Full name</span>
+          <input type="text" name="name" autocomplete="name" required placeholder="Your name">
+        </label>
+        <label class="field">
+          <span class="field-label">Party size</span>
+          <input type="number" name="party_size" min="1" max="10" value="1" required>
+        </label>
+        <label class="field">
+          <span class="field-label">Dietary notes <em>optional</em></span>
+          <input type="text" name="dietary" placeholder="Allergies, preferences…">
+        </label>
+        <button class="rsvp-submit" type="submit">
+          <span class="btn-label">Send RSVP</span>
+        </button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <p>Naomi <span class="amp">&amp;</span> Moses · 07.11.2026 · Seychelles</p>
+    <div class="monogram" aria-hidden="true">N <span class="amp">&amp;</span> M</div>
+    <p>Naomi &amp; Moses · 07.11.2026 · Seychelles</p>
+    <p class="footer-note">The best is yet to come — our song is just beginning.</p>
   </footer>
 
 </div>
+
+<noscript>
+  <style>
+    #opening { display: none !important; }
+    #site { display: block !important; }
+    .reveal-up { opacity: 1 !important; transform: none !important; }
+    .music-toggle { display: none !important; }
+  </style>
+</noscript>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>

@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Local AI/agent config
+CLAUDE.md
+.claude/
