@@ -6,12 +6,23 @@
 <meta name="theme-color" content="#FBF3EA">
 <title>Naomi &amp; Moses — 07 November 2026, Seychelles</title>
 <meta name="description" content="Naomi and Moses invite you to celebrate their wedding on 07 November 2026 at Savoy Resort and Spa, Seychelles.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://naomiandmoses.com/">
 <meta property="og:title" content="Naomi &amp; Moses — 07 November 2026, Seychelles">
 <meta property="og:description" content="Join us in Seychelles as our melody becomes forever.">
-<meta property="og:image" content="/assets/og-image.jpg">
+<meta property="og:image" content="https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&w=1200&h=630&fit=crop&q=80">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Naomi &amp; Moses">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Naomi &amp; Moses — 07 November 2026, Seychelles">
+<meta name="twitter:description" content="Join us in Seychelles as our melody becomes forever.">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&w=1200&h=630&fit=crop&q=80">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FBF3EA'/%3E%3Ctext x='32' y='41' font-family='Georgia' font-size='21' font-style='italic' text-anchor='middle' fill='%23654633'%3EN %26 M%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&q=80&w=2400&auto=format&fit=crop">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -58,6 +69,7 @@
     <nav class="nav-links" id="nav-links" aria-label="Primary">
       <a href="#home">Home</a>
       <a href="#story">Our story</a>
+      <a href="#moments">Moments</a>
       <a href="#wedding">Wedding</a>
       <a href="#travel">Travel</a>
       <a href="#rsvp">RSVP</a>
@@ -69,13 +81,32 @@
 
   <main>
 
-    <!-- ============ HERO ============ -->
+    <!-- ============ HERO — full-bleed Seychelles photo ============ -->
     <section id="home" class="hero">
-      <span class="hero-blend" aria-hidden="true"></span>
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-bg-img"></div>
+      </div>
+      <span class="hero-vignette" aria-hidden="true"></span>
 
-      <!-- spinning record + needle motif -->
+      <!-- gold corner ornaments -->
+      <span class="hero-corner tl" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="hero-corner tr" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="hero-corner bl" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="hero-corner br" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+
+      <!-- record + needle motif -->
       <div class="hero-art" aria-hidden="true">
-        <span class="hero-record"></span>
+        <span class="record-wrap">
+          <span class="record"></span>
+        </span>
         <svg class="hero-needle" viewBox="0 0 120 150">
           <path d="M12 14 C 34 34, 52 60, 62 84" class="needle-arm"/>
           <path d="M62 84 L 74 96 L 80 110" class="needle-head"/>
@@ -93,24 +124,28 @@
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>
       </span>
 
-      <p class="eyebrow reveal-up">07 November 2026 · Seychelles</p>
+      <div class="hero-content" tabindex="-1">
+        <p class="eyebrow reveal-up">07 November 2026 · Seychelles</p>
 
-      <h1 class="hero-title">
-        <span class="word w-n reveal-up">Naomi</span>
-        <span class="amp hero-amp reveal-up">&amp;</span>
-        <span class="word w-m reveal-up">Moses</span>
-      </h1>
+        <h1 class="hero-title">
+          <span class="word w-n reveal-up">Naomi</span>
+          <span class="amp hero-amp reveal-up">&amp;</span>
+          <span class="word w-m reveal-up">Moses</span>
+        </h1>
 
-      <p class="hero-tagline reveal-up">Two hearts. One melody. Forever.</p>
+        <span class="gold-rule reveal-up" aria-hidden="true"></span>
 
-      <div class="countdown reveal-up" id="countdown" data-date="2026-11-07T15:30:00">
-        <div class="countdown-unit"><span class="count-num" data-unit="days">00</span><span class="count-label">days</span></div>
-        <span class="count-colon" aria-hidden="true">·</span>
-        <div class="countdown-unit"><span class="count-num" data-unit="hours">00</span><span class="count-label">hours</span></div>
-        <span class="count-colon" aria-hidden="true">·</span>
-        <div class="countdown-unit"><span class="count-num" data-unit="minutes">00</span><span class="count-label">minutes</span></div>
-        <span class="count-colon" aria-hidden="true">·</span>
-        <div class="countdown-unit"><span class="count-num" data-unit="seconds">00</span><span class="count-label">seconds</span></div>
+        <p class="hero-tagline reveal-up">Two hearts. One melody. Forever.</p>
+
+        <div class="countdown reveal-up" id="countdown" data-date="2026-11-07T15:30:00">
+          <div class="countdown-unit"><span class="count-num" data-unit="days">00</span><span class="count-label">days</span></div>
+          <span class="count-colon" aria-hidden="true">·</span>
+          <div class="countdown-unit"><span class="count-num" data-unit="hours">00</span><span class="count-label">hours</span></div>
+          <span class="count-colon" aria-hidden="true">·</span>
+          <div class="countdown-unit"><span class="count-num" data-unit="minutes">00</span><span class="count-label">minutes</span></div>
+          <span class="count-colon" aria-hidden="true">·</span>
+          <div class="countdown-unit"><span class="count-num" data-unit="seconds">00</span><span class="count-label">seconds</span></div>
+        </div>
       </div>
 
       <a href="#story" class="scroll-cue reveal-up" aria-label="Scroll to our story">
@@ -125,11 +160,25 @@
 
     <!-- ============ OUR STORY ============ -->
     <section id="story" class="story">
-      <header class="section-head reveal-up">
-        <p class="eyebrow">Chapter one</p>
-        <h2>Our story</h2>
-        <p class="section-intro">Every great love is a song — this is how the melody of two choirs became one.</p>
-      </header>
+      <span class="staff-bg" aria-hidden="true"></span>
+
+      <div class="story-intro">
+        <figure class="story-photo reveal-up">
+          <div class="photo-frame">
+            <img src="https://images.unsplash.com/photo-1519307212971-dd9561667ffb?fm=jpg&q=80&w=1200&auto=format&fit=crop" alt="The couple in silhouette watching the sunset over the sea" loading="lazy" onerror="this.closest('.photo-frame').classList.add('noimg')">
+            <figcaption>golden hour, our first hello</figcaption>
+          </div>
+        </figure>
+
+        <div class="story-intro-copy">
+          <p class="eyebrow reveal-up">Chapter one</p>
+          <h2 class="reveal-up">Our story</h2>
+          <span class="flourish reveal-up" aria-hidden="true">
+            <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+          </span>
+          <p class="section-intro reveal-up">Every great love is a song — this is how the melody of two choirs became one.</p>
+        </div>
+      </div>
 
       <div class="timeline">
         <span class="timeline-line" aria-hidden="true"></span>
@@ -160,8 +209,61 @@
       </div>
     </section>
 
-    <!-- ============ QUOTE ============ -->
+    <!-- ============ MOMENTS — photo gallery ============ -->
+    <section id="moments" class="moments">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">The melody in pictures</p>
+        <h2>Moments</h2>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+        </span>
+      </header>
+
+      <div class="moments-grid">
+        <figure class="moment reveal-up" style="--rot:-3deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1747419003011-97b50122a653?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="Newlyweds running along the beach, hand in hand" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>and then we ran</figcaption>
+        </figure>
+
+        <figure class="moment reveal-up" style="--rot:2.5deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1597427681221-d4beae4f802d?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="A bride walking along the beach at sunset" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>the walk to you</figcaption>
+        </figure>
+
+        <figure class="moment reveal-up" style="--rot:-2deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1576694667642-6f289dd54187?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="A newly wed couple together on the shoreline" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>saying yes, twice</figcaption>
+        </figure>
+
+        <figure class="moment reveal-up" style="--rot:3deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1765813142498-fbee89bd66e5?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="A silhouette dancing on the beach at sunset" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>our first dance</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ QUOTE — full-bleed photo break ============ -->
     <section id="quote" class="quote">
+      <div class="quote-bg" aria-hidden="true">
+        <div class="quote-bg-img"></div>
+        <span class="quote-shade"></span>
+      </div>
+
+      <svg class="quote-edge quote-edge-top" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,0 L1440,0 L1440,70 C1080,12 360,124 0,64 Z"/>
+      </svg>
+      <svg class="quote-edge quote-edge-bot" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,10 C360,68 1080,-44 1440,6 L1440,80 L0,80 Z"/>
+      </svg>
+
       <div class="quote-wave" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
@@ -172,15 +274,14 @@
     </section>
 
     <!-- ============ WEDDING DETAILS ============ -->
-    <svg class="wave-fill wave-peach" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,46 C240,0 480,92 720,64 C960,36 1200,0 1440,48 L1440,96 L0,96 Z"/>
-    </svg>
-
     <section id="wedding" class="details">
       <header class="section-head reveal-up">
         <p class="eyebrow">The wedding</p>
         <h2>07 November 2026</h2>
-        <p class="section-intro">Two moments, one unforgettable day on the shores of the Indian Ocean.</p>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line fl-line-dark"/><circle cx="98" cy="10" r="1.7" class="fl-dot fl-dot-dark"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem fl-gem-dark"/><circle cx="162" cy="10" r="1.7" class="fl-dot fl-dot-dark"/><path d="M164 10 H260" class="fl-line fl-line-dark"/></svg>
+        </span>
+        <p class="section-intro reveal-up">Two moments, one unforgettable day on the shores of the Indian Ocean.</p>
       </header>
 
       <div class="detail-cards">
@@ -213,6 +314,7 @@
       <p class="details-note reveal-up">Dress code: beach formal — light colours, barefoot elegance, and hearts full of joy.</p>
     </section>
 
+    <!-- sound-wave divider -->
     <svg class="wave-fill wave-cream" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,64 C240,110 480,18 720,46 C960,74 1200,110 1440,62 L1440,96 L0,96 Z"/>
     </svg>
@@ -222,7 +324,10 @@
       <header class="section-head reveal-up">
         <p class="eyebrow">Getting there</p>
         <h2>Travel &amp; stay</h2>
-        <p class="section-intro">A few notes to help you reach our little paradise.</p>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+        </span>
+        <p class="section-intro reveal-up">A few notes to help you reach our little paradise.</p>
       </header>
 
       <div class="travel-grid">
@@ -266,7 +371,10 @@
       <header class="section-head reveal-up">
         <p class="eyebrow">Kindly RSVP</p>
         <h2>Will you join us?</h2>
-        <p class="section-intro">Our melody is sweeter when you sing along. Let us know by 01 October 2026.</p>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+        </span>
+        <p class="section-intro reveal-up">Our melody is sweeter when you sing along. Let us know by 01 October 2026.</p>
       </header>
 
       <form class="rsvp-form reveal-up" id="rsvp-form" novalidate>
@@ -293,7 +401,10 @@
 
   <footer class="site-footer">
     <div class="monogram" aria-hidden="true">N <span class="amp">&amp;</span> M</div>
-    <p>Naomi &amp; Moses · 07.11.2026 · Seychelles</p>
+    <span class="flourish" aria-hidden="true">
+      <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+    </span>
+    <p>Naomi <span class="amp">&amp;</span> Moses · 07.11.2026 · Seychelles</p>
     <p class="footer-note">The best is yet to come — our song is just beginning.</p>
   </footer>
 
@@ -305,6 +416,7 @@
     #site { display: block !important; }
     .reveal-up { opacity: 1 !important; transform: none !important; }
     .music-toggle { display: none !important; }
+    .hero-art, .hero-bg-img, .quote-bg-img { opacity: 1 !important; }
   </style>
 </noscript>
 

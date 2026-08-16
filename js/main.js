@@ -1,20 +1,225 @@
-/* ============ OPENING SEQUENCE ============ */
+/* ============================================================
+   Naomi & Moses — main
+   Opening sequence, generative music-box love song, GSAP scroll
+   choreography, countdown, nav, RSVP.
+   Every GSAP timeline lives here (no inline scripts in HTML).
+   ============================================================ */
 
-const loadingScreen = document.getElementById('loading-screen');
-const openCard = document.getElementById('open-card');
-const openBtn = document.getElementById('open-btn');
-const groove = document.getElementById('groove-reveal');
-const opening = document.getElementById('opening');
-const site = document.getElementById('site');
-const pctLabel = document.getElementById('loading-pct');
-
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasGSAP = typeof gsap !== 'undefined';
 
-// Preload the assets that actually gate a "ready" page: hero fonts + first
-// section's imagery. Swap the placeholder array for real asset URLs.
-const assetsToPreload = [
-  // 'assets/hero.jpg',
-];
+if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+/* ============================================================
+   LOVE SONG — a gentle generative music box (Web Audio).
+   If a real song is dropped at assets/audio/love-song.mp3 it
+   plays instead of the synthesized melody.
+   ============================================================ */
+
+const MIDI = (m) => 440 * Math.pow(2, (m - 69) / 12);
+
+const Music = {
+  playing: false,
+  ctx: null,
+  master: null,
+  timer: null,
+  nextTime: 0,
+  step: 0,
+  active: new Set(),
+  real: null,
+  realOk: false,
+
+  // waltz, 72 bpm, 4 bars of 6 eighths
+  EIGHTH: 60 / 72 / 2,
+  TOTAL_STEPS: 24,
+  chords: [
+    { bass: 36, triad: [60, 64, 67] }, // C
+    { bass: 43, triad: [55, 59, 62] }, // G
+    { bass: 45, triad: [57, 60, 64] }, // Am
+    { bass: 41, triad: [53, 57, 60] }, // F
+  ],
+  // sweet pentatonic line over the four bars (null = rest)
+  melody: [
+    null, 64, null, 67, null, 69,
+    null, 71, null, 74, null, 71,
+    null, 69, null, 72, null, 76,
+    null, 69, null, 67, null, 64,
+  ],
+  arpPattern: [0, 1, 2, 1, 0, 1],
+
+  init() {
+    // Optional real song override (plain <audio>, no build step)
+    const a = new Audio('assets/audio/love-song.mp3');
+    a.loop = true;
+    a.preload = 'auto';
+    a.addEventListener('canplay', () => { this.realOk = true; });
+    a.addEventListener('error', () => { this.realOk = false; });
+    this.real = a;
+  },
+
+  start() {
+    if (this.playing) return;
+    this.playing = true;
+    setMusicUI(true);
+    if (this.realOk) {
+      this.real.currentTime = 0;
+      this.real.play().catch(() => this.startBox());
+    } else {
+      this.startBox();
+    }
+  },
+
+  stop() {
+    this.playing = false;
+    setMusicUI(false);
+    if (this.realOk) this.real.pause();
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    // silence anything still scheduled
+    this.active.forEach((osc) => { try { osc.stop(); } catch (e) { /* already stopped */ } });
+    this.active.clear();
+    if (this.ctx && this.master) {
+      const now = this.ctx.currentTime;
+      this.master.gain.cancelScheduledValues(now);
+      this.master.gain.setValueAtTime(this.master.gain.value, now);
+      this.master.gain.linearRampToValueAtTime(0.0001, now + 0.4);
+    }
+  },
+
+  toggle() {
+    this.playing ? this.stop() : this.start();
+  },
+
+  /* ---- synthesized music box ---- */
+  startBox() {
+    if (!this.ctx) this.buildGraph();
+    this.ctx.resume();
+    const now = this.ctx.currentTime;
+    this.step = 0;
+    this.nextTime = now + 0.12;
+    this.master.gain.cancelScheduledValues(now);
+    this.master.gain.setValueAtTime(0.0001, now);
+    this.master.gain.linearRampToValueAtTime(0.16, now + 1.2);
+    if (!this.timer) {
+      this.timer = setInterval(() => this.schedule(), 120);
+    }
+  },
+
+  buildGraph() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.ctx = ctx;
+
+    this.master = ctx.createGain();
+    this.master.gain.value = 0.0001;
+    this.master.connect(ctx.destination);
+
+    this.bus = ctx.createGain();   // dry path
+    this.send = ctx.createGain();  // reverb send
+    this.dry = ctx.createGain();
+    this.wet = ctx.createGain();
+    this.bus.connect(this.dry); this.dry.connect(this.master);
+    this.bus.connect(this.send);
+    this.send.gain.value = 0.5;
+
+    const convolver = ctx.createConvolver();
+    convolver.buffer = this.impulse();
+    convolver.connect(this.wet); this.wet.connect(this.master);
+    this.wet.gain.value = 0.5;
+
+    this.convolver = convolver;
+  },
+
+  impulse() {
+    const rate = this.ctx.sampleRate;
+    const len = Math.floor(rate * 2.2);
+    const buf = this.ctx.createBuffer(2, len, rate);
+    for (let ch = 0; ch < 2; ch++) {
+      const data = buf.getChannelData(ch);
+      for (let i = 0; i < len; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.8);
+      }
+    }
+    return buf;
+  },
+
+  schedule() {
+    // lookahead well above one eighth (0.417s) so throttled tabs
+    // never dump a burst of overdue notes on refocus
+    while (this.nextTime < this.ctx.currentTime + 1.2) {
+      this.scheduleStep(this.step, this.nextTime);
+      this.nextTime += this.EIGHTH;
+      this.step = (this.step + 1) % this.TOTAL_STEPS;
+    }
+  },
+
+  scheduleStep(step, t) {
+    const bar = Math.floor(step / 6);
+    const pos = step % 6;
+    const chord = this.chords[bar];
+
+    if (pos === 0) this.tone(MIDI(chord.bass), t, 3.4, 0.5);
+
+    const arp = chord.triad[this.arpPattern[pos]];
+    this.tone(MIDI(arp), t, 2.2, 0.38);
+
+    const mel = this.melody[step];
+    if (mel != null) {
+      this.tone(MIDI(mel), t, 2.6, 0.85);
+      this.tone(MIDI(mel + 12), t, 1.7, 0.28); // music-box shimmer
+    }
+  },
+
+  tone(freq, t, dur, vol) {
+    const ctx = this.ctx;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, t);
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    osc.connect(g);
+    g.connect(this.bus);
+    g.connect(this.send);
+
+    this.active.add(osc);
+    osc.onended = () => this.active.delete(osc);
+
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
+  },
+};
+
+const musicToggle = $('#music-toggle');
+function setMusicUI(on) {
+  musicToggle.classList.toggle('is-playing', on);
+  musicToggle.setAttribute('aria-pressed', String(on));
+  musicToggle.setAttribute('aria-label', on ? 'Pause our song' : 'Play our song');
+}
+musicToggle.addEventListener('click', () => Music.toggle());
+
+/* ============================================================
+   OPENING SEQUENCE
+   ============================================================ */
+
+const loadingScreen = $('#loading-screen');
+const openCard = $('#open-card');
+const openBtn = $('#open-btn');
+const groove = $('#groove-reveal');
+const opening = $('#opening');
+const site = $('#site');
+const pctLabel = $('#loading-pct');
+
+// Real assets to gate a "ready" page — add hero/og images here.
+const assetsToPreload = [];
 
 function preload(urls) {
   if (!urls.length) return Promise.resolve();
@@ -42,7 +247,6 @@ preload(assetsToPreload).then(() => {
     loadingScreen.hidden = true;
     openCard.hidden = false;
   };
-  // wait for the visual counter to actually reach 100 before revealing the card
   const waitForCount = setInterval(() => {
     if (pct >= 100) {
       clearInterval(waitForCount);
@@ -51,6 +255,18 @@ preload(assetsToPreload).then(() => {
   }, 100);
 });
 
+function enterSite() {
+  opening.remove();
+  site.hidden = false;
+  showMusicToggle();
+  runHeroReveal();
+  initScrollChoreography();
+  startCountdown();
+  // move keyboard focus into the revealed page
+  const heroContent = $('.hero-content');
+  if (heroContent) heroContent.focus({ preventScroll: true });
+}
+
 openBtn.addEventListener('click', () => {
   const rect = openBtn.getBoundingClientRect();
   const originX = rect.left + rect.width / 2;
@@ -58,118 +274,256 @@ openBtn.addEventListener('click', () => {
 
   groove.style.left = `${originX}px`;
   groove.style.top = `${originY}px`;
-
   openCard.hidden = true;
 
-  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.2;
+  // Start the song now — we're inside the user gesture, so the
+  // browser's autoplay policy allows audio to begin. Never let a
+  // Web Audio failure trap the visitor on the loading screen.
+  try {
+    Music.start();
+  } catch (err) {
+    console.warn('Music unavailable:', err);
+  }
 
-  if (prefersReducedMotion) {
-    opening.remove();
-    site.hidden = false;
-    runHeroReveal();
+  if (prefersReducedMotion || !hasGSAP) {
+    enterSite();
     return;
   }
 
+  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.2;
   gsap.to(groove, {
     scale: maxDim / 20,
     duration: 0.9,
     ease: 'power3.out',
-    onComplete: () => {
-      opening.remove();
-      site.hidden = false;
-      runHeroReveal();
-    },
+    onComplete: enterSite,
   });
 });
 
-/* ============ HERO + SCROLL REVEALS ============ */
-
-function runHeroReveal() {
-  gsap.to('.hero .reveal-up', {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    stagger: 0.12,
-    ease: 'power2.out',
-  });
-
-  if (typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-    document.querySelectorAll('section:not(.hero) .reveal-up').forEach((el) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-        },
-      });
-    });
-  }
-
-  startCountdown();
+function showMusicToggle() {
+  musicToggle.hidden = false;
+  requestAnimationFrame(() => musicToggle.classList.add('is-ready'));
 }
 
-/* ============ COUNTDOWN ============ */
+/* ============================================================
+   HERO REVEAL
+   ============================================================ */
+function runHeroReveal() {
+  if (!hasGSAP || prefersReducedMotion) {
+    document.body.classList.add('gsap-missing');
+    return;
+  }
 
+  // set up the needle so it can draw itself in
+  const arm = $('.needle-arm');
+  const head = $('.needle-head');
+  const armLen = arm.getTotalLength();
+  const headLen = head.getTotalLength();
+  gsap.set([arm, head], { strokeDasharray: (i) => (i ? headLen : armLen), strokeDashoffset: (i) => (i ? headLen : armLen) });
+
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  tl.to('.hero .reveal-up', {
+    opacity: 1, y: 0, duration: 0.9, stagger: 0.13,
+  }, 0.1)
+    .fromTo('.hero-art', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.2 }, 0.1)
+    .to('.needle-arm', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.5)
+    .to('.needle-head', { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 1.0);
+}
+
+/* ============================================================
+   SCROLL CHOREOGRAPHY (ScrollTrigger)
+   ============================================================ */
+function initScrollChoreography() {
+  if (prefersReducedMotion) return;
+
+  if (!hasGSAP || typeof ScrollTrigger === 'undefined') {
+    document.body.classList.add('gsap-missing');
+    return;
+  }
+
+  const nav = $('#nav');
+
+  // nav elevation + section -> nav link highlighting
+  ScrollTrigger.create({
+    trigger: $('#home'),
+    start: 'top -6%',
+    onToggle: (self) => nav.classList.toggle('scrolled', self.isActive),
+  });
+
+  ['home', 'story', 'moments', 'wedding', 'travel', 'rsvp'].forEach((id) => {
+    ScrollTrigger.create({
+      trigger: `#${id}`,
+      start: 'top 45%',
+      end: 'bottom bottom',
+      onToggle: (self) => {
+        if (!self.isActive) return;
+        $$('.nav-links a').forEach((a) => {
+          const isActive = a.getAttribute('href') === `#${id}`;
+          a.classList.toggle('active', isActive);
+          if (isActive) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      },
+    });
+  });
+
+  // generic scroll reveals
+  $$('section:not(.hero) .reveal-up').forEach((el) => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 86%' },
+    });
+  });
+
+  // story timeline line grows as you scroll
+  gsap.fromTo('.timeline-line', { scaleY: 0 }, {
+    scaleY: 1, ease: 'none',
+    scrollTrigger: {
+      trigger: '.timeline',
+      start: 'top 75%',
+      end: 'bottom 60%',
+      scrub: 0.6,
+    },
+  });
+
+  // gentle parallax on the photo layers (outer wrappers only —
+  // the Ken Burns / float animations live on inner elements)
+  gsap.to('.hero-bg', {
+    yPercent: 12, ease: 'none',
+    scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true },
+  });
+  gsap.to('.hero-art', {
+    yPercent: -14, ease: 'none',
+    scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true },
+  });
+  gsap.to('.quote-bg', {
+    yPercent: 12, ease: 'none',
+    scrollTrigger: { trigger: '#quote', start: 'top bottom', end: 'bottom top', scrub: true },
+  });
+}
+
+/* ============================================================
+   COUNTDOWN
+   ============================================================ */
 function startCountdown() {
-  const el = document.getElementById('countdown');
+  const el = $('#countdown');
   const target = new Date(el.dataset.date).getTime();
+
+  function setUnit(unit, value) {
+    const node = el.querySelector(`[data-unit="${unit}"]`);
+    const text = String(value).padStart(2, '0');
+    if (node.textContent === text) return;
+    node.textContent = text;
+    if (hasGSAP && !prefersReducedMotion) {
+      gsap.fromTo(node, { y: 8, opacity: 0.25 }, {
+        y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: true,
+      });
+    }
+  }
 
   function tick() {
     const diff = Math.max(0, target - Date.now());
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const minutes = Math.floor((diff % 3600000) / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-
-    el.querySelector('[data-unit="days"]').textContent = String(days).padStart(2, '0');
-    el.querySelector('[data-unit="hours"]').textContent = String(hours).padStart(2, '0');
-    el.querySelector('[data-unit="minutes"]').textContent = String(minutes).padStart(2, '0');
-    el.querySelector('[data-unit="seconds"]').textContent = String(seconds).padStart(2, '0');
+    setUnit('days', Math.floor(diff / 86400000));
+    setUnit('hours', Math.floor((diff % 86400000) / 3600000));
+    setUnit('minutes', Math.floor((diff % 3600000) / 60000));
+    setUnit('seconds', Math.floor((diff % 60000) / 1000));
   }
 
   tick();
   setInterval(tick, 1000);
 }
 
-/* ============ RSVP FORM ============ */
-
-const rsvpForm = document.getElementById('rsvp-form');
-const formStatus = document.getElementById('form-status');
+/* ============================================================
+   RSVP FORM
+   ============================================================ */
+const rsvpForm = $('#rsvp-form');
+const formStatus = $('#form-status');
 
 rsvpForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const name = rsvpForm.name.value.trim();
+
+  const nameInput = rsvpForm.name;
+  const partyInput = rsvpForm.party_size;
+  const name = nameInput.value.trim();
+  const party = parseInt(partyInput.value, 10);
+
+  nameInput.setAttribute('aria-invalid', 'false');
+  partyInput.setAttribute('aria-invalid', 'false');
+  formStatus.classList.remove('error');
 
   if (!name) {
-    formStatus.textContent = 'Enter your name to continue.';
+    nameInput.setAttribute('aria-invalid', 'true');
+    nameInput.focus();
+    formStatus.classList.add('error');
+    formStatus.textContent = 'Please tell us your name so we can save your seat.';
+    return;
+  }
+  if (!party || party < 1 || party > 10) {
+    partyInput.setAttribute('aria-invalid', 'true');
+    partyInput.focus();
+    formStatus.classList.add('error');
+    formStatus.textContent = 'Party size should be between 1 and 10.';
     return;
   }
 
-  formStatus.textContent = 'Sending...';
+  const submitBtn = $('.rsvp-submit');
+  const btnLabel = $('.btn-label');
+  const originalLabel = btnLabel.textContent;
+  btnLabel.textContent = 'Sending…';
+  formStatus.textContent = '';
 
-  // Replace with a real endpoint: a Supabase insert, a Google Sheets
-  // webhook, or a Formspree/Basin form action.
   try {
+    // Wire to a real endpoint — Formspree/Basin (no backend) or a
+    // Supabase table for queryable RSVPs.
     // await fetch('/api/rsvp', { method: 'POST', body: new FormData(rsvpForm) });
-    await new Promise((r) => setTimeout(r, 600));
-    formStatus.textContent = `Thank you, ${name}. We can't wait to see you.`;
+    await new Promise((r) => setTimeout(r, 900));
+    submitBtn.classList.add('is-sent');
+    btnLabel.textContent = 'See you there ♡';
+    formStatus.textContent = `Thank you, ${name}. We can't wait to sing with you.`;
     rsvpForm.reset();
+    setTimeout(() => {
+      submitBtn.classList.remove('is-sent');
+      btnLabel.textContent = originalLabel;
+      formStatus.textContent = '';
+    }, 6000);
   } catch (err) {
-    formStatus.textContent = "Couldn't send that — try again or call us directly.";
+    formStatus.classList.add('error');
+    formStatus.textContent = "Couldn't send that — please try again or call us directly.";
   }
 });
 
-/* ============ MOBILE NAV ============ */
+/* ============================================================
+   MOBILE NAV
+   ============================================================ */
+const navToggle = $('#nav-toggle');
+const navLinks = $('#nav-links');
 
-const navToggle = document.querySelector('.nav-toggle');
-const navLinks = document.querySelector('.nav-links');
+function setMenu(open) {
+  navToggle.setAttribute('aria-expanded', String(open));
+  navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  navLinks.classList.toggle('is-open', open);
+  navLinks.style.display = open ? 'flex' : '';
+  document.body.classList.toggle('menu-open', open);
+}
 
 navToggle?.addEventListener('click', () => {
-  const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
-  navToggle.setAttribute('aria-expanded', String(!isOpen));
-  navLinks.style.display = isOpen ? 'none' : 'flex';
+  setMenu(navToggle.getAttribute('aria-expanded') !== 'true');
 });
+
+navLinks.querySelectorAll('a').forEach((a) => {
+  a.addEventListener('click', () => setMenu(false));
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 720) setMenu(false);
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+Music.init();
+
+// If JS runs but GSAP/CDN failed, reveal content & controls anyway
+if (!hasGSAP) {
+  document.body.classList.add('gsap-missing');
+}
