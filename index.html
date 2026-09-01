@@ -1,531 +1,427 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111821">
-  <title>Doose &amp; Deri - A Holy Union</title>
-  <meta name="description" content="Doose and Deri invite you to a sacred wedding celebration in Lagos, Nigeria, throughout November 2026.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Doose &amp; Deri - A Holy Union">
-  <meta property="og:description" content="A wedding week of faith, family, tradition, and thanksgiving in Lagos.">
-  <meta property="og:image" content="assets/web/IMG_4638.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Doose &amp; Deri - A Holy Union">
-  <meta name="twitter:description" content="A wedding week of faith, family, tradition, and thanksgiving in Lagos.">
-  <meta name="twitter:image" content="assets/web/IMG_4638.jpg">
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/web/IMG_4638.jpg">
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FBF3EA">
+<title>Naomi &amp; Moses — 07 November 2026, Seychelles</title>
+<meta name="description" content="Naomi and Moses invite you to celebrate their wedding on 07 November 2026 at Savoy Resort and Spa, Seychelles.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://naomiandmoses.com/">
+<meta property="og:title" content="Naomi &amp; Moses — 07 November 2026, Seychelles">
+<meta property="og:description" content="Join us in Seychelles as our melody becomes forever.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&w=1200&h=630&fit=crop&q=80">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Naomi &amp; Moses">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Naomi &amp; Moses — 07 November 2026, Seychelles">
+<meta name="twitter:description" content="Join us in Seychelles as our melody becomes forever.">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&w=1200&h=630&fit=crop&q=80">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FBF3EA'/%3E%3Ctext x='32' y='41' font-family='Georgia' font-size='21' font-style='italic' text-anchor='middle' fill='%23654633'%3EN %26 M%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&q=80&w=2400&auto=format&fit=crop">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="page-progress" id="page-progress" aria-hidden="true"></div>
-  <canvas id="sparkle-canvas" aria-hidden="true"></canvas>
 
-  <div class="loader" id="loader" aria-live="polite" aria-label="Preparing the invitation">
-    <div class="splash-photos" aria-hidden="true">
-      <img src="assets/web/year1a.jpg" alt="">
-      <img src="assets/web/IMG_4638.jpg" alt="">
-      <img src="assets/web/IMG_7275.jpg" alt="">
-      <img src="assets/web/IMG_8115.jpg" alt="">
+<!-- Cinematic film grain over the whole page -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Music toggle — appears once the invitation is opened -->
+<button id="music-toggle" class="music-toggle" type="button" aria-label="Play our song" aria-pressed="false" hidden>
+  <span class="mt-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
+  </span>
+  <span class="mt-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
+
+<!-- ============ OPENING SEQUENCE ============ -->
+<!-- Loading -> record/open card -> groove reveal -> hero -->
+<div id="opening" aria-hidden="false">
+
+  <div id="loading-screen" class="opening-layer">
+    <div class="waveform" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
-    <div class="splash-panel">
-      <p class="loader-line">A song before the story</p>
-      <p class="loader-names">Doose &amp; Deri</p>
-      <button class="splash-start" id="splash-start" type="button">Begin with song</button>
-      <div class="splash-count" id="splash-count" hidden>
-        <span id="loading-count">0</span>
-        <i aria-hidden="true">%</i>
-      </div>
-      <div class="splash-bar" aria-hidden="true">
-        <span id="splash-bar-fill"></span>
-      </div>
-      <p class="splash-note" id="splash-note">Tap once to start the music and open the film.</p>
-    </div>
+    <p class="loading-label">tuning our melody<span id="loading-pct">0%</span></p>
   </div>
 
-  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true" hidden>Pause song</button>
+  <div id="open-card" class="opening-layer" hidden>
+    <button id="open-btn" type="button" aria-label="Open the invitation">
+      <span class="record" aria-hidden="true"></span>
+      <span class="open-label">tap to begin</span>
+    </button>
+  </div>
 
-  <header class="site-header" id="site-header">
-    <a class="brand" href="#home" aria-label="Doose and Deri home">
-      <span>D</span>
-      <i>&amp;</i>
-      <span>D</span>
-    </a>
-    <nav class="nav-links" id="nav-links" aria-label="Primary navigation">
-      <a href="#story">Story</a>
+  <div id="groove-reveal" aria-hidden="true"></div>
+
+</div>
+
+<!-- ============ SITE CONTENT (hidden until opened) ============ -->
+<div id="site" hidden>
+
+  <header class="nav" id="nav">
+    <a href="#home" class="nav-mark">N <span class="amp">&amp;</span> M</a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="#home">Home</a>
+      <a href="#story">Our story</a>
       <a href="#moments">Moments</a>
-      <a href="#couple">The couple</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#week">Wedding Week</a>
-      <a href="#families">Families</a>
-      <a href="#details">Details</a>
-      <a href="#gifts">Gifts</a>
+      <a href="#wedding">Wedding</a>
+      <a href="#travel">Travel</a>
       <a href="#rsvp">RSVP</a>
     </nav>
-    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-      <span></span>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
     </button>
   </header>
 
   <main>
-    <section class="hero" id="home">
-      <img class="hero-image" src="assets/web/IMG_4638.jpg" alt="Doose and Deri sharing a joyful anniversary kiss beneath a floral arch">
-      <div class="hero-overlay" aria-hidden="true"></div>
-      <div class="hero-film" aria-hidden="true">
-        <figure>
-          <img src="assets/web/year1a.jpg" alt="">
-        </figure>
-        <figure>
-          <img src="assets/web/IMG_8115.jpg" alt="">
-        </figure>
-        <figure>
-          <img src="assets/web/IMG_4971.jpg" alt="">
-        </figure>
+
+    <!-- ============ HERO — full-bleed Seychelles photo ============ -->
+    <section id="home" class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-bg-img"></div>
       </div>
-      <div class="hero-rail" aria-hidden="true">
-        <span>Faith</span>
-        <span>Family</span>
-        <span>Forever</span>
+      <span class="hero-vignette" aria-hidden="true"></span>
+
+      <!-- gold corner ornaments -->
+      <span class="hero-corner tl" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="hero-corner tr" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="hero-corner bl" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="hero-corner br" aria-hidden="true">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor"><path d="M3 26 V15 Q3 3 15 3 H26"/><path d="M9 26 V17 Q9 9 17 9 H26" opacity="0.6"/><circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+      </span>
+
+      <!-- record + needle motif -->
+      <div class="hero-art" aria-hidden="true">
+        <span class="record-wrap">
+          <span class="record"></span>
+        </span>
+        <svg class="hero-needle" viewBox="0 0 120 150">
+          <path d="M12 14 C 34 34, 52 60, 62 84" class="needle-arm"/>
+          <path d="M62 84 L 74 96 L 80 110" class="needle-head"/>
+          <circle cx="12" cy="14" r="3.5" class="needle-pivot"/>
+        </svg>
       </div>
-      <div class="hero-content">
-        <p class="kicker">November 2026 · Lagos, Nigeria</p>
-        <h1>
-          <span>Doose</span>
-          <em>&amp;</em>
-          <span>Deri</span>
+
+      <span class="note-deco n1" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
+      </span>
+      <span class="note-deco n2" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
+      </span>
+      <span class="note-deco n3" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>
+      </span>
+
+      <div class="hero-content" tabindex="-1">
+        <p class="eyebrow reveal-up">07 November 2026 · Seychelles</p>
+
+        <h1 class="hero-title">
+          <span class="word w-n reveal-up">Naomi</span>
+          <span class="amp hero-amp reveal-up">&amp;</span>
+          <span class="word w-m reveal-up">Moses</span>
         </h1>
-        <p class="hero-lede">From anniversary dinners and happy little moments to the aisle: a love story becoming a holy union.</p>
-        <div class="hero-actions" aria-label="Wedding actions">
-          <a class="btn btn-primary" href="#rsvp">RSVP</a>
-          <a class="btn btn-ghost" href="#week">See the week</a>
+
+        <span class="gold-rule reveal-up" aria-hidden="true"></span>
+
+        <p class="hero-tagline reveal-up">Two hearts. One melody. Forever.</p>
+
+        <div class="countdown reveal-up" id="countdown" data-date="2026-11-07T15:30:00">
+          <div class="countdown-unit"><span class="count-num" data-unit="days">00</span><span class="count-label">days</span></div>
+          <span class="count-colon" aria-hidden="true">·</span>
+          <div class="countdown-unit"><span class="count-num" data-unit="hours">00</span><span class="count-label">hours</span></div>
+          <span class="count-colon" aria-hidden="true">·</span>
+          <div class="countdown-unit"><span class="count-num" data-unit="minutes">00</span><span class="count-label">minutes</span></div>
+          <span class="count-colon" aria-hidden="true">·</span>
+          <div class="countdown-unit"><span class="count-num" data-unit="seconds">00</span><span class="count-label">seconds</span></div>
         </div>
       </div>
-      <aside class="hero-card" aria-label="Featured wedding date">
-        <p>White Wedding</p>
-        <strong>23 November 2026</strong>
-        <span>The Cathedral · 12:00 PM</span>
-      </aside>
-      <a class="scroll-cue" href="#story" aria-label="Scroll to story">
-        <span></span>
-        Begin
+
+      <a href="#story" class="scroll-cue reveal-up" aria-label="Scroll to our story">
+        <span class="cue-line" aria-hidden="true"></span>scroll
       </a>
     </section>
 
-    <section class="opening-note section-pad" id="story">
-      <div class="section-shell two-col">
-        <div class="section-copy reveal">
-          <p class="section-kicker">The invitation</p>
-          <h2>Before the music, before the aisle, there is a promise.</h2>
-        </div>
-        <div class="note-copy reveal">
-          <p>We invite you into more than a date on a calendar. This is the story of two lives being joined before God, welcomed by family, and celebrated by everyone who has prayed, laughed, waited, and walked with us.</p>
-          <p>Every gathering has its own meaning. The traditional wedding honours where we come from. The court wedding speaks to covenant and commitment. The white wedding brings us to the altar. Thanksgiving sends us forward with gratitude.</p>
-        </div>
-      </div>
-    </section>
+    <!-- sound-wave divider -->
+    <svg class="wave-fill wave-hero" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64 C240,110 480,18 720,46 C960,74 1200,110 1440,62 L1440,96 L0,96 Z"/>
+    </svg>
 
-    <section class="moments section-pad" id="moments">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">Anniversaries and happy moments</p>
-          <h2>The story already has a glow.</h2>
-        </div>
-        <div class="moments-grid">
-          <figure class="moment-card wide reveal">
-            <img src="assets/web/IMG_4638.jpg" alt="Doose and Deri kissing beneath a floral arch">
-            <figcaption>The yes before forever</figcaption>
-          </figure>
-          <figure class="moment-card reveal">
-            <img src="assets/web/year1a.jpg" alt="Doose and Deri at an anniversary dinner">
-            <figcaption>Year one</figcaption>
-          </figure>
-          <figure class="moment-card tall reveal">
-            <img src="assets/web/year2b.jpg" alt="Doose and Deri smiling together in a warm hallway">
-            <figcaption>Year two</figcaption>
-          </figure>
-          <figure class="moment-card reveal">
-            <img src="assets/web/IMG_7275.jpg" alt="Doose and Deri seated together by the water">
-            <figcaption>By the water</figcaption>
-          </figure>
-          <figure class="moment-card reveal">
-            <img src="assets/web/IMG_8115.jpg" alt="Doose and Deri sitting together in a garden setting">
-            <figcaption>Easy joy</figcaption>
-          </figure>
-          <figure class="moment-card wide reveal">
-            <img src="assets/web/IMG_6063.jpg" alt="Doose and Deri standing together for a mirror photo">
-            <figcaption>Everyday us</figcaption>
-          </figure>
-          <figure class="moment-card reveal">
-            <img src="assets/web/IMG_0147.jpg" alt="Doose and Deri sharing dinner across a table">
-            <figcaption>Dinner glow</figcaption>
-          </figure>
-          <figure class="moment-card reveal">
-            <img src="assets/web/IMG_4671.jpg" alt="Doose and Deri dressed up and smiling outside">
-            <figcaption>All dressed up</figcaption>
-          </figure>
-          <figure class="moment-card wide reveal">
-            <img src="assets/web/IMG_8263.jpg" alt="A photo collage of anniversary moments">
-            <figcaption>Anniversary snapshots</figcaption>
-          </figure>
-          <figure class="moment-card reveal">
-            <img src="assets/web/year2a.jpg" alt="A second-year anniversary photo collage">
-            <figcaption>Second-year smiles</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
+    <!-- ============ OUR STORY ============ -->
+    <section id="story" class="story">
+      <span class="staff-bg" aria-hidden="true"></span>
 
-    <section class="couple section-pad" id="couple">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">The beloved</p>
-          <h2>Two lives, one answered prayer.</h2>
-        </div>
-        <div class="couple-grid">
-          <article class="couple-card reveal">
-            <div class="couple-photo"><img src="assets/web/IMG_4671.jpg" alt="Doose smiling in a tailored outfit"></div>
-            <div class="couple-card-copy">
-              <h3>Doose</h3>
-              <p class="couple-role">The groom</p>
-              <p>A man of faith, purpose, and the warmest laughter. He chose her, and keeps choosing her.</p>
-            </div>
-          </article>
-          <article class="couple-card couple-card-reverse reveal">
-            <div class="couple-photo"><img src="assets/web/IMG_8115.jpg" alt="Deri smiling in a garden setting"></div>
-            <div class="couple-card-copy">
-              <h3>Deri</h3>
-              <p class="couple-role">The bride</p>
-              <p>Radiant, graceful, and full of joy. She is his perfect match and answered prayer.</p>
-            </div>
-          </article>
-        </div>
-        <p class="couple-quote reveal">“You are my home and my greatest adventure.”</p>
-      </div>
-    </section>
-
-    <section class="gallery section-pad" id="gallery">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">Captured moments</p>
-          <h2>A love story told in photographs.</h2>
-        </div>
-        <div class="gallery-grid">
-          <figure class="gallery-item gallery-item-large reveal"><img src="assets/web/year1a.jpg" alt="Doose and Deri celebrating their first anniversary"><figcaption>Year one</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="assets/web/year2b.jpg" alt="Doose and Deri smiling together"><figcaption>Growing deeper</figcaption></figure>
-          <figure class="gallery-item gallery-item-tall reveal"><img src="assets/web/IMG_7275.jpg" alt="Doose and Deri seated together by the water"><figcaption>By the water</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="assets/web/IMG_0147.jpg" alt="Doose and Deri sharing dinner"><figcaption>Dinner glow</figcaption></figure>
-          <figure class="gallery-item gallery-item-large reveal"><img src="assets/web/IMG_6063.jpg" alt="Doose and Deri standing together for a mirror photo"><figcaption>Everyday us</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="assets/web/IMG_8263.jpg" alt="A collage of Doose and Deri's anniversary moments"><figcaption>Snapshots</figcaption></figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="storyline section-pad" aria-label="Story chapters">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">How the week unfolds</p>
-          <h2>A love story in four movements</h2>
-        </div>
-        <div class="story-grid">
-          <article class="story-card reveal">
-            <span>01</span>
-            <h3>Families gather</h3>
-            <p>The first note is welcome: parents, siblings, friends, elders, and loved ones making room for joy.</p>
-          </article>
-          <article class="story-card reveal">
-            <span>02</span>
-            <h3>Tradition speaks</h3>
-            <p>Culture takes its place in the celebration, carrying colour, honour, prayer, and the beauty of belonging.</p>
-          </article>
-          <article class="story-card reveal">
-            <span>03</span>
-            <h3>The vows rise</h3>
-            <p>At the altar, the story becomes covenant: a public yes, a sacred promise, and a future begun together.</p>
-          </article>
-          <article class="story-card reveal">
-            <span>04</span>
-            <h3>Gratitude remains</h3>
-            <p>The final gathering turns celebration into thanksgiving, because every good thing begins and ends with grace.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="week section-pad" id="week">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">Wedding week</p>
-          <h2>Six gatherings. One holy union.</h2>
-        </div>
-        <div class="event-list">
-          <article class="event-card event-rehearsal reveal">
-            <div class="event-date"><span>14</span>Nov</div>
-            <div>
-              <p class="event-type">Rehearsal Dinner</p>
-              <h3>Saturday evening with our closest people</h3>
-              <p>Lagos · 6:00 PM</p>
-            </div>
-          </article>
-          <article class="event-card event-trad reveal">
-            <div class="event-date"><span>16</span>Nov</div>
-            <div>
-              <p class="event-type">Traditional Wedding</p>
-              <h3>Culture, colour, family, and blessing</h3>
-              <p>Lagos · 10:00 AM</p>
-            </div>
-          </article>
-          <article class="event-card event-court reveal">
-            <div class="event-date"><span>19</span>Nov</div>
-            <div>
-              <p class="event-type">Court Wedding</p>
-              <h3>The legal promise, witnessed with joy</h3>
-              <p>Lagos · 9:00 AM</p>
-            </div>
-          </article>
-          <article class="event-card event-breakfast reveal">
-            <div class="event-date"><span>20</span>Nov</div>
-            <div>
-              <p class="event-type">Wedding Breakfast</p>
-              <h3>A gentle morning around the people we love</h3>
-              <p>Lagos · 9:00 AM</p>
-            </div>
-          </article>
-          <article class="event-card event-white featured reveal">
-            <div class="event-date"><span>23</span>Nov</div>
-            <div>
-              <p class="event-type">Holy Matrimony</p>
-              <h3>White Wedding at The Cathedral</h3>
-              <p>Lagos · 12:00 PM</p>
-            </div>
-          </article>
-          <article class="event-card event-thanks reveal">
-            <div class="event-date"><span>30</span>Nov</div>
-            <div>
-              <p class="event-type">Thanksgiving Service</p>
-              <h3>We close the week in gratitude</h3>
-              <p>Lagos · 8:00 AM</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="quote-band">
-      <img src="assets/web/IMG_7275.jpg" alt="" aria-hidden="true">
-      <div class="quote-content reveal">
-        <p>"What therefore God hath joined together, let not man put asunder."</p>
-        <span>Matthew 19:6</span>
-      </div>
-    </section>
-
-    <section class="families section-pad" id="families">
-      <div class="section-shell two-col">
-        <div class="family-panel reveal">
-          <p class="section-kicker">Together with our beloved families</p>
-          <h2>The Adeyemi Family <em>&amp;</em> The Okonkwo Family</h2>
-        </div>
-        <div class="family-copy reveal">
-          <p>Joyfully announce the marriage of their children, Doose and Deri, and ask you to share in the blessing of this new beginning.</p>
-          <div class="family-names" aria-label="Couple names">
-            <strong>Doose</strong>
-            <span>&amp;</span>
-            <strong>Deri</strong>
+      <div class="story-intro">
+        <figure class="story-photo reveal-up">
+          <div class="photo-frame">
+            <img src="https://images.unsplash.com/photo-1519307212971-dd9561667ffb?fm=jpg&q=80&w=1200&auto=format&fit=crop" alt="The couple in silhouette watching the sunset over the sea" loading="lazy" onerror="this.closest('.photo-frame').classList.add('noimg')">
+            <figcaption>golden hour, our first hello</figcaption>
           </div>
+        </figure>
+
+        <div class="story-intro-copy">
+          <p class="eyebrow reveal-up">Chapter one</p>
+          <h2 class="reveal-up">Our story</h2>
+          <span class="flourish reveal-up" aria-hidden="true">
+            <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+          </span>
+          <p class="section-intro reveal-up">Every great love is a song — this is how the melody of two choirs became one.</p>
         </div>
+      </div>
+
+      <div class="timeline">
+        <span class="timeline-line" aria-hidden="true"></span>
+
+        <article class="story-chapter reveal-up">
+          <span class="chapter-num">01</span>
+          <div class="chapter-copy">
+            <h3>Where the melody began</h3>
+            <p>In the harmony of the choir, Moses found Naomi — and in her, his forever. Two voices, singing side by side, until the music grew into something far more than song.</p>
+          </div>
+        </article>
+
+        <article class="story-chapter reveal-up">
+          <span class="chapter-num">02</span>
+          <div class="chapter-copy">
+            <h3>The journey</h3>
+            <p>Through every shared rhythm and quiet moment, our melody grew richer — the laughs, the long talks, the way home became each other.</p>
+          </div>
+        </article>
+
+        <article class="story-chapter reveal-up">
+          <span class="chapter-num">03</span>
+          <div class="chapter-copy">
+            <h3>The proposal</h3>
+            <p>Where the tide met the evening light, our prelude became our forever chorus. She said yes, and the whole island seemed to sing along.</p>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="couples section-pad" id="couple" aria-label="The couple">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">The beloved</p>
-          <h2>Doose &amp; Deri</h2>
-        </div>
-        <div class="couple-grid">
-          <article class="couple-card reveal">
-            <div class="couple-photo">
-              <img src="assets/web/year1a.jpg" alt="Doose at an anniversary dinner">
-            </div>
-            <div class="couple-card-copy">
-              <span class="couple-role">The Groom</span>
-              <h3>Doose</h3>
-              <p>A man of faith, purpose, and the warmest laughter. He chose her, and kept choosing her.</p>
-            </div>
-          </article>
-          <article class="couple-card couple-card-reverse reveal">
-            <div class="couple-photo">
-              <img src="assets/web/IMG_8115.jpg" alt="Deri smiling in a garden setting">
-            </div>
-            <div class="couple-card-copy">
-              <span class="couple-role">The Bride</span>
-              <h3>Deri</h3>
-              <p>Radiant, graceful, full of joy. She is his perfect match — his answered prayer.</p>
-            </div>
-          </article>
-        </div>
-        <p class="couple-quote reveal">"You are my home and my greatest adventure."</p>
+    <!-- ============ MOMENTS — photo gallery ============ -->
+    <section id="moments" class="moments">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">The melody in pictures</p>
+        <h2>Moments</h2>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+        </span>
+      </header>
+
+      <div class="moments-grid">
+        <figure class="moment reveal-up" style="--rot:-3deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1747419003011-97b50122a653?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="Newlyweds running along the beach, hand in hand" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>and then we ran</figcaption>
+        </figure>
+
+        <figure class="moment reveal-up" style="--rot:2.5deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1597427681221-d4beae4f802d?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="A bride walking along the beach at sunset" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>the walk to you</figcaption>
+        </figure>
+
+        <figure class="moment reveal-up" style="--rot:-2deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1576694667642-6f289dd54187?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="A newly wed couple together on the shoreline" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>saying yes, twice</figcaption>
+        </figure>
+
+        <figure class="moment reveal-up" style="--rot:3deg">
+          <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1765813142498-fbee89bd66e5?fm=jpg&q=80&w=1000&auto=format&fit=crop" alt="A silhouette dancing on the beach at sunset" loading="lazy" onerror="this.closest('.polaroid').classList.add('noimg')">
+          </div>
+          <figcaption>our first dance</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="details section-pad" id="details">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">Guest guide</p>
-          <h2>Everything to hold the week together.</h2>
-        </div>
-        <div class="details-grid">
-          <article class="detail-card reveal">
-            <span class="detail-label">Venue</span>
-            <h3>The Cathedral</h3>
-            <p>Victoria Island, Lagos, Nigeria</p>
-          </article>
-          <article class="detail-card reveal">
-            <span class="detail-label">Dress Code</span>
-            <h3>Elegant and intentional</h3>
-            <p>Traditional: coral and gold aso-ebi. White wedding: black tie.</p>
-          </article>
-          <article class="detail-card reveal">
-            <span class="detail-label">Stay</span>
-            <h3>Eko Hotels &amp; Suites</h3>
-            <p>Block rates are available. Mention "D&amp;D Wedding" when booking.</p>
-          </article>
-          <article class="detail-card reveal">
-            <span class="detail-label">Transport</span>
-            <h3>Shuttle support</h3>
-            <p>Shuttles from Eko Hotel begin at 10:00 AM for the white wedding.</p>
-          </article>
-          <article class="detail-card reveal">
-            <span class="detail-label">Wedding Hashtag</span>
-            <h3 style="color:var(--coral);font-size:clamp(1.3rem,2.5vw,1.8rem);letter-spacing:0.04em">#DooseAndDeri2026</h3>
-            <p>Share your photos and memories with our wedding hashtag.</p>
-          </article>
-        </div>
+    <!-- ============ QUOTE — full-bleed photo break ============ -->
+    <section id="quote" class="quote">
+      <div class="quote-bg" aria-hidden="true">
+        <div class="quote-bg-img"></div>
+        <span class="quote-shade"></span>
+      </div>
+
+      <svg class="quote-edge quote-edge-top" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,0 L1440,0 L1440,70 C1080,12 360,124 0,64 Z"/>
+      </svg>
+      <svg class="quote-edge quote-edge-bot" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,10 C360,68 1080,-44 1440,6 L1440,80 L0,80 Z"/>
+      </svg>
+
+      <div class="quote-wave" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <blockquote class="reveal-up">
+        <p>“Our love is a song <br>we’ll keep humming for a lifetime.”</p>
+        <cite>— Naomi <span class="amp">&amp;</span> Moses</cite>
+      </blockquote>
+    </section>
+
+    <!-- ============ WEDDING DETAILS ============ -->
+    <section id="wedding" class="details">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">The wedding</p>
+        <h2>07 November 2026</h2>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line fl-line-dark"/><circle cx="98" cy="10" r="1.7" class="fl-dot fl-dot-dark"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem fl-gem-dark"/><circle cx="162" cy="10" r="1.7" class="fl-dot fl-dot-dark"/><path d="M164 10 H260" class="fl-line fl-line-dark"/></svg>
+        </span>
+        <p class="section-intro reveal-up">Two moments, one unforgettable day on the shores of the Indian Ocean.</p>
+      </header>
+
+      <div class="detail-cards">
+        <article class="detail-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="24" cy="24" r="3"/>
+              <path d="M24 27C20 31 16 31 14 29c-2.5-2.5-.6-9.5 4-14s12-3 14-.4c1.5 2-2.5 8.4-8 12.4Z"/>
+              <path d="M24 27c4 4 8 4 10 2 2.5-2.5.6-9.5-4-14s-12-3-14-.4"/>
+            </svg>
+          </span>
+          <h3>Exchange of vows</h3>
+          <p class="detail-place">Assemblies of God Church</p>
+          <p class="detail-time">15:30 · Saturday</p>
+        </article>
+
+        <article class="detail-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M10 26c0-4 4-6 8-6s8 2 8 6v12c0 2-1.5 3-3 3h-10c-1.5 0-3-1-3-3V26Z"/>
+              <path d="M10 28h16M18 18a6 6 0 0 1 12 0c0 5-3 9-8 12"/>
+            </svg>
+          </span>
+          <h3>Reception</h3>
+          <p class="detail-place">Savoy Resort &amp; Spa, Seychelles</p>
+          <p class="detail-time">17:00 · Beachside</p>
+        </article>
+      </div>
+
+      <p class="details-note reveal-up">Dress code: beach formal — light colours, barefoot elegance, and hearts full of joy.</p>
+    </section>
+
+    <!-- sound-wave divider -->
+    <svg class="wave-fill wave-cream" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64 C240,110 480,18 720,46 C960,74 1200,110 1440,62 L1440,96 L0,96 Z"/>
+    </svg>
+
+    <!-- ============ TRAVEL ============ -->
+    <section id="travel" class="travel">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">Getting there</p>
+        <h2>Travel &amp; stay</h2>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+        </span>
+        <p class="section-intro reveal-up">A few notes to help you reach our little paradise.</p>
+      </header>
+
+      <div class="travel-grid">
+        <article class="travel-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M8 32h32l-6-8h-8l-4-8H12l-4 8v8Z"/>
+              <path d="M8 32v-8M38 32l-4-8"/>
+            </svg>
+          </span>
+          <h3>Flights</h3>
+          <p>Fly into Seychelles International Airport (SEZ). Direct routes from most major hubs — we recommend booking early for November.</p>
+        </article>
+
+        <article class="travel-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 22c0-6 5-10 12-10s12 4 12 10c0 5-4 9-9 13l-3 2-3-2c-5-4-9-8-9-13Z"/>
+              <circle cx="24" cy="21" r="4"/>
+            </svg>
+          </span>
+          <h3>Stay</h3>
+          <p>A room block is reserved at Savoy Resort &amp; Spa — mention “Naomi &amp; Moses” when booking. Hotels nearby also welcome the celebration.</p>
+        </article>
+
+        <article class="travel-card reveal-up">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M14 34c-2-4-2-14 2-20M26 36c2-3 2-12-1-18M36 34c-1-4-1-12 1-18"/>
+              <circle cx="24" cy="24" r="16"/>
+            </svg>
+          </span>
+          <h3>Getting around</h3>
+          <p>Taxis and resort shuttles make the short trip from hotel to church easy. We’ll share a shuttle timetable closer to the day.</p>
+        </article>
       </div>
     </section>
 
-    <section class="gifts section-pad" id="gifts">
-      <div class="section-shell">
-        <div class="section-heading reveal">
-          <p class="section-kicker">With gratitude</p>
-          <h2>Your presence is the greatest gift.</h2>
-        </div>
-        <p class="note-copy reveal">Should you wish to bless our new home further, we would be deeply grateful for your love and generosity.</p>
-        <div class="details-grid" style="margin-top:2rem">
-          <article class="detail-card reveal" style="border-top:4px solid var(--coral)">
-            <span class="detail-label">Bank Transfer · Doose</span>
-            <h3>0123 456 789</h3>
-            <p>First Bank Nigeria<br>Account Name: Adeyemi Doose</p>
-          </article>
-          <article class="detail-card reveal" style="border-top:4px solid var(--sage)">
-            <span class="detail-label" style="color:#4E7A52">Bank Transfer · Deri</span>
-            <h3>9876 543 210</h3>
-            <p>GTBank Nigeria<br>Account Name: Okonkwo Deri</p>
-          </article>
-        </div>
-        <div class="gift-list" style="margin-top:2rem">
-          <span>Home and kitchen</span>
-          <span>Honeymoon fund</span>
-          <span>Home décor and art</span>
-          <span>Investment gift</span>
-          <span>Tech items</span>
-          <span>Furniture</span>
-        </div>
-        <p class="gift-note reveal" style="margin-top:1.6rem;color:var(--gold);font-family:var(--font-display);font-size:1rem;text-align:center">Please send us a WhatsApp message after your transfer so we can thank you personally.</p>
-      </div>
+    <!-- ============ RSVP ============ -->
+    <section id="rsvp" class="rsvp">
+      <header class="section-head reveal-up">
+        <p class="eyebrow">Kindly RSVP</p>
+        <h2>Will you join us?</h2>
+        <span class="flourish" aria-hidden="true">
+          <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+        </span>
+        <p class="section-intro reveal-up">Our melody is sweeter when you sing along. Let us know by 01 October 2026.</p>
+      </header>
+
+      <form class="rsvp-form reveal-up" id="rsvp-form" novalidate>
+        <label class="field">
+          <span class="field-label">Full name</span>
+          <input type="text" name="name" autocomplete="name" required placeholder="Your name">
+        </label>
+        <label class="field">
+          <span class="field-label">Party size</span>
+          <input type="number" name="party_size" min="1" max="10" value="1" required>
+        </label>
+        <label class="field">
+          <span class="field-label">Dietary notes <em>optional</em></span>
+          <input type="text" name="dietary" placeholder="Allergies, preferences…">
+        </label>
+        <button class="rsvp-submit" type="submit">
+          <span class="btn-label">Send RSVP</span>
+        </button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
     </section>
 
-    <section class="countdown-section section-pad" aria-label="Countdown to the white wedding">
-      <canvas id="cd-particles" aria-hidden="true"></canvas>
-      <div class="section-shell countdown-shell">
-        <div class="section-copy reveal">
-          <p class="section-kicker">Until we say I do</p>
-          <h2>23 November 2026</h2>
-        </div>
-        <div class="countdown" id="countdown" data-date="2026-11-23T12:00:00">
-          <div class="time-box reveal">
-            <strong data-unit="days">00</strong>
-            <span>Days</span>
-          </div>
-          <div class="time-box reveal">
-            <strong data-unit="hours">00</strong>
-            <span>Hours</span>
-          </div>
-          <div class="time-box reveal">
-            <strong data-unit="minutes">00</strong>
-            <span>Minutes</span>
-          </div>
-          <div class="time-box reveal">
-            <strong data-unit="seconds">00</strong>
-            <span>Seconds</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-pad" id="crossword" style="background:linear-gradient(180deg,var(--paper),var(--ivory))">
-      <div class="section-shell" style="max-width:520px;margin:0 auto">
-        <div class="section-heading center reveal" style="text-align:center">
-          <p class="section-kicker">A little fun</p>
-          <h2>Wedding Crossword</h2>
-          <p style="margin-top:0.5rem;color:var(--muted);font-family:var(--font-display);font-size:1.1rem;font-style:italic">How well do you know Doose &amp; Deri?</p>
-        </div>
-        <div class="cw-wrap reveal">
-          <div class="cw-grid" id="cw-grid"></div>
-          <div class="cw-clues">
-            <div>
-              <h4>Across</h4>
-              <div class="cw-clue"><b>3.</b> The foundation of every marriage (4)</div>
-              <div class="cw-clue"><b>4.</b> The congregation's response (4)</div>
-              <div class="cw-clue"><b>5.</b> The groom's name (5)</div>
-              <div class="cw-clue"><b>7.</b> The wedding month (8)</div>
-            </div>
-            <div>
-              <h4>Down</h4>
-              <div class="cw-clue"><b>1.</b> The bride's name (4)</div>
-              <div class="cw-clue"><b>2.</b> Where vows are spoken (6)</div>
-              <div class="cw-clue"><b>6.</b> Sacred altar promises (4)</div>
-            </div>
-          </div>
-          <div class="cw-btns">
-            <button class="cw-btn cw-check" type="button" id="cw-check">Check Answers</button>
-            <button class="cw-btn cw-clear" type="button" id="cw-clear">Clear</button>
-          </div>
-          <div class="cw-msg" id="cw-msg"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="rsvp section-pad" id="rsvp">
-      <div class="section-shell rsvp-shell">
-        <div class="rsvp-copy reveal">
-          <p class="section-kicker">Your presence</p>
-          <h2>Come witness the promise.</h2>
-          <p>Please confirm your attendance and include your name, party size, and the gathering you plan to attend.</p>
-        </div>
-        <div class="rsvp-panel reveal">
-          <a class="btn btn-primary" href="https://wa.me/2348000000000?text=Hello%2C%20I%20would%20love%20to%20attend%20the%20wedding%20of%20Doose%20%26%20Deri.%20My%20name%20is%20" target="_blank" rel="noopener">RSVP on WhatsApp</a>
-          <p>Kindly respond by <strong>1 November 2026</strong>.</p>
-          <span>#DooseAndDeri2026</span>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">
-    <p>Doose <em>&amp;</em> Deri</p>
-    <span>November 2026 · Lagos, Nigeria</span>
-    <p class="ft-hashtag">#DooseAndDeri2026</p>
-    <p class="ft-verse">"What therefore God hath joined together, let not man put asunder." — Matthew 19:6</p>
+    <div class="monogram" aria-hidden="true">N <span class="amp">&amp;</span> M</div>
+    <span class="flourish" aria-hidden="true">
+      <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
+    </span>
+    <p>Naomi <span class="amp">&amp;</span> Moses · 07.11.2026 · Seychelles</p>
+    <p class="footer-note">The best is yet to come — our song is just beginning.</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="js/main.js"></script>
+</div>
+
+<noscript>
+  <style>
+    #opening { display: none !important; }
+    #site { display: block !important; }
+    .reveal-up { opacity: 1 !important; transform: none !important; }
+    .music-toggle { display: none !important; }
+    .hero-art, .hero-bg-img, .quote-bg-img { opacity: 1 !important; }
+  </style>
+</noscript>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
