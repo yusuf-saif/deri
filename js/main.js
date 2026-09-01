@@ -1,7 +1,7 @@
 /* ============================================================
-   Naomi & Moses — main
-   Opening sequence, generative music-box love song, GSAP scroll
-   choreography, countdown, nav, RSVP.
+   Doose & Deri — main
+   Opening sequence, real love songs with a generative music-box
+   fallback, GSAP scroll choreography, countdown, nav, RSVP.
    Every GSAP timeline lives here (no inline scripts in HTML).
    ============================================================ */
 
@@ -15,12 +15,33 @@ if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
 }
 
 /* ============================================================
-   LOVE SONG — a gentle generative music box (Web Audio).
-   If a real song is dropped at assets/audio/love-song.mp3 it
-   plays instead of the synthesized melody.
+   LOVE SONGS — real tracks with a generative music-box fallback.
+   Drop your own purchased files into assets/audio/ with these
+   exact names:
+     assets/audio/i-do-aloe-blacc.mp3      "I Do" by Aloe Blacc
+     assets/audio/on-purpose-nico.mp3      "On Purpose" by Ni/co
+   The track follows the section being viewed: "I Do" plays for
+   the hero + ceremony, "On Purpose" for the rest of the site.
+   If a file hasn't been added yet it falls back to the
+   synthesized music box instead of breaking.
    ============================================================ */
 
 const MIDI = (m) => 440 * Math.pow(2, (m - 69) / 12);
+
+const TRACKS = [
+  {
+    id: 'i-do',
+    file: 'assets/audio/i-do-aloe-blacc.mp3',
+    label: 'I Do — Aloe Blacc',
+    sections: ['home', 'wedding'],
+  },
+  {
+    id: 'on-purpose',
+    file: 'assets/audio/on-purpose-nico.mp3',
+    label: 'On Purpose — Ni/co',
+    sections: ['story', 'moments', 'dates', 'rsvp'],
+  },
+];
 
 const Music = {
   playing: false,
@@ -30,8 +51,9 @@ const Music = {
   nextTime: 0,
   step: 0,
   active: new Set(),
-  real: null,
-  realOk: false,
+  tracks: {},
+  currentId: null,
+  activeSection: 'home',
 
   // waltz, 72 bpm, 4 bars of 6 eighths
   EIGHTH: 60 / 72 / 2,
@@ -52,36 +74,81 @@ const Music = {
   arpPattern: [0, 1, 2, 1, 0, 1],
 
   init() {
-    // Optional real song override (plain <audio>, no build step)
-    const a = new Audio('assets/audio/love-song.mp3');
-    a.loop = true;
-    a.preload = 'auto';
-    a.addEventListener('canplay', () => { this.realOk = true; });
-    a.addEventListener('error', () => { this.realOk = false; });
-    this.real = a;
+    TRACKS.forEach((t) => {
+      const el = new Audio(t.file);
+      el.loop = true;
+      el.preload = 'auto';
+      el.volume = 0;
+      t.el = el;
+      t.ok = false;
+      el.addEventListener('canplaythrough', () => { t.ok = true; });
+      el.addEventListener('error', () => { t.ok = false; });
+      this.tracks[t.id] = t;
+    });
+  },
+
+  trackFor(section) {
+    return TRACKS.find((t) => t.sections.includes(section)) || TRACKS[0];
+  },
+
+  setSection(section) {
+    if (section === this.activeSection) return;
+    this.activeSection = section;
+    if (this.playing) this.playTrack(this.trackFor(section).id);
   },
 
   start() {
     if (this.playing) return;
     this.playing = true;
     setMusicUI(true);
-    if (this.realOk) {
-      this.real.currentTime = 0;
-      this.real.play().catch(() => this.startBox());
+    this.playTrack(this.trackFor(this.activeSection).id);
+  },
+
+  playTrack(id) {
+    if (id === this.currentId) return;
+    this.currentId = id;
+    this.stopBox();
+    TRACKS.forEach((t) => {
+      if (t.id !== id) { t.el.pause(); t.el.volume = 0; }
+    });
+    const track = this.tracks[id];
+    if (track && track.ok && track.el.readyState > 1) {
+      this.fadeIn(track.el);
     } else {
-      this.startBox();
+      this.startBox(); // graceful generative fallback
     }
+  },
+
+  fadeIn(el, durS = 1.2) {
+    el.volume = 0;
+    el.play().catch(() => { /* media resume needs a gesture */ });
+    const t0 = performance.now();
+    const step = () => {
+      const k = Math.min(1, (performance.now() - t0) / (durS * 1000));
+      el.volume = k;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   },
 
   stop() {
     this.playing = false;
     setMusicUI(false);
-    if (this.realOk) this.real.pause();
+    this.currentId = null;
+    TRACKS.forEach((t) => { t.el.pause(); t.el.volume = 0; });
+    this.stopBox();
+  },
+
+  toggle() {
+    this.playing ? this.stop() : this.start();
+  },
+
+  /* ---- silence the synthesized box ---- */
+  stopBox() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    // silence anything still scheduled
     this.active.forEach((osc) => { try { osc.stop(); } catch (e) { /* already stopped */ } });
     this.active.clear();
     if (this.ctx && this.master) {
@@ -90,10 +157,6 @@ const Music = {
       this.master.gain.setValueAtTime(this.master.gain.value, now);
       this.master.gain.linearRampToValueAtTime(0.0001, now + 0.4);
     }
-  },
-
-  toggle() {
-    this.playing ? this.stop() : this.start();
   },
 
   /* ---- synthesized music box ---- */
@@ -350,13 +413,14 @@ function initScrollChoreography() {
     onToggle: (self) => nav.classList.toggle('scrolled', self.isActive),
   });
 
-  ['home', 'story', 'moments', 'wedding', 'travel', 'rsvp'].forEach((id) => {
+  ['home', 'story', 'moments', 'wedding', 'dates', 'rsvp'].forEach((id) => {
     ScrollTrigger.create({
       trigger: `#${id}`,
       start: 'top 45%',
       end: 'bottom bottom',
       onToggle: (self) => {
         if (!self.isActive) return;
+        Music.setSection(id);
         $$('.nav-links a').forEach((a) => {
           const isActive = a.getAttribute('href') === `#${id}`;
           a.classList.toggle('active', isActive);

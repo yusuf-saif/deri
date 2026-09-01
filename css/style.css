@@ -1,5 +1,5 @@
 /* ============================================================
-   Naomi & Moses — wedding site
+   Doose & Deri — wedding site
    Design language: their story began in a choir, so the whole
    site borrows music's language — waveform loader, spinning
    record + needle, sound-wave dividers, music-staff texture,
@@ -30,8 +30,8 @@
   --shadow-card: 0 10px 40px -12px rgba(62, 42, 28, 0.18);
 
   /* full-bleed photography (Unsplash, free license) */
-  --img-hero: url("https://images.unsplash.com/photo-1768294862374-28c398d4ea9f?fm=jpg&q=80&w=2400&auto=format&fit=crop");
-  --img-quote: url("https://images.unsplash.com/photo-1769415243058-ee6ffd52ba18?fm=jpg&q=80&w=2000&auto=format&fit=crop");
+  --img-hero: url("../assets/web/IMG_4638.jpg");
+  --img-quote: url("../assets/web/IMG_7275.jpg");
 }
 
 * { box-sizing: border-box; }
@@ -261,7 +261,7 @@ p { line-height: 1.7; }
   50% { transform: translateY(-10px); }
 }
 
-/* A vinyl record: concentric grooves + a peach "N & M" label */
+/* A vinyl record: concentric grooves + a peach "D & D" label */
 .record {
   position: relative;
   width: 108px;
@@ -277,7 +277,7 @@ p { line-height: 1.7; }
   animation: spin 6s linear infinite;
 }
 .record::after {
-  content: "N & M";
+  content: "D & D";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -985,21 +985,21 @@ p { line-height: 1.7; }
 }
 
 /* ============================================================
-   TRAVEL
+   IMPORTANT DATES
    ============================================================ */
-.travel {
+.dates {
   background: var(--cream);
   padding: 5.5rem 2rem 6rem;
   text-align: center;
 }
-.travel-grid {
+.dates-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 1.6rem;
   max-width: 900px;
   margin: 0 auto;
 }
-.travel-card {
+.date-card {
   background: var(--paper);
   border: 1px solid rgba(62, 42, 28, 0.1);
   border-top: 3px solid var(--gold);
@@ -1008,14 +1008,14 @@ p { line-height: 1.7; }
   text-align: left;
   box-shadow: var(--shadow-card);
 }
-.travel-card .card-icon {
+.date-card .card-icon {
   background: linear-gradient(135deg, var(--lavender), var(--pink));
 }
-.travel-card h3 {
+.date-card h3 {
   font-size: 1.4rem;
   margin-bottom: 0.6rem;
 }
-.travel-card p {
+.date-card p {
   margin: 0;
   font-size: 0.92rem;
   color: var(--brown);
