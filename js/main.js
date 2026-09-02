@@ -85,6 +85,7 @@ const Music = {
       el.addEventListener('error', () => { t.ok = false; });
       this.tracks[t.id] = t;
     });
+    YouTube.load();
   },
 
   trackFor(section) {
@@ -113,9 +114,16 @@ const Music = {
     });
     const track = this.tracks[id];
     if (track && track.ok && track.el.readyState > 1) {
+      // 1. a real MP3 the owner dropped in
+      YouTube.pauseAll();
       this.fadeIn(track.el);
+    } else if (YouTube.couldPlay()) {
+      // 2. official YouTube embed for these songs
+      YouTube.play(id);
     } else {
-      this.startBox(); // graceful generative fallback
+      // 3. graceful generative music-box fallback
+      YouTube.load();
+      this.startBox();
     }
   },
 
@@ -136,6 +144,7 @@ const Music = {
     setMusicUI(false);
     this.currentId = null;
     TRACKS.forEach((t) => { t.el.pause(); t.el.volume = 0; });
+    YouTube.pauseAll();
     this.stopBox();
   },
 
@@ -259,6 +268,93 @@ const Music = {
     osc.start(t);
     osc.stop(t + dur + 0.05);
   },
+};
+
+/* ============================================================
+   YOUTUBE EMBED — official IFrame player for the two songs.
+   Plays audio from youtube.com (no downloaded files, no rips)
+   and hands back to the generative box if the API is blocked.
+   ============================================================ */
+
+const YT_VIDEOS = {
+  'i-do': 'sB90yWpcWxk',      // I Do — Aloe Blacc
+  'on-purpose': '86Uru51EqOU', // On Purpose
+};
+
+const YouTube = {
+  apiReady: false,
+  failed: false,
+  loaded: false,
+  players: {},
+  active: null,
+
+  load() {
+    if (this.loaded || this.failed) return;
+    if (window.YT) { this.apiReady = true; this.build(); return; }
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.async = true;
+    tag.onerror = () => { this.failed = true; };
+    document.head.appendChild(tag);
+  },
+
+  build() {
+    if (this.loaded) return;
+    this.loaded = true;
+    Object.keys(YT_VIDEOS).forEach((id) => {
+      this.players[id] = new YT.Player(`yt-${id}`, {
+        videoId: YT_VIDEOS[id],
+        width: '200',
+        height: '113',
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          rel: 0,
+          playsinline: 1,
+          loop: 1,
+          playlist: YT_VIDEOS[id],
+        },
+        events: {
+          onReady: () => {
+            if (Music.playing && Music.trackFor(Music.activeSection).id === id) {
+              this.play(id);
+            }
+          },
+        },
+      });
+    });
+  },
+
+  play(id) {
+    const p = this.players[id];
+    if (!p) return;
+    if (this.active && this.active !== id) {
+      try { this.players[this.active].pauseVideo(); } catch (e) { /* ignore */ }
+    }
+    this.active = id;
+    try {
+      p.unMute();
+      p.setVolume(85);
+      p.playVideo();
+    } catch (e) { /* ignore */ }
+  },
+
+  pauseAll() {
+    Object.keys(this.players).forEach((id) => {
+      try { this.players[id].pauseVideo(); } catch (e) { /* ignore */ }
+    });
+    this.active = null;
+  },
+
+  couldPlay() {
+    return this.loaded && !!this.players['i-do'];
+  },
+};
+
+window.onYouTubeIframeAPIReady = () => {
+  YouTube.apiReady = true;
+  YouTube.build();
 };
 
 const musicToggle = $('#music-toggle');

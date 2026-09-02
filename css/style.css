@@ -4,7 +4,7 @@
    site borrows music's language — waveform loader, spinning
    record + needle, sound-wave dividers, music-staff texture,
    and a generative music-box love song. HD finish: full-bleed
-   Seychelles photography, film grain, gold ornaments.
+   couple photography, film grain, gold ornaments.
 
    Every animation has a prefers-reduced-motion fallback at the
    bottom of this file.
@@ -566,6 +566,26 @@ p { line-height: 1.7; }
   color: var(--brown);
   opacity: 0.82;
   margin: 0.9rem 0 0;
+}
+
+/* our songs — stream links in the hero */
+.hero-songs {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brown);
+  opacity: 0.8;
+  margin: 1.6rem 0 0;
+}
+.hero-songs a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(194, 160, 108, 0.5);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.hero-songs a:hover {
+  color: var(--brown);
+  border-color: var(--brown);
 }
 
 /* countdown — glass chips over the photo */
@@ -1270,4 +1290,18 @@ body.gsap-missing .hero-art {
   .polaroid {
     transform: rotate(var(--rot, 0deg)) !important;
   }
+}
+
+/* ============================================================
+   YOUTUBE EMBED STAGE
+   ============================================================ */
+.yt-stage {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 200px;
+  height: 113px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
