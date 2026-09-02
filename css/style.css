@@ -683,6 +683,7 @@ p { line-height: 1.7; }
 }
 .wave-hero path { fill: var(--cream); }
 .wave-cream path { fill: var(--cream); }
+.wave-lavender path { fill: var(--lavender); }
 
 /* ============================================================
    STORY
@@ -1040,6 +1041,79 @@ p { line-height: 1.7; }
   font-size: 0.92rem;
   color: var(--brown);
   opacity: 0.88;
+}
+
+/* ============================================================
+   GIFT THE COUPLE
+   ============================================================ */
+.gifting {
+  background: var(--lavender);
+  padding: 5.5rem 2rem 6rem;
+  text-align: center;
+}
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.6rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.gift-card {
+  background: var(--paper);
+  border: 1px solid rgba(62, 42, 28, 0.1);
+  border-top: 3px solid var(--gold);
+  border-radius: 18px;
+  padding: 2.2rem 1.8rem;
+  text-align: left;
+  box-shadow: var(--shadow-card);
+}
+.gift-card .card-icon {
+  background: linear-gradient(135deg, var(--pink), var(--peach));
+}
+.gift-lbl {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brown);
+  opacity: 0.75;
+  margin-bottom: 0.5rem;
+}
+.gift-acct {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--brown-deep);
+  margin: 0 0 0.4rem;
+}
+.gift-bank {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--brown);
+  opacity: 0.85;
+}
+.gift-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1.2rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.gift-item {
+  font-size: 0.85rem;
+  color: var(--brown);
+  opacity: 0.85;
+}
+.gift-item::before {
+  content: '♪\00a0';
+  color: var(--gold);
+}
+.gift-note {
+  max-width: 460px;
+  margin: 2.6rem auto 0;
+  font-style: italic;
+  color: var(--brown-soft);
 }
 
 /* ============================================================
