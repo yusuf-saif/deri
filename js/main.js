@@ -30,16 +30,10 @@ const MIDI = (m) => 440 * Math.pow(2, (m - 69) / 12);
 
 const TRACKS = [
   {
-    id: 'i-do',
-    file: 'assets/audio/i-do-aloe-blacc.mp3',
-    label: 'I Do — Aloe Blacc',
-    sections: ['home', 'wedding'],
-  },
-  {
     id: 'on-purpose',
     file: 'assets/audio/on-purpose-nico.mp3',
     label: 'On Purpose — Ni/co',
-    sections: ['story', 'moments', 'dates', 'rsvp'],
+    sections: ['home', 'story', 'moments', 'wedding', 'dates', 'rsvp'],
   },
 ];
 
@@ -271,14 +265,13 @@ const Music = {
 };
 
 /* ============================================================
-   YOUTUBE EMBED — official IFrame player for the two songs.
+   YOUTUBE EMBED — official IFrame player for On Purpose.
    Plays audio from youtube.com (no downloaded files, no rips)
    and hands back to the generative box if the API is blocked.
    ============================================================ */
 
 const YT_VIDEOS = {
-  'i-do': 'sB90yWpcWxk',      // I Do — Aloe Blacc
-  'on-purpose': '86Uru51EqOU', // On Purpose
+  'on-purpose': '86Uru51EqOU', // On Purpose — Ni/co
 };
 
 const YouTube = {
@@ -348,7 +341,7 @@ const YouTube = {
   },
 
   couldPlay() {
-    return this.loaded && !!this.players['i-do'];
+    return this.loaded && !!this.players['on-purpose'];
   },
 };
 

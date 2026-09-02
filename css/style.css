@@ -1052,10 +1052,7 @@ p { line-height: 1.7; }
   text-align: center;
 }
 .gift-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1.6rem;
-  max-width: 900px;
+  max-width: 380px;
   margin: 0 auto;
 }
 .gift-card {
