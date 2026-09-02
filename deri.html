@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>Doose &amp; Deri · November 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════ */
+    :root {
+      --butter:      #F7EAA8;
+      --butter-mid:  #D4C06A;
+      --sage:        #7A9E7E;
+      --sage-deep:   #4E7A52;
+      --lilac:       #C5B8D8;
+      --lilac-deep:  #8E7EAA;
+      --coral:       #E8A898;
+      --coral-deep:  #C27E6A;
+      --cream:       #FAF7F2;
+      --dark:        #0D0B08;
+      --dark-warm:   #1A1208;
+      --gold:        #C4AC6C;
+      --gold-lt:     #F7EAA8;
+      --text:        #3D2E1E;
+      --text-mid:    #6B5C4A;
+      --f-script:    'Great Vibes', cursive;
+      --f-serif:     'Playfair Display', serif;
+      --f-sans:      'Jost', sans-serif;
+      --ease:        cubic-bezier(0.22,1,0.36,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--dark); color: var(--cream); font-family: var(--f-sans); overflow-x: hidden; }
+
+    /* ═══════════════════════════════════════
+       LOADER
+    ═══════════════════════════════════════ */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--dark);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    #loader-names {
+      font-family: var(--f-script);
+      font-size: clamp(52px, 16vw, 96px);
+      color: var(--gold-lt);
+      text-shadow: 0 0 60px rgba(247,234,168,0.35);
+      opacity: 0; transform: translateY(20px);
+    }
+    .loader-bar {
+      width: 0; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    #loader-sub {
+      font-size: 9px; font-weight: 300; letter-spacing: 5px;
+      color: rgba(196,172,108,0.45); text-transform: uppercase; opacity: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       GLOBAL SPARKLE CANVAS (fixed, decorative)
+    ═══════════════════════════════════════ */
+    #sparkle-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 4;
+    }
+
+    /* ═══════════════════════════════════════
+       MUSIC BUTTON
+    ═══════════════════════════════════════ */
+    #music-btn {
+      position: fixed; top: 20px; right: 20px; z-index: 200;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: rgba(13,11,8,0.75); border: 1px solid rgba(196,172,108,0.35);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; color: var(--gold);
+      transition: background 0.3s, border-color 0.3s, transform 0.2s;
+    }
+    #music-btn:hover { background: rgba(196,172,108,0.15); border-color: var(--gold); transform: scale(1.08); }
+    #music-btn.on { color: var(--gold-lt); border-color: var(--gold-lt); background: rgba(196,172,108,0.12); }
+
+    /* Track label pill */
+    #track-pill {
+      position: fixed; top: 20px; right: 76px; z-index: 200;
+      background: rgba(13,11,8,0.75); border: 1px solid rgba(196,172,108,0.2);
+      backdrop-filter: blur(12px); border-radius: 40px;
+      padding: 6px 14px; font-size: 9px; font-weight: 300; letter-spacing: 2px;
+      color: rgba(196,172,108,0.6); text-transform: uppercase;
+      opacity: 0; transition: opacity 0.4s;
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════ */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ─ Video background ─ */
+    /*  ↓ Replace src="" with your video file or URL  */
+    #hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; opacity: 0.42;
+    }
+
+    /* Animated gradient fallback (shows when no video) */
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 85% 65% at 50% 42%, #231808 0%, #0D0B08 72%);
+      animation: bg-breathe 9s ease-in-out infinite alternate;
+    }
+    @keyframes bg-breathe {
+      0%   { background: radial-gradient(ellipse 80% 60% at 45% 40%, #2A1A0C 0%, #0D0B08 72%); }
+      100% { background: radial-gradient(ellipse 90% 70% at 55% 46%, #221406 0%, #0D0B08 72%); }
+    }
+
+    /* Cinematic vignette over video */
+    .hero-vignette {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(13,11,8,0.55) 0%,
+        rgba(13,11,8,0.15) 35%,
+        rgba(13,11,8,0.15) 55%,
+        rgba(13,11,8,0.65) 85%,
+        rgba(13,11,8,0.96) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative; z-index: 3;
+      text-align: center; padding: 0 24px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .eyebrow {
+      font-size: 9px; font-weight: 300; letter-spacing: 5px;
+      color: rgba(196,172,108,0.55); text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .hero-name {
+      font-family: var(--f-script);
+      font-size: clamp(76px, 22vw, 128px);
+      line-height: 0.88; color: var(--gold-lt);
+      text-shadow: 0 0 60px rgba(247,234,168,0.4), 0 0 120px rgba(196,172,108,0.18);
+      animation: name-glow 5s ease-in-out infinite alternate;
+    }
+    @keyframes name-glow {
+      0%   { text-shadow: 0 0 40px rgba(247,234,168,0.3), 0 0 80px rgba(196,172,108,0.12); }
+      100% { text-shadow: 0 0 70px rgba(247,234,168,0.55), 0 0 140px rgba(196,172,108,0.28); }
+    }
+
+    .hero-amp {
+      font-size: 10px; font-weight: 200; letter-spacing: 8px;
+      color: rgba(196,172,108,0.5); text-transform: uppercase;
+      display: block; margin: 10px 0;
+    }
+
+    /* Rotating ornament ring */
+    .hero-ring-wrap {
+      position: absolute; left: 50%; top: 50%;
+      width: 280px; height: 280px;
+      transform: translate(-50%, -50%);
+      animation: spin-ring 28s linear infinite;
+      pointer-events: none; z-index: 2;
+      opacity: 0.22;
+    }
+    @keyframes spin-ring { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+    /* Gold divider */
+    .gold-divider {
+      display: flex; align-items: center; gap: 12px; margin: 22px 0;
+    }
+    .gold-divider .line { width: 64px; height: 1px; }
+    .gold-divider .l  { background: linear-gradient(to right, transparent, var(--gold)); }
+    .gold-divider .r  { background: linear-gradient(to left,  transparent, var(--gold)); }
+    .gold-divider .gem {
+      width: 9px; height: 9px;
+      background: var(--gold); transform: rotate(45deg);
+    }
+
+    .hero-date {
+      font-size: 10px; font-weight: 300; letter-spacing: 4px;
+      color: rgba(247,234,168,0.42); text-transform: uppercase;
+    }
+
+    /* Event chips */
+    .hero-chips {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-top: 32px; width: 100%; max-width: 310px;
+    }
+    .h-chip {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px; padding: 11px 16px;
+      backdrop-filter: blur(10px);
+    }
+    .h-chip-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+      animation: chip-glow 2.5s ease-in-out infinite;
+    }
+    @keyframes chip-glow {
+      0%,100% { opacity:1; }
+      50% { opacity:0.6; box-shadow: 0 0 10px currentColor; }
+    }
+    .dot-y { background:var(--butter); box-shadow:0 0 8px var(--butter); color:var(--butter); }
+    .dot-s { background:var(--sage);   box-shadow:0 0 8px var(--sage);   color:var(--sage); animation-delay:.6s; }
+    .dot-l { background:var(--lilac);  box-shadow:0 0 8px var(--lilac);  color:var(--lilac); animation-delay:1.2s; }
+    .h-chip-label { flex: 1; text-align: left; }
+    .h-chip-label strong { display:block; font-size:11px; font-weight:500; letter-spacing:.3px; }
+    .h-chip-label span   { display:block; font-size:10px; font-weight:300; opacity:.5; margin-top:2px; }
+    .h-chip.cy strong { color:var(--butter); }
+    .h-chip.cs strong { color:var(--sage); }
+    .h-chip.cl strong { color:var(--lilac); }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      text-align: center; z-index: 3;
+    }
+    .scroll-hint p {
+      font-size: 8px; letter-spacing: 3.5px; color: rgba(196,172,108,0.3);
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .scroll-hint svg { animation: bounce 2.4s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(6px);} }
+
+    /* ═══════════════════════════════════════
+       SECTION UTILITY
+    ═══════════════════════════════════════ */
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(196,172,108,0.25);
+      background: rgba(196,172,108,0.1);
+      border-radius: 40px; padding: 5px 18px;
+      font-size: 8.5px; font-weight: 500; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .pill.light { border-color: rgba(61,46,30,0.2); background: rgba(61,46,30,0.06); color: var(--text-mid); }
+
+    /* ═══════════════════════════════════════
+       STORY SECTION
+    ═══════════════════════════════════════ */
+    #story {
+      background: var(--cream); color: var(--text);
+      padding: 88px 0 72px;
+    }
+    .story-header { text-align: center; padding: 0 24px; margin-bottom: 52px; }
+    .story-header h2 {
+      font-family: var(--f-script);
+      font-size: clamp(46px, 13vw, 68px);
+      color: var(--text); margin: 10px 0 8px;
+    }
+    .story-header .sub {
+      font-family: var(--f-serif); font-style: italic;
+      font-size: 13px; color: var(--text-mid);
+    }
+
+    /* Timeline */
+    .timeline { position: relative; max-width: 420px; margin: 0 auto; padding: 0 20px; }
+    .t-spine {
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, rgba(196,172,108,0.05), rgba(196,172,108,0.35) 15%, rgba(196,172,108,0.35) 85%, rgba(196,172,108,0.05));
+      transform: translateX(-50%);
+    }
+
+    .chapter { margin-bottom: 36px; will-change: opacity, transform; }
+
+    .ch-badge { text-align: center; margin-bottom: 14px; }
+    .ch-badge span {
+      display: inline-block; border-radius: 40px; padding: 5px 20px;
+      font-size: 8px; font-weight: 500; letter-spacing: 3.5px;
+      text-transform: uppercase; color: #fff;
+    }
+    .ch-badge.cr span { background: var(--coral); }
+    .ch-badge.sg span { background: var(--sage); }
+    .ch-badge.lc span { background: var(--lilac); }
+
+    .ch-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      margin: 0 auto 14px; position: relative; z-index: 2;
+    }
+    .ch-dot.cr { background:var(--coral); box-shadow:0 0 0 5px rgba(232,168,152,0.2),0 0 0 10px rgba(232,168,152,0.07); }
+    .ch-dot.sg { background:var(--sage);  box-shadow:0 0 0 5px rgba(122,158,126,0.2),0 0 0 10px rgba(122,158,126,0.07); }
+    .ch-dot.lc {
+      background:var(--lilac); width:14px; height:14px;
+      box-shadow:0 0 0 5px rgba(197,184,216,0.2),0 0 0 11px rgba(197,184,216,0.08),0 0 22px rgba(197,184,216,0.4);
+      animation: hbeat 2.4s ease-in-out infinite;
+    }
+    @keyframes hbeat { 0%,55%,100%{transform:scale(1);} 22%{transform:scale(1.22);} 44%{transform:scale(1.06);} }
+
+    .ch-card { border-radius: 22px; overflow: hidden; }
+    .ch-card .bar { height: 3.5px; }
+    .ch-card.cr { background:linear-gradient(135deg,rgba(232,168,152,.07),rgba(232,168,152,.15)); border:1px solid rgba(232,168,152,.28); }
+    .ch-card.sg { background:linear-gradient(135deg,rgba(122,158,126,.07),rgba(122,158,126,.14)); border:1px solid rgba(122,158,126,.28); }
+    .ch-card.lc { background:linear-gradient(135deg,rgba(197,184,216,.07),rgba(197,184,216,.15)); border:1px solid rgba(197,184,216,.3); }
+    .ch-card.cr .bar { background:linear-gradient(to right,var(--coral),#F5C5B5,var(--coral)); }
+    .ch-card.sg .bar { background:linear-gradient(to right,var(--sage),#9DC4A1,var(--sage)); }
+    .ch-card.lc .bar { background:linear-gradient(to right,var(--lilac),#DDD4EE,var(--lilac)); }
+
+    .card-inner { padding: 20px 18px 18px; }
+    .card-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+    .card-icon {
+      width:42px; height:42px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; flex-shrink:0;
+    }
+    .ch-card.cr .card-icon { background:rgba(232,168,152,.18); border:1px solid rgba(232,168,152,.3); }
+    .ch-card.sg .card-icon { background:rgba(122,158,126,.15); border:1px solid rgba(122,158,126,.28); }
+    .ch-card.lc .card-icon { background:rgba(197,184,216,.15); border:1px solid rgba(197,184,216,.3); }
+
+    .card-titles p { font-size:8px; font-weight:500; letter-spacing:3px; text-transform:uppercase; margin-bottom:3px; }
+    .ch-card.cr .card-titles p { color:rgba(232,168,152,.75); }
+    .ch-card.sg .card-titles p { color:rgba(122,158,126,.8); }
+    .ch-card.lc .card-titles p { color:rgba(197,184,216,.85); }
+    .card-titles h3 { font-family:var(--f-serif); font-size:19px; font-weight:600; color:var(--text); line-height:1.15; }
+
+    .card-copy { font-size:12.5px; font-weight:300; color:var(--text-mid); line-height:1.75; margin-bottom:14px; }
+
+    .card-tags { display:flex; flex-wrap:wrap; gap:7px; }
+    .tag { border-radius:20px; padding:4px 12px; font-size:10px; }
+    .ch-card.cr .tag { background:rgba(232,168,152,.12); border:1px solid rgba(232,168,152,.28); color:var(--coral-deep); }
+    .ch-card.sg .tag { background:rgba(122,158,126,.1);  border:1px solid rgba(122,158,126,.27); color:var(--sage-deep); }
+    .ch-card.lc .tag { background:rgba(197,184,216,.1);  border:1px solid rgba(197,184,216,.3);  color:var(--lilac-deep); }
+
+    /* ═══════════════════════════════════════
+       EVENTS SECTION
+    ═══════════════════════════════════════ */
+    #events {
+      background: var(--dark);
+      padding: 88px 0 72px;
+    }
+    .events-header { text-align:center; padding:0 24px; margin-bottom:40px; }
+    .events-header h2 {
+      font-family:var(--f-script);
+      font-size:clamp(42px,12vw,62px);
+      color:var(--gold-lt); margin:10px 0 6px;
+      text-shadow:0 0 28px rgba(247,234,168,.25);
+    }
+    .events-header p { font-size:10px; font-weight:300; letter-spacing:2px; color:rgba(247,234,168,.35); font-style:italic; }
+
+    .events-stack { max-width:420px; margin:0 auto; padding:0 18px; display:flex; flex-direction:column; gap:16px; }
+
+    .ev-card { border-radius:22px; overflow:hidden; will-change:opacity,transform; }
+    .ev-card .shimmer { height:3px; background-size:300%; animation:shim 3.5s linear infinite; }
+    @keyframes shim { 0%{background-position:-300% center;} 100%{background-position:300% center;} }
+    .ev-card.by { background:linear-gradient(135deg,rgba(247,234,168,.05),rgba(247,234,168,.11)); border:1px solid rgba(247,234,168,.24); }
+    .ev-card.sg { background:linear-gradient(135deg,rgba(122,158,126,.05),rgba(122,158,126,.12)); border:1px solid rgba(122,158,126,.25); }
+    .ev-card.lc { background:linear-gradient(135deg,rgba(197,184,216,.05),rgba(197,184,216,.13)); border:1px solid rgba(197,184,216,.28); }
+    .ev-card.by .shimmer { background:linear-gradient(90deg,var(--butter),#FFF8C0,var(--butter)); }
+    .ev-card.sg .shimmer { background:linear-gradient(90deg,var(--sage),#C1E0C4,var(--sage)); }
+    .ev-card.lc .shimmer { background:linear-gradient(90deg,var(--lilac),#EDE6F8,var(--lilac)); }
+
+    .ev-body { padding:20px 20px 18px; }
+    .ev-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px; }
+
+    .ev-date { border-radius:14px; padding:10px 13px; text-align:center; min-width:62px; }
+    .ev-card.by .ev-date { background:rgba(247,234,168,.09); border:1px solid rgba(247,234,168,.22); }
+    .ev-card.sg .ev-date { background:rgba(122,158,126,.1);  border:1px solid rgba(122,158,126,.24); }
+    .ev-card.lc .ev-date { background:rgba(197,184,216,.1);  border:1px solid rgba(197,184,216,.27); }
+    .ev-date .mo  { font-size:7.5px; font-weight:500; letter-spacing:3px; text-transform:uppercase; opacity:.55; }
+    .ev-date .dy  { font-family:var(--f-serif); font-size:34px; font-weight:600; line-height:1; }
+    .ev-date .wk  { font-size:7.5px; font-weight:300; letter-spacing:1.5px; text-transform:uppercase; opacity:.45; margin-top:2px; }
+    .ev-card.by .ev-date .dy { color:var(--butter); text-shadow:0 0 18px rgba(247,234,168,.4); }
+    .ev-card.sg .ev-date .dy { color:var(--sage);   text-shadow:0 0 18px rgba(122,158,126,.4); }
+    .ev-card.lc .ev-date .dy { color:var(--lilac);  text-shadow:0 0 18px rgba(197,184,216,.4); }
+    .ev-card.by .ev-date .mo,
+    .ev-card.by .ev-date .wk { color:rgba(247,234,168,.6); }
+    .ev-card.sg .ev-date .mo,
+    .ev-card.sg .ev-date .wk { color:rgba(122,158,126,.65); }
+    .ev-card.lc .ev-date .mo,
+    .ev-card.lc .ev-date .wk { color:rgba(197,184,216,.65); }
+
+    .ev-text { flex:1; }
+    .ev-text h3 { font-family:var(--f-serif); font-size:18px; font-weight:600; margin-bottom:6px; line-height:1.15; }
+    .ev-card.by .ev-text h3 { color:var(--butter); }
+    .ev-card.sg .ev-text h3 { color:var(--sage); }
+    .ev-card.lc .ev-text h3 { color:var(--lilac); }
+    .ev-text p { font-size:11.5px; font-weight:300; line-height:1.65; }
+    .ev-card.by .ev-text p { color:rgba(247,234,168,.48); }
+    .ev-card.sg .ev-text p { color:rgba(122,158,126,.55); }
+    .ev-card.lc .ev-text p { color:rgba(197,184,216,.55); }
+
+    .ev-icon {
+      width:46px; height:46px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; flex-shrink:0;
+      animation:ev-float 4s ease-in-out infinite;
+    }
+    @keyframes ev-float { 0%,100%{transform:translateY(0) rotate(-4deg);} 50%{transform:translateY(-8px) rotate(4deg);} }
+    .ev-card.by .ev-icon { background:rgba(247,234,168,.08); border:1px solid rgba(247,234,168,.18); animation-delay:0s; }
+    .ev-card.sg .ev-icon { background:rgba(122,158,126,.09); border:1px solid rgba(122,158,126,.2);  animation-delay:.5s; }
+    .ev-card.lc .ev-icon { background:rgba(197,184,216,.09); border:1px solid rgba(197,184,216,.22); animation-delay:1s; }
+
+    .ev-meta { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+    .ev-row { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:300; }
+    .ev-card.by .ev-row { color:rgba(247,234,168,.42); }
+    .ev-card.sg .ev-row { color:rgba(122,158,126,.55); }
+    .ev-card.lc .ev-row { color:rgba(197,184,216,.55); }
+    .ev-divider { height:1px; margin-bottom:14px; }
+    .ev-card.by .ev-divider { background:rgba(247,234,168,.1); }
+    .ev-card.sg .ev-divider { background:rgba(122,158,126,.12); }
+    .ev-card.lc .ev-divider { background:rgba(197,184,216,.12); }
+    .ev-dress {
+      display:inline-block; border-radius:20px;
+      padding:4px 14px; font-size:10px; letter-spacing:.5px;
+    }
+    .ev-card.by .ev-dress { background:rgba(247,234,168,.08); border:1px solid rgba(247,234,168,.2); color:var(--butter); }
+    .ev-card.sg .ev-dress { background:rgba(122,158,126,.09); border:1px solid rgba(122,158,126,.22); color:var(--sage); }
+    .ev-card.lc .ev-dress { background:rgba(197,184,216,.09); border:1px solid rgba(197,184,216,.24); color:var(--lilac); }
+
+    /* ═══════════════════════════════════════
+       RSVP
+    ═══════════════════════════════════════ */
+    #rsvp {
+      background: var(--cream); color: var(--text);
+      padding: 88px 24px 80px; text-align: center;
+    }
+    #rsvp h2 { font-family:var(--f-script); font-size:clamp(46px,13vw,66px); color:var(--text); margin:10px 0 8px; }
+    #rsvp .sub { font-family:var(--f-serif); font-style:italic; font-size:12.5px; color:var(--text-mid); margin-bottom:36px; }
+    .rsvp-form { max-width:360px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+    .rf {
+      width:100%; background:rgba(196,172,108,.06);
+      border:1px solid rgba(196,172,108,.25); border-radius:14px;
+      padding:14px 18px; font-family:var(--f-sans); font-size:13px; font-weight:300;
+      color:var(--text); outline:none; transition:border-color .3s;
+      appearance:none;
+    }
+    .rf::placeholder { color:rgba(61,46,30,.38); }
+    .rf:focus { border-color:var(--gold); }
+    .rsvp-btn {
+      width:100%; border:none; border-radius:14px; padding:16px;
+      background:linear-gradient(135deg,var(--gold),var(--butter-mid));
+      font-family:var(--f-sans); font-size:11px; font-weight:500;
+      letter-spacing:3px; text-transform:uppercase;
+      color:var(--dark); cursor:pointer; transition:opacity .3s, transform .2s;
+    }
+    .rsvp-btn:hover { opacity:.9; transform:translateY(-2px); }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    footer {
+      background: var(--dark);
+      padding: 52px 24px; text-align: center;
+    }
+    footer h3 {
+      font-family:var(--f-script); font-size:clamp(38px,10vw,56px);
+      color:rgba(247,234,168,.48);
+      text-shadow:0 0 24px rgba(247,234,168,.15); margin-bottom:6px;
+    }
+    footer p { font-size:8.5px; letter-spacing:3.5px; color:rgba(196,172,108,.22); text-transform:uppercase; }
+
+    /* ═══════════════════════════════════════
+       REDUCED MOTION
+    ═══════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <h1 id="loader-names">Doose &amp; Deri</h1>
+  <div class="loader-bar" id="lbar"></div>
+  <p id="loader-sub">November 2026</p>
+</div>
+
+<!-- ══ SPARKLES ══ -->
+<canvas id="sparkle-canvas"></canvas>
+
+<!-- ══ MUSIC CONTROLS ══ -->
+<div id="track-pill">♪ Hero Theme</div>
+<button id="music-btn" aria-label="Toggle music">♪</button>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section id="hero">
+  <!--
+    BACKGROUND VIDEO
+    Replace src="" with your video file or URL, e.g.:
+      src="hero.mp4"   (place hero.mp4 next to this HTML file)
+      src="https://your-cdn.com/video.mp4"
+    The video plays muted and looped automatically.
+    A beautiful animated gradient is shown if no video src is set.
+  -->
+  <video id="hero-video" autoplay muted loop playsinline src="" poster=""></video>
+
+  <div class="hero-bg"></div>
+  <div class="hero-vignette"></div>
+
+  <!-- Rotating ornament ring -->
+  <div class="hero-ring-wrap" aria-hidden="true">
+    <svg width="280" height="280" viewBox="0 0 280 280" fill="none">
+      <circle cx="140" cy="140" r="135" stroke="#C4AC6C" stroke-width=".7" stroke-dasharray="5 16"/>
+      <circle cx="140" cy="5"   r="4" fill="#C4AC6C"/>
+      <circle cx="140" cy="275" r="4" fill="#C4AC6C"/>
+      <circle cx="5"   cy="140" r="4" fill="#C4AC6C"/>
+      <circle cx="275" cy="140" r="4" fill="#C4AC6C"/>
+      <circle cx="239" cy="41"  r="2.5" fill="#F7EAA8" opacity=".65"/>
+      <circle cx="41"  cy="239" r="2.5" fill="#F7EAA8" opacity=".65"/>
+      <circle cx="239" cy="239" r="2.5" fill="#E8A898" opacity=".55"/>
+      <circle cx="41"  cy="41"  r="2.5" fill="#7A9E7E" opacity=".55"/>
+    </svg>
+  </div>
+
+  <div class="hero-content" id="hero-content">
+    <p class="eyebrow" id="h-eyebrow">A Love Story · Est. 2023</p>
+
+    <h1 class="hero-name" id="h-name1">Doose</h1>
+    <span class="hero-amp">&amp;</span>
+    <h1 class="hero-name" id="h-name2">Deri</h1>
+
+    <div class="gold-divider" id="h-div">
+      <div class="line l"></div>
+      <div class="gem"></div>
+      <div class="line r"></div>
+    </div>
+    <p class="hero-date" id="h-date">November 2026 · Nigeria</p>
+
+    <div class="hero-chips" id="h-chips">
+      <div class="h-chip cy">
+        <div class="h-chip-dot dot-y"></div>
+        <div class="h-chip-label">
+          <strong>Traditional Wedding</strong>
+          <span>Saturday · November 16</span>
+        </div>
+      </div>
+      <div class="h-chip cs">
+        <div class="h-chip-dot dot-s"></div>
+        <div class="h-chip-label">
+          <strong>Court Wedding</strong>
+          <span>Thursday · November 19</span>
+        </div>
+      </div>
+      <div class="h-chip cl">
+        <div class="h-chip-dot dot-l"></div>
+        <div class="h-chip-label">
+          <strong>White Wedding</strong>
+          <span>Sunday · November 23</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <p>Our Story</p>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="rgba(196,172,108,0.3)" stroke-width="1.5">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     LOVE STORY
+═══════════════════════════════════════ -->
+<section id="story">
+  <div class="story-header">
+    <div class="pill light">The Journey</div>
+    <h2>Our Love Story</h2>
+    <p class="sub">Three years. Three chapters. One forever.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="t-spine"></div>
+
+    <!-- Year 1 -->
+    <div class="chapter" id="ch1">
+      <div class="ch-badge cr"><span>Year One</span></div>
+      <div class="ch-dot cr"></div>
+      <div class="ch-card cr">
+        <div class="bar"></div>
+        <div class="card-inner">
+          <div class="card-head">
+            <div class="card-icon">🌸</div>
+            <div class="card-titles">
+              <p>How We Found Each Other</p>
+              <h3>The First Hello</h3>
+            </div>
+          </div>
+          <p class="card-copy">It began with a glance across a crowded room — two hearts, strangers still, yet somehow already familiar. He noticed her laugh first. She noticed his kindness. The universe had been arranging this meeting for years.</p>
+          <div class="card-tags">
+            <span class="tag">✨ First Meeting</span>
+            <span class="tag">💬 Late Night Talks</span>
+            <span class="tag">🌅 First Date</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Year 2 -->
+    <div class="chapter" id="ch2">
+      <div class="ch-badge sg"><span>Year Two</span></div>
+      <div class="ch-dot sg"></div>
+      <div class="ch-card sg">
+        <div class="bar"></div>
+        <div class="card-inner">
+          <div class="card-head">
+            <div class="card-icon">🌿</div>
+            <div class="card-titles">
+              <p>Growing Deeper Together</p>
+              <h3>Two Became One</h3>
+            </div>
+          </div>
+          <p class="card-copy">Through seasons of laughter and quiet mornings, they learned each other's language. Adventures shared, dreams aligned, roots growing deep. What began as a spark became a steady, unshakeable flame.</p>
+          <div class="card-tags">
+            <span class="tag">🌿 Adventures</span>
+            <span class="tag">🏡 Building Together</span>
+            <span class="tag">💚 Deepening Love</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Year 3 -->
+    <div class="chapter" id="ch3">
+      <div class="ch-badge lc"><span>Year Three</span></div>
+      <div class="ch-dot lc"></div>
+      <div class="ch-card lc">
+        <div class="bar"></div>
+        <div class="card-inner">
+          <div class="card-head">
+            <div class="card-icon">💍</div>
+            <div class="card-titles">
+              <p>The Question</p>
+              <h3>"Will You Marry Me?"</h3>
+            </div>
+          </div>
+          <p class="card-copy">Under a canopy of stars, with a ring that held every promise of forever — he knelt and asked the question their hearts had been rehearsing all along. She said yes before he could finish the sentence.</p>
+          <div class="card-tags">
+            <span class="tag">💍 The Proposal</span>
+            <span class="tag">⭐ She Said Yes</span>
+            <span class="tag">✨ Now &amp; Always</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+</section>
+
+<!-- ═══════════════════════════════════════
+     EVENTS
+═══════════════════════════════════════ -->
+<section id="events">
+  <div class="events-header">
+    <div class="pill">Mark Your Calendar</div>
+    <h2>The Celebrations</h2>
+    <p>Three glorious days · November 2026</p>
+  </div>
+
+  <div class="events-stack">
+
+    <!-- Traditional -->
+    <div class="ev-card by" id="ev-traditional">
+      <div class="shimmer"></div>
+      <div class="ev-body">
+        <div class="ev-top">
+          <div class="ev-date">
+            <div class="mo">Nov</div>
+            <div class="dy">16</div>
+            <div class="wk">Sat</div>
+          </div>
+          <div class="ev-text">
+            <h3>Traditional Wedding</h3>
+            <p>A vibrant celebration of culture, colour, and heritage. Come dressed in your finest traditional attire.</p>
+          </div>
+          <div class="ev-icon">🥁</div>
+        </div>
+        <div class="ev-meta">
+          <div class="ev-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            2:00 PM onwards
+          </div>
+          <div class="ev-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Venue to be announced
+          </div>
+        </div>
+        <div class="ev-divider"></div>
+        <span class="ev-dress">👗 Traditional Attire</span>
+      </div>
+    </div>
+
+    <!-- Court -->
+    <div class="ev-card sg" id="ev-court">
+      <div class="shimmer" style="animation-delay:.6s"></div>
+      <div class="ev-body">
+        <div class="ev-top">
+          <div class="ev-date">
+            <div class="mo">Nov</div>
+            <div class="dy">19</div>
+            <div class="wk">Thu</div>
+          </div>
+          <div class="ev-text">
+            <h3>Court Wedding</h3>
+            <p>The official union sealed in law and love. A serene, intimate ceremony to witness the signing of forever.</p>
+          </div>
+          <div class="ev-icon">⚖️</div>
+        </div>
+        <div class="ev-meta">
+          <div class="ev-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            10:00 AM
+          </div>
+          <div class="ev-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Registry Office · TBA
+          </div>
+        </div>
+        <div class="ev-divider"></div>
+        <span class="ev-dress">👔 Smart Casual</span>
+      </div>
+    </div>
+
+    <!-- White Wedding -->
+    <div class="ev-card lc" id="ev-white">
+      <div class="shimmer" style="animation-delay:1.2s"></div>
+      <div class="ev-body">
+        <div class="ev-top">
+          <div class="ev-date">
+            <div class="mo">Nov</div>
+            <div class="dy">23</div>
+            <div class="wk">Sun</div>
+          </div>
+          <div class="ev-text">
+            <h3>White Wedding</h3>
+            <p>The grand finale — breathtaking love in all white. Dance, feast, and revel as two families become one.</p>
+          </div>
+          <div class="ev-icon">💍</div>
+        </div>
+        <div class="ev-meta">
+          <div class="ev-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            4:00 PM Ceremony
+          </div>
+          <div class="ev-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Grand Ballroom · TBA
+          </div>
+        </div>
+        <div class="ev-divider"></div>
+        <span class="ev-dress">🤍 All White Dress Code</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     RSVP
+═══════════════════════════════════════ -->
+<section id="rsvp">
+  <div class="pill light" style="margin-bottom:14px;">Join Us</div>
+  <h2>RSVP</h2>
+  <p class="sub">Kindly respond by October 1st, 2026</p>
+  <form class="rsvp-form" onsubmit="handleRSVP(event)">
+    <input class="rf" type="text"  placeholder="Your Full Name"   required>
+    <input class="rf" type="email" placeholder="Email Address"    required>
+    <input class="rf" type="tel"   placeholder="Phone Number">
+    <select class="rf" required>
+      <option value="" disabled selected>Which events will you attend?</option>
+      <option value="all">All Three Celebrations 🎉</option>
+      <option value="traditional">Traditional Wedding (Nov 16)</option>
+      <option value="court">Court Wedding (Nov 19)</option>
+      <option value="white">White Wedding (Nov 23)</option>
+    </select>
+    <select class="rf">
+      <option value="" disabled selected>Number of guests</option>
+      <option>Just me</option>
+      <option>2 guests</option>
+      <option>3 guests</option>
+      <option>4+ guests</option>
+    </select>
+    <button class="rsvp-btn" type="submit">Confirm Attendance ✨</button>
+  </form>
+</section>
+
+<!-- Footer -->
+<footer>
+  <h3>Doose &amp; Deri</h3>
+  <p>With Love · November 2026</p>
+</footer>
+
+<!-- GSAP from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   SPARKLE CANVAS — continuous gold + pastel stars
+═══════════════════════════════════════════════════ */
+const canvas = document.getElementById('sparkle-canvas');
+const c = canvas.getContext('2d');
+const COLORS = ['#F7EAA8','#C4AC6C','#E8A898','#7A9E7E','#C5B8D8','#ffffff'];
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Sparkle {
+  constructor() { this.reset(true); }
+  reset(randomY = false) {
+    this.x = Math.random() * canvas.width;
+    this.y = randomY ? Math.random() * canvas.height : canvas.height + 10;
+    this.size = Math.random() * 3.5 + 0.8;
+    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.alpha = 0;
+    this.peak  = Math.random() * 0.55 + 0.15;
+    this.rate  = Math.random() * 0.008 + 0.004;
+    this.vx    = (Math.random() - 0.5) * 0.25;
+    this.vy    = -(Math.random() * 0.35 + 0.08);
+    this.phase = Math.random() * Math.PI * 2;
+    this.rising = true;
+  }
+  tick() {
+    this.phase += 0.035;
+    this.x += this.vx + Math.sin(this.phase) * 0.18;
+    this.y += this.vy;
+    if (this.rising) {
+      this.alpha += this.rate;
+      if (this.alpha >= this.peak) this.rising = false;
+    } else {
+      this.alpha -= this.rate * 0.7;
+      if (this.alpha <= 0 || this.y < -10) this.reset();
+    }
+  }
+  draw() {
+    c.save();
+    c.globalAlpha = Math.max(0, this.alpha);
+    c.fillStyle = this.color;
+    c.translate(this.x, this.y);
+    c.beginPath();
+    for (let i = 0; i < 8; i++) {
+      const a = (i * Math.PI) / 4 + this.phase * 0.08;
+      const r = i % 2 === 0 ? this.size : this.size * 0.38;
+      i === 0 ? c.moveTo(Math.cos(a)*r, Math.sin(a)*r) : c.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+    }
+    c.closePath(); c.fill();
+    c.restore();
+  }
+}
+
+const sparkles = Array.from({length:70}, () => new Sparkle());
+(function loop() {
+  c.clearRect(0, 0, canvas.width, canvas.height);
+  sparkles.forEach(s => { s.tick(); s.draw(); });
+  requestAnimationFrame(loop);
+})();
+
+/* ═══════════════════════════════════════════════════
+   WEB AUDIO — GENERATIVE MUSIC ENGINE
+   Three soundscapes — switch per section
+═══════════════════════════════════════════════════ */
+let audioCtx = null;
+let musicOn = false;
+let activeTrack = null;
+const nodes = [];
+
+function ac() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function stopAll() {
+  nodes.forEach(n => { try { n.stop && n.stop(0); } catch(e){} });
+  nodes.length = 0;
+  if (nodes._timeout) { clearTimeout(nodes._timeout); }
+}
+
+function mkGain(val) {
+  const g = ac().createGain(); g.gain.value = val;
+  g.connect(ac().destination); return g;
+}
+
+function mkReverb(dur = 2.5, dec = 2) {
+  const cv = ac().createConvolver();
+  const len = ac().sampleRate * dur;
+  const buf = ac().createBuffer(2, len, ac().sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, dec);
+  }
+  cv.buffer = buf; return cv;
+}
+
+function note(freq, t, dur, vol, type, out) {
+  const o = ac().createOscillator();
+  const g = ac().createGain();
+  o.type = type; o.frequency.value = freq;
+  const att = 0.04, rel = Math.min(0.4, dur * 0.3);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + att);
+  g.gain.setValueAtTime(vol, t + dur - rel);
+  g.gain.linearRampToValueAtTime(0, t + dur);
+  o.connect(g); g.connect(out);
+  o.start(t); o.stop(t + dur + 0.05);
+  nodes.push(o); return o;
+}
+
+function noise(t, dur, vol, out) {
+  const buf = ac().createBuffer(1, Math.ceil(ac().sampleRate * dur), ac().sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.exp(-i/(ac().sampleRate * 0.04));
+  const s = ac().createBufferSource(); s.buffer = buf;
+  const g = ac().createGain(); g.gain.value = vol;
+  s.connect(g); g.connect(out); s.start(t);
+  nodes.push(s);
+}
+
+/* ── TRACK A: HERO — Romantic slow arpeggios in Cmaj ── */
+function playHero() {
+  const rev = mkReverb(3.5, 2.8); rev.connect(mkGain(0.13));
+  const mel = [261.63,329.63,392.00,523.25,440.00,349.23,392.00,329.63];
+  const bpm = 56, b = 60/bpm * 0.5;
+  function loop(t) {
+    mel.forEach((f, i) => {
+      note(f, t+i*b, b*1.9, 0.45, 'sine', rev);
+      note(f*0.5, t+i*b, b*2.2, 0.2, 'sine', rev);
+    });
+    const tot = mel.length * b;
+    const tid = setTimeout(() => loop(ac().currentTime), (tot-0.6)*1000);
+    nodes._tid = tid;
+  }
+  loop(ac().currentTime + 0.1);
+}
+
+/* ── TRACK B: TRADITIONAL — Warm pentatonic, rhythmic African feel ── */
+function playTraditional() {
+  const mg  = mkGain(0.15);
+  const rev = mkReverb(1.6, 1.8); rev.connect(mg);
+  const dry = ac().createGain(); dry.gain.value = 0.08; dry.connect(ac().destination);
+
+  // G pentatonic melody
+  const mel = [392,440,493.88,587.33,659.25,587.33,659.25,587.33,493.88,440,392,392,440,587.33,493.88,330];
+  const bas = [98,0,130.81,0,98,0,98,130.81];
+  const bpm = 108, b = 60/bpm;
+
+  function loop(t) {
+    mel.forEach((f,i) => { if(f) note(f, t+i*b*0.5, b*0.75, 0.5, 'triangle', rev); });
+    bas.forEach((f,i) => {
+      if(f) {
+        note(f, t+i*b, b*0.4, 0.6, 'sawtooth', dry);
+        noise(t+i*b, 0.12, 0.2, mg); // percussive thump
+      }
+    });
+    const tot = bas.length * b;
+    const tid = setTimeout(() => loop(ac().currentTime), (tot-0.5)*1000);
+    nodes._tid = tid;
+  }
+  loop(ac().currentTime + 0.1);
+}
+
+/* ── TRACK C: COURT — Intimate, elegant sparse chords ── */
+function playCourt() {
+  const rev = mkReverb(5, 3.2); rev.connect(mkGain(0.1));
+  const chords = [
+    [261.63,329.63,392],   // C
+    [220,277.18,329.63],   // Am
+    [174.61,220,261.63],   // F
+    [196,246.94,293.66],   // G
+  ];
+  const bpm = 58, meas = 60/bpm * 4;
+  function loop(t) {
+    chords.forEach((chord, ci) => {
+      chord.forEach((f, ni) => note(f, t+ci*meas+ni*0.07, meas*0.82, 0.38, 'sine', rev));
+      note(chord[0]*0.5, t+ci*meas, meas*0.9, 0.3, 'sine', rev);
+    });
+    const tot = chords.length * meas;
+    const tid = setTimeout(() => loop(ac().currentTime), (tot-0.9)*1000);
+    nodes._tid = tid;
+  }
+  loop(ac().currentTime + 0.1);
+}
+
+/* ── TRACK D: WHITE WEDDING — Bright, celebratory, D major ── */
+function playWhite() {
+  const mg  = mkGain(0.16);
+  const rev = mkReverb(2.2, 2); rev.connect(mg);
+  const dry = ac().createGain(); dry.gain.value = 0.07; dry.connect(ac().destination);
+
+  const mel = [587.33,659.25,739.99,880,987.77,880,739.99,880,
+               1046.5,987.77,880,739.99,659.25,587.33,739.99,659.25];
+  const bas = [146.83,0,184.99,0,146.83,0,184.99,0];
+  const bpm = 126, b = 60/bpm;
+  const bells = [1174.66,1318.51,1567.98,1760];
+
+  function loop(t) {
+    mel.forEach((f,i) => note(f, t+i*b*0.5, b*0.68, 0.42, 'sine', rev));
+    bas.forEach((f,i) => { if(f) note(f, t+i*b, b*0.82, 0.45, 'triangle', dry); });
+    bells.forEach((f,i) => note(f, t+i*b*2.2, 1.4, 0.12, 'sine', rev)); // shimmer bells
+    const tot = bas.length * b;
+    const tid = setTimeout(() => loop(ac().currentTime), (tot-0.5)*1000);
+    nodes._tid = tid;
+  }
+  loop(ac().currentTime + 0.1);
+}
+
+const TRACKS = {
+  hero:        { fn: playHero,        label: '♪ Romantic Theme',    color: '#C4AC6C' },
+  traditional: { fn: playTraditional, label: '♪ Traditional',       color: '#F7EAA8' },
+  court:       { fn: playCourt,       label: '♪ Court Ceremony',    color: '#7A9E7E' },
+  white:       { fn: playWhite,       label: '♪ White Wedding',     color: '#C5B8D8' },
+};
+
+function switchTrack(id) {
+  if (!musicOn || id === activeTrack) return;
+  stopAll();
+  activeTrack = id;
+  const t = TRACKS[id];
+  t.fn();
+  const pill = document.getElementById('track-pill');
+  pill.textContent = t.label;
+  pill.style.color = t.color;
+  pill.style.borderColor = t.color + '44';
+  pill.style.opacity = '1';
+  setTimeout(() => pill.style.opacity = '0', 3500);
+}
+
+document.getElementById('music-btn').addEventListener('click', () => {
+  const btn = document.getElementById('music-btn');
+  if (!musicOn) {
+    musicOn = true; btn.classList.add('on'); btn.textContent = '♫';
+    activeTrack = null;
+    switchTrack('hero');
+  } else {
+    musicOn = false; btn.classList.remove('on'); btn.textContent = '♪';
+    stopAll(); activeTrack = null;
+  }
+});
+
+/* Section → track mapping */
+const secMap = { hero:'hero', story:'traditional', events:'white', rsvp:'court' };
+const secObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) switchTrack(secMap[e.target.id] || 'hero'); });
+}, { threshold: 0.35 });
+['hero','story','events','rsvp'].forEach(id => { const el=document.getElementById(id); if(el) secObs.observe(el); });
+
+/* Per-event-card track switching */
+const cardMap = { 'ev-traditional':'traditional', 'ev-court':'court', 'ev-white':'white' };
+const cardObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting && cardMap[e.target.id]) switchTrack(cardMap[e.target.id]); });
+}, { threshold: 0.65 });
+Object.keys(cardMap).forEach(id => { const el=document.getElementById(id); if(el) cardObs.observe(el); });
+
+/* ═══════════════════════════════════════════════════
+   GSAP ANIMATIONS
+═══════════════════════════════════════════════════ */
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── Loader → Hero ── */
+gsap.set(['#loader-names','#loader-sub'], { opacity:0, y:16 });
+gsap.set('#lbar', { width:0 });
+
+const loaderTL = gsap.timeline({
+  onComplete() {
+    gsap.to('#loader', {
+      opacity:0, duration:.9, ease:'power2.in',
+      onComplete() { document.getElementById('loader').style.display='none'; heroEntrance(); }
+    });
+  }
+});
+loaderTL
+  .to('#loader-names', { opacity:1, y:0, duration:1.2, ease:'power3.out' })
+  .to('#lbar',         { width:'200px', duration:1.6, ease:'power2.inOut' }, 0.2)
+  .to('#loader-sub',   { opacity:1, y:0, duration:.9, ease:'power2.out' }, 0.6)
+  .to({}, { duration:1.2 }); // hold
+
+/* ── Hero entrance after loader ── */
+function heroEntrance() {
+  gsap.set(['#h-eyebrow','#h-name1','#h-name2','.hero-amp','#h-div','#h-date','#h-chips'], { opacity:0, y:28 });
+
+  const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+  tl.to('#h-eyebrow', { opacity:1, y:0, duration:1 })
+    .to('#h-name1',   { opacity:1, y:0, duration:1.3 }, 0.15)
+    .to('.hero-amp',  { opacity:1, y:0, duration:.8  }, 0.45)
+    .to('#h-name2',   { opacity:1, y:0, duration:1.3 }, 0.6)
+    .to('#h-div',     { opacity:1, y:0, duration:.8  }, 1.1)
+    .to('#h-date',    { opacity:1, y:0, duration:.8  }, 1.25)
+    .to('#h-chips',   { opacity:1, y:0, duration:1   }, 1.5);
+}
+
+/* ── Story chapters ── */
+gsap.utils.toArray('.chapter').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity:0, y:36 },
+    { opacity:1, y:0, duration:1, ease:'power3.out', delay: i*0.08,
+      scrollTrigger:{ trigger:el, start:'top 83%', toggleActions:'play none none none' }
+    }
+  );
+});
+
+/* ── Event cards ── */
+gsap.utils.toArray('.ev-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity:0, y:32, scale:0.97 },
+    { opacity:1, y:0, scale:1, duration:1, ease:'power3.out', delay:i*0.1,
+      scrollTrigger:{ trigger:el, start:'top 86%', toggleActions:'play none none none' }
+    }
+  );
+});
+
+/* ── RSVP section heading ── */
+gsap.fromTo('#rsvp h2',
+  { opacity:0, y:24 },
+  { opacity:1, y:0, duration:1, ease:'power3.out',
+    scrollTrigger:{ trigger:'#rsvp', start:'top 80%', toggleActions:'play none none none' }
+  }
+);
+
+/* ── RSVP form fields stagger ── */
+gsap.fromTo('.rf, .rsvp-btn',
+  { opacity:0, y:16 },
+  { opacity:1, y:0, duration:.7, ease:'power2.out', stagger:.08,
+    scrollTrigger:{ trigger:'.rsvp-form', start:'top 85%', toggleActions:'play none none none' }
+  }
+);
+
+/* ── RSVP submit ── */
+function handleRSVP(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.rsvp-btn');
+  btn.textContent = 'Sending… ✨'; btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'See you there! 💍';
+    e.target.reset();
+    setTimeout(() => { btn.textContent = 'Confirm Attendance ✨'; btn.disabled = false; }, 4000);
+  }, 1400);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Doose & Deri · November 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════
+   TOKENS
+════════════════════════════════ */
+:root {
+  --butter:#F7EAA8; --butter-d:#C9A84C; --butter-dk:#8A6F2A;
+  --sage:#7A9E7E;   --sage-d:#4E7A52;   --sage-lt:#EAF2EB;
+  --lilac:#C5B8D8;  --lilac-d:#8E7EAA;  --lilac-lt:#F0ECF7;
+  --coral:#E8A898;  --coral-d:#C27E6A;  --coral-lt:#FBF2EF;
+  --dark:#0D0B08;   --dark2:#1A1208;    --dark3:#261C0E;
+  --cream:#FAF7F2;  --cream2:#F5F0E8;   --cream3:#EDE6D8;
+  --gold:#C4AC6C;   --gold-lt:#F7EAA8;
+  --text:#2A1F13;   --text-mid:#6B5C4A; --text-lt:#9E8E7A;
+  --ff-script:'Great Vibes',cursive;
+  --ff-serif:'Playfair Display',serif;
+  --ff-ital:'Cormorant Garamond',serif;
+  --ff-sans:'Jost',sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--cream);font-family:var(--ff-sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+
+/* ════════════════════════════════
+   SCROLL PROGRESS
+════════════════════════════════ */
+#prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:999;background:linear-gradient(90deg,var(--coral),var(--lilac),var(--sage),var(--butter))}
+
+/* ════════════════════════════════
+   NAV
+════════════════════════════════ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;transition:background .4s}
+#nav.scrolled{background:rgba(13,11,8,.92);backdrop-filter:blur(12px)}
+#nav-logo{font-family:var(--ff-script);font-size:1.5rem;color:var(--gold-lt);letter-spacing:.02em}
+#music-btn{background:none;border:1px solid rgba(196,172,108,.4);color:rgba(196,172,108,.8);padding:7px 16px;font-family:var(--ff-sans);font-size:.68rem;font-weight:300;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .3s}
+#music-btn:hover,#music-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(196,172,108,.06)}
+
+/* ════════════════════════════════
+   LOADER
+════════════════════════════════ */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+#l-name{font-family:var(--ff-script);font-size:clamp(56px,16vw,100px);color:var(--gold-lt);opacity:0;transform:translateY(16px);text-shadow:0 0 80px rgba(247,234,168,.25);will-change:transform,opacity}
+#l-bar-wrap{width:180px;height:1px;background:rgba(196,172,108,.15);overflow:hidden}
+#l-bar{height:100%;width:0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+#l-sub{font-family:var(--ff-sans);font-size:.62rem;font-weight:200;letter-spacing:.45em;text-transform:uppercase;color:rgba(196,172,108,.35);opacity:0}
+
+/* ════════════════════════════════
+   SPARKLE CANVAS
+════════════════════════════════ */
+#sparkle-canvas{position:fixed;inset:0;pointer-events:none;z-index:3}
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+#hero{min-height:100svh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:var(--dark)}
+#hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18}
+#hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,11,8,.3) 0%,rgba(13,11,8,.55) 60%,rgba(13,11,8,.92) 100%)}
+#hero-content{position:relative;z-index:2;padding:100px 28px 60px;width:100%}
+#h-pre{font-family:var(--ff-sans);font-size:.62rem;font-weight:300;letter-spacing:.55em;text-transform:uppercase;color:var(--coral);margin-bottom:28px;opacity:0}
+#h-names{font-family:var(--ff-script);font-size:clamp(72px,20vw,130px);line-height:.9;color:var(--gold-lt);text-shadow:0 0 100px rgba(247,234,168,.2);opacity:0;will-change:transform}
+#h-amp{display:block;font-size:.5em;color:var(--coral);line-height:1.6}
+#h-divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:28px auto;opacity:0}
+#h-date{font-family:var(--ff-ital);font-size:1.05rem;font-style:italic;color:var(--cream);opacity:.75;letter-spacing:.08em;margin-bottom:32px;opacity:0}
+#h-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;opacity:0}
+.hchip{font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.22em;text-transform:uppercase;padding:8px 18px;border-radius:100px;border:1px solid}
+.hchip-b{color:var(--butter-dk);border-color:var(--butter);background:rgba(247,234,168,.12)}
+.hchip-s{color:var(--sage-d);border-color:var(--sage);background:rgba(122,158,126,.12)}
+.hchip-l{color:var(--lilac-d);border-color:var(--lilac);background:rgba(197,184,216,.12)}
+#h-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0}
+#h-scroll span{font-family:var(--ff-sans);font-size:.52rem;font-weight:300;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);opacity:.5}
+.scrollarrow{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);position:relative;overflow:hidden}
+.scrollarrow::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--gold);animation:drip 2s ease-in-out infinite}
+@keyframes drip{0%{top:-100%}100%{top:100%}}
+
+/* ════════════════════════════════
+   SECTION SHARED
+════════════════════════════════ */
+.section-dark{background:var(--dark);padding:90px 24px}
+.section-cream{background:var(--cream);padding:90px 24px;color:var(--text)}
+.section-cream2{background:var(--cream2);padding:90px 24px;color:var(--text)}
+.s-label{font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.45em;text-transform:uppercase;color:var(--coral);margin-bottom:14px;display:block}
+.s-label.sage{color:var(--sage-d)}
+.s-label.lilac{color:var(--lilac-d)}
+.s-label.butter{color:var(--butter-dk)}
+.s-title{font-family:var(--ff-serif);font-size:clamp(2rem,7vw,3rem);font-weight:400;line-height:1.1;margin-bottom:10px}
+.s-sub{font-family:var(--ff-ital);font-size:1rem;font-style:italic;color:var(--text-mid);margin-bottom:40px}
+.s-sub.on-dark{color:var(--text-lt)}
+.rule{width:48px;height:1px;background:var(--coral);margin:20px 0;display:block}
+.rule.sage{background:var(--sage)}
+.rule.lilac{background:var(--lilac)}
+.rule.butter{background:var(--butter-d)}
+.center{text-align:center}
+.center .rule{margin-inline:auto}
+
+/* REVEAL */
+.r{opacity:0;transform:translateY(32px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.r.d2{transition-delay:.12s}
+.r.d3{transition-delay:.22s}
+.r.d4{transition-delay:.32s}
+.r.in{opacity:1;transform:none}
+
+/* ════════════════════════════════
+   STORY TIMELINE
+════════════════════════════════ */
+#story{position:relative}
+.timeline{max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+.tl-item{display:grid;grid-template-columns:48px 1fr;gap:0 20px;padding-bottom:48px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot-col{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:14px;height:14px;border-radius:50%;border:2px solid;flex-shrink:0;margin-top:6px;position:relative;z-index:1}
+.tl-dot.coral{border-color:var(--coral);background:rgba(232,168,152,.2)}
+.tl-dot.sage{border-color:var(--sage);background:rgba(122,158,126,.2)}
+.tl-dot.lilac{border-color:var(--lilac);background:rgba(197,184,216,.2)}
+.tl-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:inherit;opacity:.3;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.8);opacity:0}}
+.tl-line{flex:1;width:1px;background:linear-gradient(to bottom,var(--coral),var(--sage),var(--lilac));margin-top:4px;opacity:.25}
+.tl-body{padding-top:2px}
+.tl-year{font-family:var(--ff-sans);font-size:.58rem;font-weight:400;letter-spacing:.4em;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
+.tl-year.sage{color:var(--sage-d)}
+.tl-year.lilac{color:var(--lilac-d)}
+.tl-h{font-family:var(--ff-serif);font-size:1.3rem;font-weight:400;margin-bottom:8px}
+.tl-p{font-family:var(--ff-sans);font-size:.88rem;font-weight:300;line-height:1.65;color:var(--text-lt)}
+
+/* ════════════════════════════════
+   EVENTS
+════════════════════════════════ */
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px;margin:0 auto}
+.ev-card{border-radius:8px;padding:22px 18px;position:relative;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s}
+.ev-card:hover{transform:translateY(-4px)}
+.ev-card .ev-bar{position:absolute;top:0;left:0;right:0;height:3px}
+.ev-card.full{grid-column:span 2}
+.ev-emo{font-size:1.5rem;margin-bottom:10px;display:block}
+.ev-name{font-family:var(--ff-serif);font-size:.95rem;font-weight:500;margin-bottom:6px;line-height:1.2}
+.ev-date{font-family:var(--ff-ital);font-size:.85rem;font-style:italic;color:var(--text-mid);margin-bottom:4px}
+.ev-loc{font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:var(--text-lt)}
+/* card colour variants */
+.ev-coral{background:var(--coral-lt)} .ev-coral .ev-bar{background:var(--coral)} .ev-coral .ev-name{color:var(--coral-d)}
+.ev-sage{background:var(--sage-lt)}   .ev-sage .ev-bar{background:var(--sage)}   .ev-sage .ev-name{color:var(--sage-d)}
+.ev-lilac{background:var(--lilac-lt)} .ev-lilac .ev-bar{background:var(--lilac)} .ev-lilac .ev-name{color:var(--lilac-d)}
+.ev-butter{background:#FEFBEE}        .ev-butter .ev-bar{background:var(--butter-d)} .ev-butter .ev-name{color:var(--butter-dk)}
+.ev-aqua{background:#EFF7F8}          .ev-aqua .ev-bar{background:#7BBFC5}       .ev-aqua .ev-name{color:#3A7A80}
+.ev-rose{background:#FBF0F7}          .ev-rose .ev-bar{background:#C47FB0}       .ev-rose .ev-name{color:#8A4070}
+
+/* ════════════════════════════════
+   COUPLE
+════════════════════════════════ */
+.couple-row{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin:36px 0 30px}
+.c-card{width:160px;text-align:center}
+.c-photo{width:160px;height:200px;border-radius:6px;background:var(--cream3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--cream3)}
+.c-photo img{width:100%;height:100%;object-fit:cover}
+.c-photo-ph{font-size:2.8rem;opacity:.25}
+.c-photo::after{content:'';position:absolute;inset:0;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(196,172,108,.2)}
+.c-name{font-family:var(--ff-script);font-size:1.6rem;color:var(--butter-dk);margin-top:10px}
+.c-role{font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:var(--text-lt);margin-top:4px}
+.c-bio{font-family:var(--ff-ital);font-size:.88rem;font-style:italic;color:var(--text-mid);margin-top:8px;line-height:1.55}
+.couple-quote{text-align:center;font-family:var(--ff-script);font-size:2rem;color:var(--coral-d);line-height:1.5;max-width:320px;margin:0 auto}
+
+/* ════════════════════════════════
+   GALLERY
+════════════════════════════════ */
+.gallery-grid{columns:2;column-gap:10px;max-width:480px;margin:32px auto 0}
+.g-item{break-inside:avoid;margin-bottom:10px;border-radius:6px;overflow:hidden;background:var(--cream3);border:1px solid var(--cream3);position:relative}
+.g-item:nth-child(3n+1){aspect-ratio:3/4}
+.g-item:nth-child(3n+2){aspect-ratio:1/1}
+.g-item:nth-child(3n){aspect-ratio:4/5}
+.g-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.g-item:hover img{transform:scale(1.04)}
+.g-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:24px 0}
+.g-ph .g-icon{font-size:1.8rem;opacity:.25}
+.g-ph .g-txt{font-family:var(--ff-sans);font-size:.55rem;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:var(--text-lt);opacity:.5}
+.gallery-hint{text-align:center;font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:var(--text-lt);margin-top:20px;line-height:1.8;max-width:340px;margin-inline:auto}
+.gallery-hint code{background:var(--cream3);padding:2px 8px;border-radius:3px;font-size:.75em;color:var(--sage-d)}
+
+/* ════════════════════════════════
+   RSVP
+════════════════════════════════ */
+.rsvp-card{max-width:360px;margin:32px auto 0;background:var(--cream);border-radius:10px;padding:36px 28px;text-align:center;box-shadow:0 4px 40px rgba(0,0,0,.06)}
+.rsvp-card p{font-family:var(--ff-ital);font-size:.95rem;font-style:italic;color:var(--text-mid);margin-bottom:24px;line-height:1.7}
+.wa-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-family:var(--ff-sans);font-size:.65rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:15px 28px;border-radius:6px;transition:transform .25s,box-shadow .25s;cursor:pointer}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(37,211,102,.3)}
+.rsvp-dead{font-family:var(--ff-sans);font-size:.65rem;font-weight:300;color:var(--text-lt);margin-top:18px;letter-spacing:.05em}
+.rsvp-dead strong{color:var(--coral-d);font-weight:500}
+
+/* ════════════════════════════════
+   DETAILS
+════════════════════════════════ */
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px;margin:32px auto 0}
+.det-card{background:var(--cream);border-radius:8px;padding:20px 16px;transition:box-shadow .3s}
+.det-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.07)}
+.det-card.full{grid-column:span 2}
+.det-icon{font-size:1.3rem;margin-bottom:8px}
+.det-lbl{font-family:var(--ff-sans);font-size:.58rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--coral-d);margin-bottom:6px}
+.det-lbl.sage{color:var(--sage-d)}
+.det-lbl.lilac{color:var(--lilac-d)}
+.det-lbl.butter{color:var(--butter-dk)}
+.det-val{font-family:var(--ff-sans);font-size:.85rem;font-weight:300;color:var(--text);line-height:1.55}
+.hash-big{font-family:var(--ff-serif);font-size:1.4rem;color:var(--coral-d);letter-spacing:.04em;font-weight:400}
+
+/* ════════════════════════════════
+   CROSSWORD
+════════════════════════════════ */
+.cw-wrap{max-width:430px;margin:32px auto 0}
+.cw-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;margin-bottom:22px}
+.cw-cell{aspect-ratio:1;background:var(--cream);border-radius:2px;display:flex;align-items:center;justify-content:center;position:relative}
+.cw-cell.blk{background:var(--cream2);border-radius:2px}
+.cw-cell input{width:100%;height:100%;background:transparent;border:none;text-align:center;color:var(--text);font-family:var(--ff-sans);font-size:.7rem;font-weight:500;text-transform:uppercase;outline:none;caret-color:var(--coral)}
+.cw-cell input:focus{background:rgba(232,168,152,.12)}
+.cw-cell input.ok{color:var(--sage-d);background:rgba(122,158,126,.1)}
+.cw-cell input.ng{color:var(--coral-d);background:rgba(232,168,152,.15)}
+.cw-num{position:absolute;top:1px;left:2px;font-size:.38rem;color:var(--coral-d);font-family:var(--ff-sans);font-weight:500;pointer-events:none;line-height:1}
+.cw-clues{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.cw-clues h4{font-family:var(--ff-sans);font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--coral-d);margin-bottom:10px}
+.cw-clue{font-family:var(--ff-ital);font-size:.85rem;font-style:italic;color:var(--text-mid);margin-bottom:6px;line-height:1.35}
+.cw-clue b{font-style:normal;color:var(--coral-d);font-family:var(--ff-sans);font-size:.65rem;font-weight:500}
+.cw-btns{display:flex;gap:10px;justify-content:center}
+.cw-btn{font-family:var(--ff-sans);font-size:.6rem;font-weight:400;letter-spacing:.18em;text-transform:uppercase;padding:11px 22px;border-radius:4px;cursor:pointer;transition:all .25s}
+.cw-check{background:var(--coral);color:#fff;border:none}
+.cw-check:hover{background:var(--coral-d)}
+.cw-clear{background:transparent;color:var(--text-mid);border:1px solid var(--cream3)}
+.cw-clear:hover{border-color:var(--coral);color:var(--coral-d)}
+.cw-msg{text-align:center;font-family:var(--ff-ital);font-size:.88rem;font-style:italic;color:var(--sage-d);margin-top:14px;min-height:22px}
+
+/* ════════════════════════════════
+   GIFTING
+════════════════════════════════ */
+.gift-intro{font-family:var(--ff-ital);font-size:.95rem;font-style:italic;color:var(--text-mid);max-width:300px;margin:16px auto 32px;line-height:1.7;text-align:center}
+.gift-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px;margin:0 auto}
+.gift-card{background:var(--cream);border-radius:8px;padding:22px 16px;border-top:3px solid var(--coral);transition:box-shadow .3s}
+.gift-card.sage{border-color:var(--sage)}
+.gift-card.lilac{border-color:var(--lilac)}
+.gift-card.butter{border-color:var(--butter-d)}
+.gift-card.full{grid-column:span 2}
+.gift-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.gift-icon{font-size:1.5rem;margin-bottom:8px;display:block}
+.gift-lbl{font-family:var(--ff-sans);font-size:.58rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--coral-d);margin-bottom:8px}
+.gift-lbl.sage{color:var(--sage-d)}
+.gift-lbl.butter{color:var(--butter-dk)}
+.gift-acct{font-family:var(--ff-sans);font-size:.8rem;font-weight:500;color:var(--text);margin-bottom:4px;letter-spacing:.04em}
+.gift-bank{font-family:var(--ff-sans);font-size:.75rem;font-weight:300;color:var(--text-mid);line-height:1.5}
+.gift-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.gift-item{font-family:var(--ff-sans);font-size:.75rem;font-weight:300;color:var(--text-mid);display:flex;align-items:center;gap:6px}
+.gift-item::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--coral);flex-shrink:0}
+.gift-note{text-align:center;font-family:var(--ff-ital);font-size:.85rem;font-style:italic;color:var(--text-mid);margin-top:24px;line-height:1.6;max-width:300px;margin-inline:auto}
+
+/* ════════════════════════════════
+   COUNTDOWN
+════════════════════════════════ */
+#countdown{position:relative;overflow:hidden;text-align:center;padding:90px 24px}
+#cd-bg{position:absolute;inset:0;pointer-events:none}
+.cd-pre{font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.45em;text-transform:uppercase;color:var(--coral);margin-bottom:20px;position:relative;z-index:1;display:block}
+.cd-h{font-family:var(--ff-serif);font-size:clamp(1.6rem,6vw,2.4rem);font-weight:400;color:var(--gold-lt);margin-bottom:8px;position:relative;z-index:1}
+.cd-event{font-family:var(--ff-ital);font-size:.9rem;font-style:italic;color:rgba(247,234,168,.5);margin-bottom:48px;position:relative;z-index:1}
+.cd-units{display:flex;align-items:flex-start;gap:0;justify-content:center;position:relative;z-index:1}
+.cd-unit{text-align:center;padding:0 16px}
+.cd-n{font-family:var(--ff-serif);font-size:clamp(3rem,10vw,5rem);font-weight:400;color:var(--gold-lt);line-height:1;text-shadow:0 0 60px rgba(247,234,168,.35);letter-spacing:-.02em}
+.cd-l{font-family:var(--ff-sans);font-size:.52rem;font-weight:300;letter-spacing:.4em;text-transform:uppercase;color:rgba(196,172,108,.45);margin-top:6px}
+.cd-colon{font-family:var(--ff-serif);font-size:3rem;color:rgba(196,172,108,.2);padding-top:8px}
+
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+#footer{background:var(--dark2);padding:64px 24px 40px;text-align:center;border-top:1px solid rgba(196,172,108,.08)}
+.ft-names{font-family:var(--ff-script);font-size:clamp(3rem,10vw,5rem);color:var(--gold-lt);line-height:1;margin-bottom:16px;text-shadow:0 0 60px rgba(247,234,168,.15)}
+.ft-rule{width:48px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px auto}
+.ft-tag{font-family:var(--ff-sans);font-size:.6rem;font-weight:300;letter-spacing:.45em;text-transform:uppercase;color:rgba(196,172,108,.4);margin-bottom:10px}
+.ft-hash{font-family:var(--ff-sans);font-size:.75rem;font-weight:500;letter-spacing:.15em;color:var(--coral);margin-bottom:28px}
+.ft-verse{font-family:var(--ff-ital);font-size:.82rem;font-style:italic;color:rgba(196,172,108,.25);line-height:1.7;max-width:300px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<canvas id="sparkle-canvas"></canvas>
+
+<!-- ─── LOADER ─── -->
+<div id="loader">
+  <div id="l-name">Doose & Deri</div>
+  <div id="l-bar-wrap"><div id="l-bar"></div></div>
+  <div id="l-sub">November 2026 · Lagos</div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <div id="nav-logo">D&D</div>
+  <button id="music-btn" onclick="toggleMusic()">♪ Music Off</button>
+</nav>
+
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+<section id="hero">
+  <!-- Replace src="" with your video file -->
+  <video id="hero-video" autoplay muted loop playsinline src="" poster=""></video>
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div id="h-pre">A Holy Union in Christ</div>
+    <div id="h-names">
+      Doose
+      <span id="h-amp">&amp;</span>
+      Deri
+    </div>
+    <div id="h-divider"></div>
+    <div id="h-date">Sunday 23rd November, 2026 · Lagos, Nigeria</div>
+    <div id="h-chips">
+      <span class="hchip hchip-b">Nov 16 · Traditional</span>
+      <span class="hchip hchip-s">Nov 19 · Court</span>
+      <span class="hchip hchip-l">Nov 23 · White Wedding</span>
+    </div>
+  </div>
+  <div id="h-scroll"><span>Scroll</span><div class="scrollarrow"></div></div>
+</section>
+
+<!-- ═══════════════════════════════════
+     LOVE STORY
+═══════════════════════════════════ -->
+<section class="section-dark" id="story">
+  <div class="center r">
+    <span class="s-label">How it began</span>
+    <h2 class="s-title">Our Love Story</h2>
+    <span class="rule" style="margin-inline:auto"></span>
+    <p class="s-sub on-dark">Three chapters, one beautiful journey</p>
+  </div>
+  <div class="timeline" style="margin-top:48px">
+    <div class="tl-item r d2">
+      <div class="tl-dot-col">
+        <div class="tl-dot coral"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-year coral">Chapter One · Year One</div>
+        <div class="tl-h">The Beginning</div>
+        <p class="tl-p">Two souls from different worlds, brought together by something greater than chance. A glance, a smile, and suddenly the ordinary became extraordinary. Love, in its quietest form, had already begun.</p>
+      </div>
+    </div>
+    <div class="tl-item r d2">
+      <div class="tl-dot-col">
+        <div class="tl-dot sage"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-year sage">Chapter Two · Year Two</div>
+        <div class="tl-h">Growing Deeper</div>
+        <p class="tl-p">Through seasons of laughter and growth, they discovered the beauty of choosing each other — every single day. Their love deepened, rooted in faith, friendship, and the quiet certainty of belonging.</p>
+      </div>
+    </div>
+    <div class="tl-item r d2">
+      <div class="tl-dot-col">
+        <div class="tl-dot lilac"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-year lilac">Chapter Three · The Proposal</div>
+        <div class="tl-h">He Asked. She Said Yes. 💍</div>
+        <p class="tl-p">On one perfect evening, he got down on one knee and asked the question he had been carrying in his heart. With tears of joy and a resounding yes, they stepped into forever — together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     EVENTS
+═══════════════════════════════════ -->
+<section class="section-cream" id="events">
+  <div class="center r">
+    <span class="s-label sage">Save the Dates</span>
+    <h2 class="s-title">The Celebrations</h2>
+    <span class="rule sage" style="margin-inline:auto"></span>
+    <p class="s-sub">Six sacred gatherings across two glorious weeks</p>
+  </div>
+  <div class="ev-grid" style="margin-top:40px">
+    <div class="ev-card ev-butter r">
+      <div class="ev-bar"></div>
+      <span class="ev-emo">🕯️</span>
+      <div class="ev-name">Rehearsal Dinner</div>
+      <div class="ev-date">Saturday, 14th November</div>
+      <div class="ev-loc">Lagos · 6:00 PM</div>
+    </div>
+    <div class="ev-card ev-coral r d2">
+      <div class="ev-bar"></div>
+      <span class="ev-emo">👑</span>
+      <div class="ev-name">Traditional Wedding</div>
+      <div class="ev-date">Sunday, 16th November</div>
+      <div class="ev-loc">Lagos · 10:00 AM</div>
+    </div>
+    <div class="ev-card ev-sage r">
+      <div class="ev-bar"></div>
+      <span class="ev-emo">⚖️</span>
+      <div class="ev-name">Court Wedding</div>
+      <div class="ev-date">Thursday, 19th November</div>
+      <div class="ev-loc">Lagos · 9:00 AM</div>
+    </div>
+    <div class="ev-card ev-aqua r d2">
+      <div class="ev-bar"></div>
+      <span class="ev-emo">☕</span>
+      <div class="ev-name">Wedding Breakfast</div>
+      <div class="ev-date">Friday, 20th November</div>
+      <div class="ev-loc">Lagos · 9:00 AM</div>
+    </div>
+    <div class="ev-card ev-lilac full r">
+      <div class="ev-bar"></div>
+      <span class="ev-emo">🕊️</span>
+      <div class="ev-name">Holy Matrimony · White Wedding</div>
+      <div class="ev-date">Sunday, 23rd November 2026</div>
+      <div class="ev-loc">The Cathedral · Victoria Island · Lagos · 12:00 PM</div>
+    </div>
+    <div class="ev-card ev-rose full r">
+      <div class="ev-bar"></div>
+      <span class="ev-emo">🙏</span>
+      <div class="ev-name">Thanksgiving Service</div>
+      <div class="ev-date">Sunday, 30th November</div>
+      <div class="ev-loc">Lagos · 8:00 AM</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     COUPLE
+═══════════════════════════════════ -->
+<section class="section-cream2" id="couple">
+  <div class="center r">
+    <span class="s-label lilac">The Beloved</span>
+    <h2 class="s-title">Doose &amp; Deri</h2>
+    <span class="rule lilac" style="margin-inline:auto"></span>
+  </div>
+  <div class="couple-row">
+    <div class="c-card r d2">
+      <!-- Replace with: <img src="doose.jpg" alt="Doose"> -->
+      <div class="c-photo"><div class="c-photo-ph">🤵</div></div>
+      <div class="c-name">Doose</div>
+      <div class="c-role">The Groom</div>
+      <div class="c-bio">A man of faith, purpose, and the warmest laughter. He chose her, and kept choosing her.</div>
+    </div>
+    <div class="c-card r d3">
+      <!-- Replace with: <img src="deri.jpg" alt="Deri"> -->
+      <div class="c-photo"><div class="c-photo-ph">👰</div></div>
+      <div class="c-name">Deri</div>
+      <div class="c-role">The Bride</div>
+      <div class="c-bio">Radiant, graceful, full of joy. She is his perfect match — his answered prayer.</div>
+    </div>
+  </div>
+  <p class="couple-quote r">"You are my home and my greatest adventure."</p>
+</section>
+
+<!-- ═══════════════════════════════════
+     PHOTO GALLERY
+═══════════════════════════════════ -->
+<section class="section-cream" id="gallery">
+  <div class="center r">
+    <span class="s-label butter">Captured Moments</span>
+    <h2 class="s-title">Our Gallery</h2>
+    <span class="rule butter" style="margin-inline:auto"></span>
+    <p class="s-sub">A love story told in photographs</p>
+  </div>
+  <div class="gallery-grid r">
+    <!-- To add photos: replace each <div class="g-ph"> block with <img src="your-photo.jpg" alt=""> -->
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+    <div class="g-item"><div class="g-ph"><div class="g-icon">📸</div><div class="g-txt">Add Photo</div></div></div>
+  </div>
+  <p class="gallery-hint r">To add your photos: swap each placeholder with <code>&lt;img src="photo.jpg" alt=""&gt;</code></p>
+</section>
+
+<!-- ═══════════════════════════════════
+     RSVP
+═══════════════════════════════════ -->
+<section class="section-dark" id="rsvp">
+  <div class="center r">
+    <span class="s-label">Your Presence</span>
+    <h2 class="s-title">RSVP</h2>
+    <span class="rule" style="margin-inline:auto"></span>
+  </div>
+  <div class="rsvp-card r d2">
+    <p>We would be deeply honoured to celebrate this sacred moment with you. Please confirm your attendance via WhatsApp, including your name and the event you will be joining us for.</p>
+    <a class="wa-btn" href="https://wa.me/2348000000000?text=Hello!%20I%20would%20love%20to%20attend%20the%20wedding%20of%20Doose%20%26%20Deri.%20My%20name%20is%20..." target="_blank" rel="noopener">
+      <span>💬</span> RSVP via WhatsApp
+    </a>
+    <div class="rsvp-dead">Kindly respond by <strong>1st November 2026</strong></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     DETAILS
+═══════════════════════════════════ -->
+<section class="section-cream2" id="details">
+  <div class="center r">
+    <span class="s-label sage">Everything You Need</span>
+    <h2 class="s-title">Wedding Details</h2>
+    <span class="rule sage" style="margin-inline:auto"></span>
+  </div>
+  <div class="det-grid">
+    <div class="det-card r">
+      <div class="det-icon">📍</div>
+      <div class="det-lbl">Main Venue</div>
+      <div class="det-val">The Cathedral<br>Victoria Island<br>Lagos, Nigeria</div>
+    </div>
+    <div class="det-card r d2">
+      <div class="det-icon">👗</div>
+      <div class="det-lbl sage">Dress Code</div>
+      <div class="det-val">Traditional: Aso-ebi<br>Coral &amp; Gold<br>White Wedding: Black Tie</div>
+    </div>
+    <div class="det-card r">
+      <div class="det-icon">🏨</div>
+      <div class="det-lbl lilac">Hotel</div>
+      <div class="det-val">Eko Hotels &amp; Suites<br>Block rates available<br>Quote "D&amp;D Wedding"</div>
+    </div>
+    <div class="det-card r d2">
+      <div class="det-icon">🚗</div>
+      <div class="det-lbl butter">Transport</div>
+      <div class="det-val">Shuttles from Eko Hotel<br>Every hour from 10:00 AM</div>
+    </div>
+    <div class="det-card full r">
+      <div class="det-icon">#️⃣</div>
+      <div class="det-lbl">Wedding Hashtag</div>
+      <div class="hash-big">#DooseAndDeri2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     CROSSWORD
+═══════════════════════════════════ -->
+<section class="section-cream" id="crossword">
+  <div class="center r">
+    <span class="s-label lilac">A Little Fun</span>
+    <h2 class="s-title">Wedding Crossword</h2>
+    <span class="rule lilac" style="margin-inline:auto"></span>
+    <p class="s-sub">How well do you know Doose &amp; Deri?</p>
+  </div>
+  <div class="cw-wrap r d2">
+    <div class="cw-grid" id="cw-grid"></div>
+    <div class="cw-clues">
+      <div>
+        <h4>Across</h4>
+        <div class="cw-clue"><b>3.</b> The foundation of every marriage (4)</div>
+        <div class="cw-clue"><b>4.</b> The congregation's response (4)</div>
+        <div class="cw-clue"><b>5.</b> The groom's name (5)</div>
+        <div class="cw-clue"><b>7.</b> The wedding month (8)</div>
+      </div>
+      <div>
+        <h4>Down</h4>
+        <div class="cw-clue"><b>1.</b> The bride's name (4)</div>
+        <div class="cw-clue"><b>2.</b> Where vows are spoken (6)</div>
+        <div class="cw-clue"><b>6.</b> Sacred altar promises (4)</div>
+      </div>
+    </div>
+    <div class="cw-btns">
+      <button class="cw-btn cw-check" onclick="checkCW()">Check Answers</button>
+      <button class="cw-btn cw-clear" onclick="clearCW()">Clear</button>
+    </div>
+    <div class="cw-msg" id="cw-msg"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     GIFTING
+═══════════════════════════════════ -->
+<section class="section-cream2" id="gifting">
+  <div class="center r">
+    <span class="s-label butter">With Gratitude</span>
+    <h2 class="s-title">Gift Registry</h2>
+    <span class="rule butter" style="margin-inline:auto"></span>
+  </div>
+  <p class="gift-intro">Your presence is the greatest gift of all. Should you wish to bless us further, we are deeply grateful for your love and generosity.</p>
+  <div class="gift-grid r d2">
+    <div class="gift-card">
+      <span class="gift-icon">🏦</span>
+      <div class="gift-lbl">Bank Transfer · Doose</div>
+      <div class="gift-acct">0123 456 789</div>
+      <div class="gift-bank">First Bank Nigeria<br>Account Name: Adeyemi Doose</div>
+    </div>
+    <div class="gift-card sage">
+      <span class="gift-icon">🏦</span>
+      <div class="gift-lbl sage">Bank Transfer · Deri</div>
+      <div class="gift-acct">9876 543 210</div>
+      <div class="gift-bank">GTBank Nigeria<br>Account Name: Okonkwo Deri</div>
+    </div>
+    <div class="gift-card lilac full">
+      <span class="gift-icon">🎁</span>
+      <div class="gift-lbl" style="color:var(--lilac-d)">Our Wishlist</div>
+      <div class="gift-list">
+        <div class="gift-item">Kitchen appliances</div>
+        <div class="gift-item">Home décor & art</div>
+        <div class="gift-item">Honeymoon fund</div>
+        <div class="gift-item">Investment gift</div>
+        <div class="gift-item">Tech items</div>
+        <div class="gift-item">Furniture</div>
+      </div>
+    </div>
+  </div>
+  <p class="gift-note r">Please send a WhatsApp message after your transfer — we want to thank you personally. 🙏</p>
+</section>
+
+<!-- ═══════════════════════════════════
+     COUNTDOWN
+═══════════════════════════════════ -->
+<section id="countdown" class="section-dark">
+  <canvas id="cd-bg"></canvas>
+  <div class="r">
+    <span class="cd-pre">The moment is almost here</span>
+    <h2 class="cd-h">Counting Down to Forever</h2>
+    <p class="cd-event">White Wedding · 23rd November 2026</p>
+    <div class="cd-units">
+      <div class="cd-unit"><div class="cd-n" id="cd-d">00</div><div class="cd-l">Days</div></div>
+      <div class="cd-colon">:</div>
+      <div class="cd-unit"><div class="cd-n" id="cd-h">00</div><div class="cd-l">Hours</div></div>
+      <div class="cd-colon">:</div>
+      <div class="cd-unit"><div class="cd-n" id="cd-m">00</div><div class="cd-l">Minutes</div></div>
+      <div class="cd-colon">:</div>
+      <div class="cd-unit"><div class="cd-n" id="cd-s">00</div><div class="cd-l">Seconds</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
+<footer id="footer">
+  <div class="ft-names">Doose & Deri</div>
+  <div class="ft-rule"></div>
+  <div class="ft-tag">November 2026 · Lagos, Nigeria</div>
+  <div class="ft-hash">#DooseAndDeri2026</div>
+  <p class="ft-verse">"What therefore God hath joined together, let not man put asunder." — Matthew 19:6</p>
+</footer>
+
+<!-- ════ SCRIPTS ════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+/* ════════════════════════════════
+   SPARKLE CANVAS
+════════════════════════════════ */
+(function(){
+  const cvs=document.getElementById('sparkle-canvas');
+  const ctx=cvs.getContext('2d');
+  const COLORS=['rgba(247,234,168,','rgba(197,184,216,','rgba(122,158,126,','rgba(232,168,152,','rgba(196,172,108,'];
+  let W,H,sparks=[];
+  class Spark{
+    constructor(){this.init(true)}
+    init(rand){
+      this.x=Math.random()*W;
+      this.y=rand?Math.random()*H:-8;
+      this.size=Math.random()*2.2+.6;
+      this.alpha=0;this.maxA=Math.random()*.55+.15;
+      this.vx=(Math.random()-.5)*.25;
+      this.vy=Math.random()*.4+.15;
+      this.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+      this.phase=Math.random()*Math.PI*2;
+      this.freq=.015+Math.random()*.02;
+    }
+    tick(){
+      this.phase+=this.freq;
+      this.x+=this.vx+Math.sin(this.phase)*.3;
+      this.y+=this.vy;
+      this.alpha=Math.min(this.maxA,this.alpha+.008);
+      if(this.y>H+8)this.init(false);
+    }
+    draw(){
+      const s=this.size;
+      ctx.save();ctx.translate(this.x,this.y);
+      ctx.fillStyle=this.color+this.alpha+')';
+      // 4-point star
+      ctx.beginPath();
+      ctx.moveTo(0,-s*1.8);ctx.lineTo(s*.5,-s*.5);
+      ctx.lineTo(s*1.8,0);ctx.lineTo(s*.5,s*.5);
+      ctx.lineTo(0,s*1.8);ctx.lineTo(-s*.5,s*.5);
+      ctx.lineTo(-s*1.8,0);ctx.lineTo(-s*.5,-s*.5);
+      ctx.closePath();ctx.fill();ctx.restore();
+    }
+  }
+  function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;if(!sparks.length)sparks=Array.from({length:60},()=>new Spark());}
+  function loop(){ctx.clearRect(0,0,W,H);sparks.forEach(s=>{s.tick();s.draw();});requestAnimationFrame(loop);}
+  window.addEventListener('resize',resize);resize();loop();
+})();
+
+/* ════════════════════════════════
+   COUNTDOWN PARTICLES
+════════════════════════════════ */
+(function(){
+  const cvs=document.getElementById('cd-bg');
+  const ctx=cvs.getContext('2d');
+  let stars=[];
+  function resize(){
+    const p=cvs.parentElement;
+    cvs.width=p.offsetWidth;cvs.height=p.offsetHeight;
+    stars=Array.from({length:50},()=>({x:Math.random()*cvs.width,y:Math.random()*cvs.height,r:.4+Math.random()*1.2,a:Math.random(),da:(.003+Math.random()*.004)*(Math.random()<.5?1:-1)}));
+  }
+  function draw(){
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    stars.forEach(s=>{s.a+=s.da;if(s.a<0||s.a>1)s.da*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(196,172,108,${s.a})`;ctx.fill();});
+    requestAnimationFrame(draw);
+  }
+  new ResizeObserver(resize).observe(cvs.parentElement);resize();draw();
+})();
+
+/* ════════════════════════════════
+   COUNTDOWN TIMER
+════════════════════════════════ */
+const WD=new Date('2026-11-23T12:00:00');
+function tick(){
+  const diff=WD-new Date();
+  if(diff<=0){['cd-d','cd-h','cd-m','cd-s'].forEach(i=>document.getElementById(i).textContent='00');return;}
+  const d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4),s=Math.floor((diff%6e4)/1e3);
+  document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
+
+/* ════════════════════════════════
+   SCROLL PROGRESS + NAV
+════════════════════════════════ */
+const progEl=document.getElementById('prog');
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  progEl.style.width=pct+'%';
+  nav.classList.toggle('scrolled',window.scrollY>60);
+},{ passive:true });
+
+/* ════════════════════════════════
+   INTERSECTION REVEAL
+════════════════════════════════ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+
+/* ════════════════════════════════
+   MUSIC
+════════════════════════════════ */
+let actx=null,playing=false,nodes=[];
+const btn=document.getElementById('music-btn');
+function toggleMusic(){
+  if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended')actx.resume();
+  if(playing){nodes.forEach(n=>{try{n.stop();}catch(e){}});nodes=[];btn.textContent='♪ Music Off';btn.classList.remove('on');playing=false;}
+  else{playing=true;startMusic();btn.textContent='♪ Music On';btn.classList.add('on');}
+}
+function startMusic(){
+  const master=actx.createGain();master.gain.value=.14;master.connect(actx.destination);
+  const reverb=actx.createConvolver();
+  const len=actx.sampleRate*2,buf=actx.createBuffer(2,len,actx.sampleRate);
+  for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/actx.sampleRate*1.5);}
+  reverb.buffer=buf;reverb.connect(master);
+  const gain2=actx.createGain();gain2.gain.value=.4;gain2.connect(reverb);gain2.connect(master);
+  const scale=[261.63,293.66,329.63,349.23,392,440,493.88,523.25];
+  const patterns=[[0,2,4,7],[2,4,7,4],[0,4,7,9],[0,2,4,2]];
+  let beat=0;
+  (function seq(){
+    if(!playing)return;
+    const pat=patterns[beat%patterns.length];
+    pat.forEach((n,i)=>{
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.type=i%2===0?'sine':'triangle';
+      o.frequency.value=scale[n]*(i<2?1:.5);
+      const t=actx.currentTime+i*1.4;
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.5,t+.12);g.gain.exponentialRampToValueAtTime(.001,t+1.1);
+      o.connect(g);g.connect(gain2);o.start(t);o.stop(t+1.2);nodes.push(o);
+    });
+    beat++;
+    setTimeout(seq,pat.length*1400);
+  })();
+}
+
+/* ════════════════════════════════
+   LOADER + HERO ENTRANCE
+════════════════════════════════ */
+function showPage(){
+  const lo=document.getElementById('loader');
+  lo.style.transition='opacity .5s';lo.style.opacity='0';
+  setTimeout(()=>{lo.style.display='none';},550);
+  // Reveal hero elements without Anime.js
+  ['#h-pre','#h-names','#h-date','#h-chips','#h-divider','#h-scroll'].forEach(s=>{
+    const el=document.querySelector(s);if(el){el.style.opacity='1';el.style.transform='none';}
+  });
+}
+// Fallback: always show page after 4.5s no matter what
+const fallbackTimer=setTimeout(()=>{if(document.getElementById('loader').style.display!=='none')showPage();},4500);
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildCW();
+  if(typeof anime==='undefined'){clearTimeout(fallbackTimer);showPage();return;}
+  // Loader sequence
+  anime.timeline({easing:'easeOutExpo'})
+    .add({targets:'#l-name',opacity:1,translateY:0,duration:1000,delay:200})
+    .add({targets:'#l-bar',width:'180px',duration:1400,easing:'easeInOutSine'},300)
+    .add({targets:'#l-sub',opacity:1,duration:700},900)
+    .add({targets:'#loader',opacity:0,duration:600,delay:700,complete(){
+      clearTimeout(fallbackTimer);
+      document.getElementById('loader').style.display='none';
+      heroIn();
+    }},1600);
+});
+
+function heroIn(){
+  gsap.registerPlugin(ScrollTrigger);
+  const tl=anime.timeline({easing:'easeOutExpo'});
+  tl.add({targets:'#h-pre',opacity:[0,1],translateY:[12,0],duration:700,delay:100})
+    .add({targets:'#h-names',opacity:[0,1],translateY:[28,0],duration:1100,easing:'easeOutElastic(1,.7)'},200)
+    .add({targets:'#h-amp',opacity:[0,1],scale:[.6,1],duration:600},500)
+    .add({targets:'#h-divider',opacity:[0,1],width:['0px','80px'],duration:800},600)
+    .add({targets:'#h-date',opacity:[0,1],translateY:[10,0],duration:700},750)
+    .add({targets:'#h-chips',opacity:[0,1],translateY:[12,0],duration:700},900)
+    .add({targets:'#h-scroll',opacity:[0,1],duration:600},1300);
+  // Parallax on hero video
+  gsap.to(['#hero-video','#hero-overlay'],{yPercent:20,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1}});
+  // CountUp animation for countdown numbers on scroll
+  ScrollTrigger.create({trigger:'#countdown',start:'top 80%',once:true,onEnter(){
+    anime({targets:'.cd-n',opacity:[0,1],translateY:[20,0],duration:800,delay:anime.stagger(100),easing:'easeOutExpo'});
+  }});
+}
+
+/* ════════════════════════════════
+   CROSSWORD
+════════════════════════════════ */
+const CW_DATA=[
+  [0,3,'D',1],[0,9,'C',2],
+  [1,0,'L',3],[1,1,'O'],[1,2,'V'],[1,3,'E'],[1,9,'H'],
+  [2,3,'R'],[2,9,'A'],
+  [3,3,'I'],[3,4,'A',4],[3,5,'M'],[3,6,'E'],[3,7,'N'],[3,9,'P'],
+  [4,3,'D',5],[4,4,'O'],[4,5,'O'],[4,6,'S'],[4,7,'E'],[4,8,'V',6],[4,9,'E'],
+  [5,8,'O'],[5,9,'L'],
+  [6,8,'W'],
+  [7,0,'N',7],[7,1,'O'],[7,2,'V'],[7,3,'E'],[7,4,'M'],[7,5,'B'],[7,6,'E'],[7,7,'R'],[7,8,'S']
+];
+const ROWS=8,COLS=10;
+
+function buildCW(){
+  const map={};CW_DATA.forEach(([r,c,l,n])=>map[`${r},${c}`]={l,n:n||null});
+  const grid=document.getElementById('cw-grid');grid.innerHTML='';
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const k=`${r},${c}`,d=document.createElement('div');
+      d.className='cw-cell'+(map[k]?'':' blk');
+      if(map[k]){
+        if(map[k].n){const n=document.createElement('div');n.className='cw-num';n.textContent=map[k].n;d.appendChild(n);}
+        const inp=document.createElement('input');
+        inp.maxLength=1;inp.dataset.r=r;inp.dataset.c=c;inp.dataset.a=map[k].l;
+        inp.addEventListener('input',e=>{
+          e.target.value=e.target.value.toUpperCase().replace(/[^A-Z]/g,'').slice(-1);
+          e.target.classList.remove('ok','ng');
+          document.getElementById('cw-msg').textContent='';
+          if(e.target.value){
+            const nr=grid.querySelector(`input[data-r="${r}"][data-c="${c+1}"]`)||grid.querySelector(`input[data-r="${r+1}"][data-c="${c}"]`);
+            if(nr)nr.focus();
+          }
+        });
+        inp.addEventListener('keydown',e=>{
+          const dirs={ArrowRight:[r,c+1],ArrowLeft:[r,c-1],ArrowDown:[r+1,c],ArrowUp:[r-1,c]};
+          if(dirs[e.key]){e.preventDefault();const[nr,nc]=dirs[e.key];const t=grid.querySelector(`input[data-r="${nr}"][data-c="${nc}"]`);if(t)t.focus();}
+          if(e.key==='Backspace'&&!inp.value){const prev=grid.querySelector(`input[data-r="${r}"][data-c="${c-1}"]`)||grid.querySelector(`input[data-r="${r-1}"][data-c="${c}"]`);if(prev){prev.focus();prev.value='';}}
+        });
+        d.appendChild(inp);
+      }
+      grid.appendChild(d);
+    }
+  }
+}
+
+function checkCW(){
+  const all=[...document.querySelectorAll('#cw-grid input')];
+  let correct=0,empty=0;
+  all.forEach(i=>{
+    if(!i.value){empty++;return;}
+    const ok=i.value===i.dataset.a;
+    i.classList.toggle('ok',ok);i.classList.toggle('ng',!ok);
+    if(ok)correct++;
+  });
+  const msg=document.getElementById('cw-msg');
+  if(empty)msg.textContent=`${empty} cell${empty>1?'s':''} still empty!`;
+  else if(correct===all.length)msg.textContent='🎉 Perfect! You truly know Doose & Deri!';
+  else msg.textContent=`${correct}/${all.length} correct — keep going!`;
+  if(correct)anime({targets:'#cw-grid input.ok',scale:[1,1.1,1],duration:500,easing:'easeOutElastic(1,.5)',delay:anime.stagger(30)});
+}
+function clearCW(){document.querySelectorAll('#cw-grid input').forEach(i=>{i.value='';i.classList.remove('ok','ng');});document.getElementById('cw-msg').textContent='';}
+</script>
+</body>
+</html>

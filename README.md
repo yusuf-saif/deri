@@ -39,8 +39,33 @@ Every image is wrapped so a failed load shows an elegant gradient instead of a b
 ## To make this real
 1. Swap in the couple's own photos (see above) and refresh the `og:image`/`twitter:image`
    meta URLs in index.html (a 1200×630 crop of the hero image is used as a placeholder).
-2. Wire the RSVP form to a real endpoint — Formspree/Basin for zero backend, or a
-   Supabase table if you want the data queryable later.
+2. RSVP form saves submissions to a Google Sheet and emails the couple on each
+   RSVP via a Google Apps Script web app. Set it up:
+   1. Create a Google Sheet (e.g. "Naomi & Moses RSVPs") with an empty first sheet.
+   2. In the sheet: **Extensions → Apps Script**, replace the default code with
+      the `doPost()` handler below, then **Deploy → New deployment → Web app**,
+      run as **Me**, access **Anyone**, and copy the deployment URL.
+   3. Paste that URL into `RSVP_SCRIPT_URL` at the top of the RSVP section in
+      `js/main.js`, and confirm the email in `MailApp.sendEmail.to` is correct.
+
+      ```javascript
+      function doPost(e) {
+        const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        const data = JSON.parse(e.postData.contents);
+        sheet.appendRow([new Date(), data.name, data.phone, data.party_size]);
+        MailApp.sendEmail({
+          to: 'abigaildoose12@gmail.com',
+          subject: 'New RSVP: ' + data.name,
+          body: 'Name: ' + data.name + '\n' +
+                'Phone: ' + data.phone + '\n' +
+                'Party size: ' + data.party_size + '\n' +
+                'Time: ' + new Date()
+        });
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: 'ok' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      ```
 3. Swap in your own song (see above).
 4. Confirm `prefers-reduced-motion` on: CSS disables the Ken Burns drift, record spin,
    bounces and equalizer bars; JS reveals content without the choreography. Also test

@@ -1114,6 +1114,131 @@ p { line-height: 1.7; }
 }
 
 /* ============================================================
+   WEDDING COLORS — the palette in swatches
+   ============================================================ */
+.palette {
+  background: var(--lavender);
+  padding: 5.5rem 2rem 6rem;
+  text-align: center;
+}
+.palette .eyebrow, .palette .section-intro { color: var(--brown-deep); }
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.6rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.swatch-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  background: rgba(255, 253, 249, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 253, 249, 0.92);
+  border-radius: 18px;
+  padding: 1.7rem 1.2rem 1.5rem;
+  box-shadow: 0 10px 30px -14px rgba(62, 42, 28, 0.22);
+}
+
+/* circular swatch with a soft cream ring, like a framed keepsake */
+.swatch {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow:
+    inset 0 0 0 4px var(--paper),
+    inset 0 0 0 5px rgba(62, 42, 28, 0.12),
+    0 10px 24px -10px rgba(62, 42, 28, 0.3);
+}
+
+.swatch-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--brown-deep);
+}
+.swatch-hex {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brown);
+  opacity: 0.7;
+}
+
+/* ============================================================
+   HASHTAGS — one-tap copy
+   ============================================================ */
+.hashtags {
+  background: var(--cream);
+  padding: 5.5rem 2rem 6rem;
+  text-align: center;
+}
+
+.hashtag-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.hashtag-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid rgba(62, 42, 28, 0.22);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--brown-deep);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 8px 22px -12px rgba(62, 42, 28, 0.28);
+  transition: transform 0.3s var(--ease-out), border-color 0.3s, color 0.3s,
+              background 0.3s, box-shadow 0.3s;
+}
+.hashtag-chip::after {
+  content: "\2299";
+  font-size: 0.6em;
+  opacity: 0.35;
+  transform: translateY(0.05em);
+}
+.hashtag-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  color: var(--brown);
+  box-shadow: 0 12px 28px -12px rgba(62, 42, 28, 0.36);
+}
+.hashtag-chip.copied {
+  border-color: #7BA37B;
+  background: #F2F8F2;
+  color: #4C7A4C;
+}
+
+.hashtag-status {
+  font-size: 0.88rem;
+  color: var(--brown);
+  opacity: 0.8;
+  min-height: 1.6em;
+  margin: 1.4rem 0 0;
+  font-style: italic;
+}
+
+/* ============================================================
    RSVP
    ============================================================ */
 .rsvp {
@@ -1258,6 +1383,63 @@ p { line-height: 1.7; }
   opacity: 0;
   transform: translateY(28px);
 }
+
+/* ============================================================
+   PREMIUM FINISH — refined details layered over the base styles.
+   Slow, quiet polish: hairline gold frames, softer shadows, and
+   a gentle sheen on interactive elements. Nothing here moves,
+   so it is safe for reduced-motion users out of the box.
+   ============================================================ */
+
+/* Gold hairline frame around the glass countdown chips — like a
+   jewel sitting on the photograph. */
+.countdown-unit {
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(194, 160, 108, 0.28),
+              0 12px 30px -14px rgba(62, 42, 28, 0.3);
+}
+
+/* Softer, deeper card shadows for the framed surfaces. */
+.photo-frame {
+  box-shadow: var(--shadow-card),
+              0 3px 0 1px var(--gold),
+              0 3px 0 2px rgba(251, 243, 234, 0.9),
+              0 6px 0 3px var(--gold),
+              0 22px 46px -18px rgba(62, 42, 28, 0.42);
+}
+
+/* A whisper of color temperature on the polaroid tape so the
+   gallery reads a touch warmer under the cream page. */
+.polaroid::before {
+  background: linear-gradient(90deg, rgba(255, 185, 141, 0.4), rgba(255, 185, 141, 0.7), rgba(255, 185, 141, 0.4));
+}
+
+/* Gentle sheen that travels across the primary buttons on hover —
+   a quiet nod to a polished metal surface, no added motion. */
+.rsvp-submit { position: relative; overflow: hidden; }
+.rsvp-submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.7s var(--ease-out);
+  pointer-events: none;
+}
+.rsvp-submit:hover::after { transform: translateX(120%); }
+
+/* Match the fraternal details / dates / gift cards with a subtle
+   extra top glow so the gold hairline reads crisply on cream. */
+.date-card, .gift-card {
+  box-shadow: 0 1px 0 rgba(194, 160, 108, 0.12) inset,
+              0 18px 40px -20px rgba(62, 42, 28, 0.24);
+}
+
+/* A breathing room boost for the largest display type. */
+@media (min-width: 900px) {
+  .hero-title { letter-spacing: 0.035em; }
+  .section-head h2 { letter-spacing: 0.01em; }
+}
 body.gsap-missing .reveal-up {
   opacity: 1;
   transform: none;
@@ -1360,6 +1542,12 @@ body.gsap-missing .hero-art {
   }
   .polaroid {
     transform: rotate(var(--rot, 0deg)) !important;
+  }
+  .rsvp-submit::after {
+    display: none !important;
+  }
+  .hashtag-chip:hover {
+    transform: none;
   }
 }
 

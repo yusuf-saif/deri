@@ -592,15 +592,22 @@ function startCountdown() {
 const rsvpForm = $('#rsvp-form');
 const formStatus = $('#form-status');
 
+// Google Apps Script web app URL — paste the deployment URL here.
+const RSVP_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbwUt--NGDvjWI1Wuv5jyviXf-Wrd2lWBwKP6REIjgdO_3NEUEraR-Tb094b0_hJt92C/exec';
+
 rsvpForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const nameInput = rsvpForm.name;
+  const phoneInput = rsvpForm.phone;
   const partyInput = rsvpForm.party_size;
   const name = nameInput.value.trim();
+  const phone = phoneInput.value.trim();
   const party = parseInt(partyInput.value, 10);
 
   nameInput.setAttribute('aria-invalid', 'false');
+  phoneInput.setAttribute('aria-invalid', 'false');
   partyInput.setAttribute('aria-invalid', 'false');
   formStatus.classList.remove('error');
 
@@ -611,11 +618,18 @@ rsvpForm.addEventListener('submit', async (e) => {
     formStatus.textContent = 'Please tell us your name so we can save your seat.';
     return;
   }
-  if (!party || party < 1 || party > 10) {
+  if (!phone || phone.replace(/\D/g, '').length < 7) {
+    phoneInput.setAttribute('aria-invalid', 'true');
+    phoneInput.focus();
+    formStatus.classList.add('error');
+    formStatus.textContent = 'Please give us a valid phone number so we can reach you.';
+    return;
+  }
+  if (!party || party < 1 || party > 1) {
     partyInput.setAttribute('aria-invalid', 'true');
     partyInput.focus();
     formStatus.classList.add('error');
-    formStatus.textContent = 'Party size should be between 1 and 10.';
+    formStatus.textContent = 'Party size is limited to 1 person.';
     return;
   }
 
@@ -626,10 +640,11 @@ rsvpForm.addEventListener('submit', async (e) => {
   formStatus.textContent = '';
 
   try {
-    // Wire to a real endpoint — Formspree/Basin (no backend) or a
-    // Supabase table for queryable RSVPs.
-    // await fetch('/api/rsvp', { method: 'POST', body: new FormData(rsvpForm) });
-    await new Promise((r) => setTimeout(r, 900));
+    await fetch(RSVP_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify({ name, phone, party_size: party })
+    });
     submitBtn.classList.add('is-sent');
     btnLabel.textContent = 'See you there ♡';
     formStatus.textContent = `Thank you, ${name}. We can't wait to sing with you.`;
@@ -643,6 +658,59 @@ rsvpForm.addEventListener('submit', async (e) => {
     formStatus.classList.add('error');
     formStatus.textContent = "Couldn't send that — please try again or call us directly.";
   }
+});
+
+/* ============================================================
+   HASHTAGS — one-tap copy
+   ============================================================ */
+const hashtagChips = $$('.hashtag-chip');
+const hashtagStatus = $('#hashtag-status');
+let hashtagTimer = null;
+
+function hashtagFallbackCopy(text, chip) {
+  const range = document.createRange();
+  range.selectNodeContents(chip);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  let ok = false;
+  try {
+    ok = document.execCommand('copy');
+  } catch (err) {
+    ok = false;
+  }
+  sel.removeAllRanges();
+  return ok;
+}
+
+function announceHashtag(chip, text) {
+  chip.classList.add('copied');
+  if (hashtagStatus) {
+    hashtagStatus.textContent = `Copied ${text}`;
+    hashtagStatus.hidden = false;
+  }
+  clearTimeout(hashtagTimer);
+  hashtagTimer = setTimeout(() => {
+    chip.classList.remove('copied');
+    if (hashtagStatus) hashtagStatus.hidden = true;
+  }, 2000);
+}
+
+hashtagChips.forEach((chip) => {
+  chip.addEventListener('click', async () => {
+    const text = chip.dataset.copy;
+    let ok = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch (err) {
+        ok = false;
+      }
+    }
+    if (!ok) ok = hashtagFallbackCopy(text, chip);
+    if (ok) announceHashtag(chip, text);
+  });
 });
 
 /* ============================================================
