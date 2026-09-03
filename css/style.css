@@ -800,6 +800,16 @@ p { line-height: 1.7; }
   max-width: 52ch;
 }
 
+.story-closing {
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--brown-soft);
+  margin: 2.5rem auto 0;
+  max-width: 40ch;
+}
+
 /* ============================================================
    MOMENTS — photo gallery
    ============================================================ */
@@ -845,8 +855,15 @@ p { line-height: 1.7; }
   object-fit: cover;
   border-radius: 3px;
 }
+.polaroid video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 3px;
+}
 .polaroid.noimg { background: linear-gradient(160deg, var(--pink), var(--lavender)); min-height: 200px; }
-.polaroid.noimg img { display: none; }
+.polaroid.noimg img, .polaroid.noimg video { display: none; }
 .moment figcaption {
   margin-top: 0.75rem;
   padding-bottom: 0.6rem;

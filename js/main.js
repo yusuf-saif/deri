@@ -740,6 +740,23 @@ window.addEventListener('resize', () => {
 });
 
 /* ============================================================
+   REDUCED MOTION — ambient gallery videos should not autoplay
+   for users who prefer less motion. We pause them on load and
+   whenever the preference changes.
+   ============================================================ */
+const galleryVideos = $$('.moment video');
+function applyVideoReducedMotion() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  galleryVideos.forEach((v) => {
+    if (reduce) v.pause();
+    else v.play().catch(() => { /* muted autoplay may still be blocked */ });
+  });
+}
+const reducedMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+applyVideoReducedMotion();
+reducedMotionMQ.addEventListener?.('change', applyVideoReducedMotion);
+
+/* ============================================================
    BOOT
    ============================================================ */
 Music.init();
