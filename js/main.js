@@ -465,21 +465,47 @@ function runHeroReveal() {
     return;
   }
 
-  // set up the needle so it can draw itself in
+  // draw the needle so it can scribe itself in
   const arm = $('.needle-arm');
   const head = $('.needle-head');
   const armLen = arm.getTotalLength();
   const headLen = head.getTotalLength();
   gsap.set([arm, head], { strokeDasharray: (i) => (i ? headLen : armLen), strokeDashoffset: (i) => (i ? headLen : armLen) });
 
+  /* ---- cinematic curtain reveal ----
+     The photo sits behind a closed black frame. The top bar rises
+     and the bottom bar falls so the scene frames in like a film
+     opening — title, needle and notes rise to meet it. (The slow
+     push-in is handled by the CSS Ken Burns on .hero-bg-img.) */
+  const topBar = $('.letterbox.is-top');
+  const bottomBar = $('.letterbox.is-bottom');
+  const grain = $('.filmgrain');
+  const H = window.innerHeight;
+  const barH = Math.ceil(H / 2);
+
+  gsap.set([topBar, bottomBar], { height: 0 });          // start: no bars
+  gsap.set(grain, { opacity: 0 });
+
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
+  // 1. close the curtain instantly (the frame arrives black)
+  tl.set(topBar, { height: barH }, 0)
+    .set(bottomBar, { height: barH }, 0)
+    .set(grain, { opacity: 0.5 }, 0);
+
+  // 2. part the curtain — a genuinely cinematic widescreen reveal
+  tl.to(topBar, { height: 0, duration: 1.3, ease: 'expo.inOut' }, 0.5)
+    .to(bottomBar, { height: 0, duration: 1.3, ease: 'expo.inOut' }, 0.5)
+    .to(grain, { opacity: 0.18, duration: 2.2, ease: 'sine.out' }, 0.55);
+
+  // 3. print the title onto the scene
   tl.to('.hero .reveal-up', {
-    opacity: 1, y: 0, duration: 0.9, stagger: 0.13,
-  }, 0.1)
-    .fromTo('.hero-art', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.2 }, 0.1)
-    .to('.needle-arm', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.5)
-    .to('.needle-head', { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 1.0);
+    opacity: 1, y: 0, duration: 1.0, stagger: 0.14,
+  }, 1.4)
+    .fromTo('.hero-art', { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1.3 }, 1.4)
+    .to('.needle-arm', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 2.0)
+    .to('.needle-head', { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 2.5)
+    .to(grain, { opacity: 0.05, duration: 1.6, ease: 'sine.out' }, 2.3);
 }
 
 /* ============================================================
