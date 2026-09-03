@@ -757,6 +757,25 @@ applyVideoReducedMotion();
 reducedMotionMQ.addEventListener?.('change', applyVideoReducedMotion);
 
 /* ============================================================
+   HOVER-TO-PLAY — hovering a memory turns the music on; leaving
+   a memory restores the state the visitor had before (silent
+   becomes silent again, already-playing stays playing).
+   Works with the global Music system, not a separate toggle.
+   ============================================================ */
+const momentCards = $$('.moment');
+let musicPlayingBeforeHover = false;
+
+momentCards.forEach((card) => {
+  card.addEventListener('pointerenter', () => {
+    musicPlayingBeforeHover = Music.playing;
+    if (!Music.playing) Music.start();
+  });
+  card.addEventListener('pointerleave', () => {
+    if (!musicPlayingBeforeHover && Music.playing) Music.stop();
+  });
+});
+
+/* ============================================================
    BOOT
    ============================================================ */
 Music.init();

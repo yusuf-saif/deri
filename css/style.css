@@ -432,11 +432,15 @@ p { line-height: 1.7; }
   position: absolute;
   inset: 0;
   background: var(--img-hero) center/cover no-repeat;
-  animation: kenburns 28s ease-in-out infinite alternate;
+  will-change: transform;
+  /* cinematic Ken Burns: slower and deeper, with an added horizontal pan
+     so the camera reads like it is genuinely tracking across the scene */
+  animation: kenburns 46s ease-in-out infinite alternate;
 }
 @keyframes kenburns {
-  from { transform: scale(1.06) translate3d(0, 0, 0); }
-  to   { transform: scale(1.2) translate3d(2%, -1.5%, 0); }
+  0%   { transform: scale(1.04) translate3d(0, 0, 0); }
+  50%  { transform: scale(1.16) translate3d(1.6%, -1%, 0); }
+  100% { transform: scale(1.24) translate3d(3.2%, -2%, 0); }
 }
 
 .hero-vignette {
