@@ -420,13 +420,15 @@ function enterSite() {
 }
 
 openBtn.addEventListener('click', () => {
+  if (openBtn.disabled) return;
+
   const rect = openBtn.getBoundingClientRect();
   const originX = rect.left + rect.width / 2;
   const originY = rect.top + rect.height / 2;
 
   groove.style.left = `${originX}px`;
   groove.style.top = `${originY}px`;
-  openCard.hidden = true;
+  openBtn.disabled = true;
 
   // Start the song now — we're inside the user gesture, so the
   // browser's autoplay policy allows audio to begin. Never let a
@@ -443,12 +445,23 @@ openBtn.addEventListener('click', () => {
   }
 
   const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.2;
-  gsap.to(groove, {
-    scale: maxDim / 20,
-    duration: 0.9,
-    ease: 'power3.out',
-    onComplete: enterSite,
-  });
+  const rope = openBtn.querySelector('.rope-wrap');
+  const flap = openBtn.querySelector('.envelope-flap');
+  const letter = openBtn.querySelector('.letter-sheet');
+
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: enterSite });
+  tl.to(rope, { opacity: 0, y: -14, scale: 0.94, duration: 0.35 }, 0)
+    .to(flap, { rotateX: -180, duration: 0.65, transformOrigin: '50% 0%', ease: 'power2.inOut' }, 0.1)
+    .to(letter, { y: -78, duration: 0.75, ease: 'back.out(1.1)' }, 0.34)
+    .to(openCard, { opacity: 0, scale: 0.96, duration: 0.35, ease: 'power2.in' }, 1.05)
+    .add(() => {
+      openCard.hidden = true;
+    }, 1.12)
+    .to(groove, {
+      scale: maxDim / 20,
+      duration: 0.9,
+      ease: 'power3.out',
+    }, 1.12);
 });
 
 function showMusicToggle() {

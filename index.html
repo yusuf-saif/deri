@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#FBF3EA">
+<meta name="theme-color" content="#FBF7E8">
 <title>DOOSE &amp; DERI — 21 November 2026, Abuja</title>
 <meta name="description" content="DOOSE and DERI invite you to celebrate their wedding on 21 November 2026 at Family Worship Center, Wuye, Abuja.">
 <meta property="og:type" content="website">
@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="DOOSE &amp; DERI — 21 November 2026, Abuja">
 <meta name="twitter:description" content="Join us in Abuja as our melody becomes forever.">
 <meta name="twitter:image" content="assets/web/IMG_4638.jpg">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FBF3EA'/%3E%3Ctext x='32' y='41' font-family='Georgia' font-size='21' font-style='italic' text-anchor='middle' fill='%23654633'%3ED %26 D%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FBF7E8'/%3E%3Ctext x='32' y='41' font-family='Georgia' font-size='21' font-style='italic' text-anchor='middle' fill='%232F3A2A'%3ED %26 D%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="assets/web/IMG_4638.jpg">
@@ -39,20 +39,50 @@
 </button>
 
 <!-- ============ OPENING SEQUENCE ============ -->
-<!-- Loading -> record/open card -> groove reveal -> hero -->
+<!-- Loading -> envelope invitation -> reveal -> hero -->
 <div id="opening" aria-hidden="false">
 
   <div id="loading-screen" class="opening-layer">
-    <div class="waveform" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span>
+    <div class="envelope-scene is-loading" aria-hidden="true">
+      <span class="envelope-shadow"></span>
+      <span class="envelope">
+        <span class="letter-sheet">
+          <span class="letter-mark">D &amp; D</span>
+          <span class="letter-submark">The 100s</span>
+          <span class="letter-line short"></span>
+        </span>
+        <span class="envelope-flap"></span>
+        <span class="envelope-pocket"></span>
+        <span class="rope-wrap">
+          <span class="rope rope-h"></span>
+          <span class="rope rope-v"></span>
+          <span class="rope-knot"></span>
+        </span>
+      </span>
     </div>
-    <p class="loading-label">tuning our melody<span id="loading-pct">0%</span></p>
+    <p class="loading-label">preparing your invitation<span id="loading-pct">0%</span></p>
   </div>
 
   <div id="open-card" class="opening-layer" hidden>
     <button id="open-btn" type="button" aria-label="Open the invitation">
-      <span class="record" aria-hidden="true"></span>
-      <span class="open-label">tap to begin</span>
+      <span class="envelope-scene is-ready" aria-hidden="true">
+        <span class="envelope-shadow"></span>
+        <span class="envelope">
+          <span class="letter-sheet">
+            <span class="letter-mark">D &amp; D</span>
+            <span class="letter-submark">The 100s</span>
+            <span class="letter-line short"></span>
+          </span>
+          <span class="envelope-flap"></span>
+          <span class="envelope-pocket"></span>
+          <span class="rope-wrap">
+            <span class="rope rope-h"></span>
+            <span class="rope rope-v"></span>
+            <span class="rope-knot"></span>
+          </span>
+        </span>
+      </span>
+      <span class="open-label">pull to open</span>
     </button>
   </div>
 
@@ -320,6 +350,11 @@
         </article>
       </div>
 
+      <div class="theme-callout reveal-up" aria-label="Theme of the day">
+        <span>Theme of the day</span>
+        <strong>Old Money</strong>
+      </div>
+
       <p class="details-note reveal-up">Dress code: smart &amp; elegant — Sunday best for the church, hearts full of joy.</p>
     </section>
 
@@ -407,29 +442,24 @@
         <span class="flourish" aria-hidden="true">
           <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line fl-line-dark"/><circle cx="98" cy="10" r="1.7" class="fl-dot fl-dot-dark"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem fl-gem-dark"/><circle cx="162" cy="10" r="1.7" class="fl-dot fl-dot-dark"/><path d="M164 10 H260" class="fl-line fl-line-dark"/></svg>
         </span>
-        <p class="section-intro reveal-up">The hues we're painting our day in — sing them with us in every photo.</p>
+        <p class="section-intro reveal-up">Sage green and butter yellow lead the day, with a small coral accent for warmth.</p>
       </header>
 
       <div class="palette-grid">
-        <article class="swatch-card reveal-up">
-          <span class="swatch" style="--swatch:#F2D57E"></span>
-          <p class="swatch-name">Butter yellow</p>
-          <p class="swatch-hex">#F2D57E</p>
-        </article>
         <article class="swatch-card reveal-up">
           <span class="swatch" style="--swatch:#A8B5A0"></span>
           <p class="swatch-name">Sage green</p>
           <p class="swatch-hex">#A8B5A0</p>
         </article>
         <article class="swatch-card reveal-up">
-          <span class="swatch" style="--swatch:#C6BFE0"></span>
-          <p class="swatch-name">Lilac</p>
-          <p class="swatch-hex">#C6BFE0</p>
+          <span class="swatch" style="--swatch:#F2D57E"></span>
+          <p class="swatch-name">Butter yellow</p>
+          <p class="swatch-hex">#F2D57E</p>
         </article>
         <article class="swatch-card reveal-up">
-          <span class="swatch" style="--swatch:#FF9E80"></span>
-          <p class="swatch-name">Coral</p>
-          <p class="swatch-hex">#FF9E80</p>
+          <span class="swatch" style="--swatch:#E8957D"></span>
+          <p class="swatch-name">Coral accent</p>
+          <p class="swatch-hex">#E8957D</p>
         </article>
       </div>
     </section>
@@ -451,14 +481,17 @@
       </header>
 
       <div class="hashtag-list reveal-up">
-        <button type="button" class="hashtag-chip" data-copy="#DooseAndDeri">
-          #DooseAndDeri
+        <button type="button" class="hashtag-chip" data-copy="#The100s">
+          #The100s
         </button>
         <button type="button" class="hashtag-chip" data-copy="#DandD2026">
           #DandD2026
         </button>
-        <button type="button" class="hashtag-chip" data-copy="#OurMelodyBecomesForever">
+        <!-- <button type="button" class="hashtag-chip" data-copy="#OurMelodyBecomesForever">
           #OurMelodyBecomesForever
+        </button> -->
+        <button type="button" class="hashtag-chip" data-copy="#Forever100">
+          #Forever100
         </button>
       </div>
       <p class="hashtag-status" id="hashtag-status" role="status" aria-live="polite" hidden></p>
@@ -477,7 +510,7 @@
         <span class="flourish" aria-hidden="true">
           <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
         </span>
-        <p class="section-intro reveal-up">Our melody is sweeter when you sing along. Let us know by 01 October 2026.</p>
+        <p class="section-intro reveal-up">Our melody is sweeter when you sing along. Let us know by 01 November 2026.</p>
       </header>
 
       <form class="rsvp-form reveal-up" id="rsvp-form" novalidate>
@@ -498,6 +531,8 @@
         </button>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
+
+      <p class="rsvp-invite-note reveal-up"><strong>Strictly by invite only.</strong></p>
     </section>
 
   </main>
@@ -508,7 +543,7 @@
       <svg viewBox="0 0 260 20"><path d="M0 10 H96" class="fl-line"/><circle cx="98" cy="10" r="1.7" class="fl-dot"/><path d="M130 1.5 C 118 8, 118 12, 130 18.5 C 142 12, 142 8, 130 1.5 Z" class="fl-gem"/><circle cx="162" cy="10" r="1.7" class="fl-dot"/><path d="M164 10 H260" class="fl-line"/></svg>
     </span>
     <p>DOOSE <span class="amp">&amp;</span> DERI · 21.11.2026 · Abuja</p>
-    <p class="footer-note">The best is yet to come — our song is just beginning.</p>
+    <p class="footer-note">WE FOUND OUR WAY TO EACH OTHER. NOW, WE GET FOREVER..</p>
   </footer>
 
 </div>
