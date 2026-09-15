@@ -365,13 +365,14 @@ musicToggle.addEventListener('click', () => Music.toggle());
 const loadingScreen = $('#loading-screen');
 const openCard = $('#open-card');
 const openBtn = $('#open-btn');
+const invitationFlow = $('#invitation-flow');
 const groove = $('#groove-reveal');
 const opening = $('#opening');
 const site = $('#site');
 const pctLabel = $('#loading-pct');
 
 // Real assets to gate a "ready" page — add hero/og images here.
-const assetsToPreload = [];
+const assetsToPreload = ['assets/web/IMG_4638.jpg'];
 
 function preload(urls) {
   if (!urls.length) return Promise.resolve();
@@ -422,9 +423,8 @@ function enterSite() {
 openBtn.addEventListener('click', () => {
   if (openBtn.disabled) return;
 
-  const rect = openBtn.getBoundingClientRect();
-  const originX = rect.left + rect.width / 2;
-  const originY = rect.top + rect.height / 2;
+  const originX = window.innerWidth / 2;
+  const originY = window.innerHeight / 2;
 
   groove.style.left = `${originX}px`;
   groove.style.top = `${originY}px`;
@@ -444,31 +444,65 @@ openBtn.addEventListener('click', () => {
     return;
   }
 
-  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 1.9;
-  const scene = openBtn.querySelector('.envelope-scene');
-  const seal = openBtn.querySelector('.wax-seal');
-  const flap = openBtn.querySelector('.envelope-flap');
-  const liner = openBtn.querySelector('.envelope-liner');
-  const letter = openBtn.querySelector('.letter-sheet');
-  const faceDetails = openBtn.querySelectorAll('.envelope-address, .envelope-stamp');
+  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.05;
+  const cover = openBtn.querySelector('.entry-cover');
+  const coverFolds = openBtn.querySelectorAll('.cover-fold');
+  const coverMonogram = openBtn.querySelector('.cover-monogram');
+  const coverDate = openBtn.querySelector('.cover-date');
+  const openLabel = openBtn.querySelector('.open-label');
+  const card = invitationFlow.querySelector('.invitation-card');
+  const butterfly = invitationFlow.querySelector('.entry-butterfly');
+  const inviteCopies = invitationFlow.querySelectorAll('.invite-copy');
+  const intro = invitationFlow.querySelector('.copy-intro');
+  const names = invitationFlow.querySelector('.copy-names');
+  const date = invitationFlow.querySelector('.copy-date');
+  const rsvp = invitationFlow.querySelector('.copy-rsvp');
 
   const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, onComplete: enterSite });
-  tl.to(seal, { opacity: 0, y: -18, scale: 1.14, rotate: -14, duration: 0.34, ease: 'back.in(1.25)' }, 0)
-    .to(faceDetails, { opacity: 0, y: 8, duration: 0.26 }, 0.08)
-    .to(flap, { rotateX: -172, y: -2, duration: 0.86, transformOrigin: '50% 0%', ease: 'power3.inOut' }, 0.1)
-    .to(liner, { opacity: 1, filter: 'brightness(1.08)', duration: 0.48 }, 0.22)
-    .to(letter, { y: -88, scale: 1.035, rotate: 0.6, duration: 0.86, ease: 'back.out(1.05)' }, 0.42)
-    .to(scene, { y: -18, scale: 1.03, duration: 0.72, ease: 'power2.out' }, 0.58)
-    .to(openCard, { opacity: 0, scale: 0.98, filter: 'blur(4px)', duration: 0.5, ease: 'power2.inOut' }, 1.16)
+  tl.set(invitationFlow, { opacity: 0, filter: 'blur(0px)' }, 0)
+    .set(card, { scale: 1.035, filter: 'blur(5px)' }, 0)
+    .set(butterfly, { opacity: 0, y: -24, scale: 0.78, rotationX: 18 }, 0)
+    .set(inviteCopies, { opacity: 0, y: 18 }, 0)
+    .to(openLabel, { opacity: 0, y: 14, duration: 0.28 }, 0)
+    .to([coverMonogram, coverDate], { opacity: 0, y: -10, duration: 0.34 }, 0.06)
+    .to(coverFolds, { opacity: 0.28, duration: 0.44 }, 0.08)
+    .to(cover, {
+      x: -window.innerWidth * 0.18,
+      rotate: -4,
+      rotateY: -72,
+      scale: 1.04,
+      opacity: 0,
+      filter: 'blur(8px)',
+      duration: 0.82,
+      ease: 'power3.inOut',
+    }, 0.18)
+    .to(openCard, { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, 0.36)
     .add(() => {
       openCard.hidden = true;
-    }, 1.34)
+      invitationFlow.hidden = false;
+      invitationFlow.setAttribute('aria-hidden', 'false');
+    }, 0.72)
+    .to(invitationFlow, { opacity: 1, duration: 0.58, ease: 'sine.out' }, 0.72)
+    .to(card, { scale: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, 0.74)
+    .to(butterfly, { opacity: 1, y: 0, scale: 1, rotationX: 0, duration: 1.1, ease: 'back.out(1.2)' }, 0.95)
+    .to(intro, { opacity: 1, y: 0, duration: 0.92 }, 1.18)
+    .to(intro, { opacity: 0, y: -18, duration: 0.58, ease: 'sine.inOut' }, 2.72)
+    .to(names, { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, 3.02)
+    .to(butterfly, { y: -8, scale: 1.045, duration: 1.1, ease: 'sine.inOut' }, 3.04)
+    .to(names, { opacity: 0, y: -16, duration: 0.6, ease: 'sine.inOut' }, 4.9)
+    .to(date, { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, 5.18)
+    .to(butterfly, { y: 0, scale: 1, duration: 1.0, ease: 'sine.inOut' }, 5.18)
+    .to(date, { opacity: 0, y: -16, duration: 0.6, ease: 'sine.inOut' }, 7.08)
+    .to(rsvp, { opacity: 1, y: 0, duration: 0.88, ease: 'power3.out' }, 7.32)
+    .to(rsvp, { opacity: 0, y: -12, duration: 0.52, ease: 'sine.inOut' }, 8.72)
+    .to(butterfly, { opacity: 0, y: -16, scale: 1.08, duration: 0.52, ease: 'sine.inOut' }, 8.76)
+    .to(invitationFlow, { opacity: 0, filter: 'blur(6px)', duration: 0.7, ease: 'power2.inOut' }, 8.95)
     .to(groove, {
-      scale: maxDim / 20,
-      duration: 1.08,
+      scale: maxDim / 24,
+      duration: 0.95,
       ease: 'power3.out',
-      opacity: 0.94,
-    }, 1.12);
+      opacity: 0.98,
+    }, 8.9);
 });
 
 function showMusicToggle() {
