@@ -444,23 +444,30 @@ openBtn.addEventListener('click', () => {
     return;
   }
 
-  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.2;
-  const rope = openBtn.querySelector('.rope-wrap');
+  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 1.9;
+  const scene = openBtn.querySelector('.envelope-scene');
+  const seal = openBtn.querySelector('.wax-seal');
   const flap = openBtn.querySelector('.envelope-flap');
+  const liner = openBtn.querySelector('.envelope-liner');
   const letter = openBtn.querySelector('.letter-sheet');
+  const faceDetails = openBtn.querySelectorAll('.envelope-address, .envelope-stamp');
 
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: enterSite });
-  tl.to(rope, { opacity: 0, y: -14, scale: 0.94, duration: 0.35 }, 0)
-    .to(flap, { rotateX: -180, duration: 0.65, transformOrigin: '50% 0%', ease: 'power2.inOut' }, 0.1)
-    .to(letter, { y: -78, duration: 0.75, ease: 'back.out(1.1)' }, 0.34)
-    .to(openCard, { opacity: 0, scale: 0.96, duration: 0.35, ease: 'power2.in' }, 1.05)
+  const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, onComplete: enterSite });
+  tl.to(seal, { opacity: 0, y: -18, scale: 1.14, rotate: -14, duration: 0.34, ease: 'back.in(1.25)' }, 0)
+    .to(faceDetails, { opacity: 0, y: 8, duration: 0.26 }, 0.08)
+    .to(flap, { rotateX: -172, y: -2, duration: 0.86, transformOrigin: '50% 0%', ease: 'power3.inOut' }, 0.1)
+    .to(liner, { opacity: 1, filter: 'brightness(1.08)', duration: 0.48 }, 0.22)
+    .to(letter, { y: -88, scale: 1.035, rotate: 0.6, duration: 0.86, ease: 'back.out(1.05)' }, 0.42)
+    .to(scene, { y: -18, scale: 1.03, duration: 0.72, ease: 'power2.out' }, 0.58)
+    .to(openCard, { opacity: 0, scale: 0.98, filter: 'blur(4px)', duration: 0.5, ease: 'power2.inOut' }, 1.16)
     .add(() => {
       openCard.hidden = true;
-    }, 1.12)
+    }, 1.34)
     .to(groove, {
       scale: maxDim / 20,
-      duration: 0.9,
+      duration: 1.08,
       ease: 'power3.out',
+      opacity: 0.94,
     }, 1.12);
 });
 
