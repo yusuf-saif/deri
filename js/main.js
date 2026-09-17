@@ -365,7 +365,6 @@ musicToggle.addEventListener('click', () => Music.toggle());
 const loadingScreen = $('#loading-screen');
 const openCard = $('#open-card');
 const openBtn = $('#open-btn');
-const invitationFlow = $('#invitation-flow');
 const groove = $('#groove-reveal');
 const opening = $('#opening');
 const site = $('#site');
@@ -399,6 +398,9 @@ preload(assetsToPreload).then(() => {
   const finish = () => {
     loadingScreen.hidden = true;
     openCard.hidden = false;
+    requestAnimationFrame(() => {
+      setTimeout(() => openEnvelope({ auto: true }), 450);
+    });
   };
   const waitForCount = setInterval(() => {
     if (pct >= 100) {
@@ -420,7 +422,7 @@ function enterSite() {
   if (heroContent) heroContent.focus({ preventScroll: true });
 }
 
-openBtn.addEventListener('click', () => {
+function openEnvelope({ auto = false } = {}) {
   if (openBtn.disabled) return;
 
   const originX = window.innerWidth / 2;
@@ -430,13 +432,15 @@ openBtn.addEventListener('click', () => {
   groove.style.top = `${originY}px`;
   openBtn.disabled = true;
 
-  // Start the song now — we're inside the user gesture, so the
-  // browser's autoplay policy allows audio to begin. Never let a
-  // Web Audio failure trap the visitor on the loading screen.
-  try {
-    Music.start();
-  } catch (err) {
-    console.warn('Music unavailable:', err);
+  if (!auto) {
+    // Start the song now — we're inside the user gesture, so the
+    // browser's autoplay policy allows audio to begin. Never let a
+    // Web Audio failure trap the visitor on the loading screen.
+    try {
+      Music.start();
+    } catch (err) {
+      console.warn('Music unavailable:', err);
+    }
   }
 
   if (prefersReducedMotion || !hasGSAP) {
@@ -450,20 +454,9 @@ openBtn.addEventListener('click', () => {
   const coverMonogram = openBtn.querySelector('.cover-monogram');
   const coverDate = openBtn.querySelector('.cover-date');
   const openLabel = openBtn.querySelector('.open-label');
-  const card = invitationFlow.querySelector('.invitation-card');
-  const butterfly = invitationFlow.querySelector('.entry-butterfly');
-  const inviteCopies = invitationFlow.querySelectorAll('.invite-copy');
-  const intro = invitationFlow.querySelector('.copy-intro');
-  const names = invitationFlow.querySelector('.copy-names');
-  const date = invitationFlow.querySelector('.copy-date');
-  const rsvp = invitationFlow.querySelector('.copy-rsvp');
 
   const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, onComplete: enterSite });
-  tl.set(invitationFlow, { opacity: 0, filter: 'blur(0px)' }, 0)
-    .set(card, { scale: 1.035, filter: 'blur(5px)' }, 0)
-    .set(butterfly, { opacity: 0, y: -24, scale: 0.78, rotationX: 18 }, 0)
-    .set(inviteCopies, { opacity: 0, y: 18 }, 0)
-    .to(openLabel, { opacity: 0, y: 14, duration: 0.28 }, 0)
+  tl.to(openLabel, { opacity: 0, y: 14, duration: 0.28 }, 0)
     .to([coverMonogram, coverDate], { opacity: 0, y: -10, duration: 0.34 }, 0.06)
     .to(coverFolds, { opacity: 0.28, duration: 0.44 }, 0.08)
     .to(cover, {
@@ -477,33 +470,15 @@ openBtn.addEventListener('click', () => {
       ease: 'power3.inOut',
     }, 0.18)
     .to(openCard, { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, 0.36)
-    .add(() => {
-      openCard.hidden = true;
-      invitationFlow.hidden = false;
-      invitationFlow.setAttribute('aria-hidden', 'false');
-    }, 0.72)
-    .to(invitationFlow, { opacity: 1, duration: 0.58, ease: 'sine.out' }, 0.72)
-    .to(card, { scale: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, 0.74)
-    .to(butterfly, { opacity: 1, y: 0, scale: 1, rotationX: 0, duration: 1.1, ease: 'back.out(1.2)' }, 0.95)
-    .to(intro, { opacity: 1, y: 0, duration: 0.92 }, 1.18)
-    .to(intro, { opacity: 0, y: -18, duration: 0.58, ease: 'sine.inOut' }, 2.72)
-    .to(names, { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, 3.02)
-    .to(butterfly, { y: -8, scale: 1.045, duration: 1.1, ease: 'sine.inOut' }, 3.04)
-    .to(names, { opacity: 0, y: -16, duration: 0.6, ease: 'sine.inOut' }, 4.9)
-    .to(date, { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, 5.18)
-    .to(butterfly, { y: 0, scale: 1, duration: 1.0, ease: 'sine.inOut' }, 5.18)
-    .to(date, { opacity: 0, y: -16, duration: 0.6, ease: 'sine.inOut' }, 7.08)
-    .to(rsvp, { opacity: 1, y: 0, duration: 0.88, ease: 'power3.out' }, 7.32)
-    .to(rsvp, { opacity: 0, y: -12, duration: 0.52, ease: 'sine.inOut' }, 8.72)
-    .to(butterfly, { opacity: 0, y: -16, scale: 1.08, duration: 0.52, ease: 'sine.inOut' }, 8.76)
-    .to(invitationFlow, { opacity: 0, filter: 'blur(6px)', duration: 0.7, ease: 'power2.inOut' }, 8.95)
     .to(groove, {
       scale: maxDim / 24,
       duration: 0.95,
       ease: 'power3.out',
       opacity: 0.98,
-    }, 8.9);
-});
+    }, 0.44);
+}
+
+openBtn.addEventListener('click', () => openEnvelope());
 
 function showMusicToggle() {
   musicToggle.hidden = false;
@@ -583,6 +558,8 @@ function initScrollChoreography() {
   });
 
   ['home', 'story', 'moments', 'wedding', 'dates', 'rsvp'].forEach((id) => {
+    if (!$(`#${id}`)) return;
+
     ScrollTrigger.create({
       trigger: `#${id}`,
       start: 'top 45%',

@@ -785,26 +785,73 @@ p { line-height: 1.7; }
   overflow: hidden;
 }
 
-/* outer layer gets GSAP parallax; inner layer Ken Burns in CSS */
+/* outer layer gets GSAP parallax; inner layer gets the cinematic move */
 .hero-bg {
   position: absolute;
   inset: -15% 0;
   z-index: 0;
   overflow: hidden;
+  background: #17110d;
+  transform: translateZ(0);
 }
 .hero-bg-img {
   position: absolute;
-  inset: 0;
-  background: var(--img-hero) center/cover no-repeat;
-  will-change: transform;
-  /* cinematic Ken Burns: slower and deeper, with an added horizontal pan
-     so the camera reads like it is genuinely tracking across the scene */
-  animation: kenburns 46s ease-in-out infinite alternate;
+  inset: -5%;
+  background: var(--img-hero) center 44%/cover no-repeat;
+  filter: saturate(1.06) contrast(1.04) brightness(1.02);
+  transform-origin: 52% 46%;
+  will-change: transform, filter;
+  animation: heroCinematicPan 34s cubic-bezier(0.45, 0, 0.2, 1) infinite alternate;
 }
-@keyframes kenburns {
-  0%   { transform: scale(1.04) translate3d(0, 0, 0); }
-  50%  { transform: scale(1.16) translate3d(1.6%, -1%, 0); }
-  100% { transform: scale(1.24) translate3d(3.2%, -2%, 0); }
+.hero-bg::before,
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-bg::before {
+  inset: -12%;
+  background: linear-gradient(104deg,
+    transparent 0 38%,
+    rgba(255, 244, 218, 0.15) 46%,
+    rgba(232, 149, 125, 0.07) 52%,
+    transparent 62% 100%);
+  mix-blend-mode: screen;
+  opacity: 0.32;
+  transform: translate3d(-26%, 0, 0) rotate(1deg);
+  animation: heroLightPass 18s ease-in-out infinite alternate;
+}
+.hero-bg::after {
+  background:
+    linear-gradient(to bottom, rgba(14, 10, 8, 0.2), rgba(14, 10, 8, 0) 26%, rgba(14, 10, 8, 0) 72%, rgba(14, 10, 8, 0.22)),
+    radial-gradient(74% 54% at 50% 42%, rgba(255, 255, 255, 0.1), rgba(10, 8, 6, 0.18) 68%, rgba(10, 8, 6, 0.35) 100%);
+  opacity: 0.58;
+  animation: heroVignetteBreath 9s ease-in-out infinite;
+}
+@keyframes heroCinematicPan {
+  0% {
+    transform: scale(1.08) translate3d(-1.6%, 1%, 0);
+    filter: saturate(1.04) contrast(1.02) brightness(0.98);
+  }
+  42% {
+    transform: scale(1.17) translate3d(0.7%, -0.8%, 0);
+    filter: saturate(1.08) contrast(1.05) brightness(1.04);
+  }
+  100% {
+    transform: scale(1.26) translate3d(2.8%, -1.8%, 0);
+    filter: saturate(1.02) contrast(1.08) brightness(1);
+  }
+}
+@keyframes heroLightPass {
+  0%, 18% { transform: translate3d(-34%, 2%, 0) rotate(1deg); opacity: 0.18; }
+  55% { transform: translate3d(10%, -1%, 0) rotate(1deg); opacity: 0.34; }
+  100% { transform: translate3d(34%, -2%, 0) rotate(1deg); opacity: 0.2; }
+}
+@keyframes heroVignetteBreath {
+  0%, 100% { opacity: 0.52; }
+  50% { opacity: 0.66; }
 }
 
 .hero-vignette {
@@ -2191,8 +2238,13 @@ body.gsap-missing .hero-art {
   .quote-wave i,
   .mt-eq i,
   .cue-line::after,
-  .hero-bg-img {
+  .hero-bg-img,
+  .hero-bg::before,
+  .hero-bg::after {
     animation: none !important;
+  }
+  .hero-bg::before {
+    display: none;
   }
   .reveal-up,
   body.gsap-missing .reveal-up {
