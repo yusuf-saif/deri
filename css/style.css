@@ -633,9 +633,12 @@ p { line-height: 1.7; }
 }
 .word { white-space: nowrap; }
 .hero-amp {
-  font-size: 0.55em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.7em;
   color: var(--peach-deep);
-  margin-bottom: -0.06em;
+  margin-bottom: -0.02em;
 }
 
 .gold-rule {
