@@ -270,18 +270,10 @@ function startOpeningVideo() {
   const goToSite = () => {
     if (handedOff) return;
     handedOff = true;
-    if (hasGSAP) {
-      gsap.set(groove, { opacity: 0.96, scale: 0 });
-      const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.05;
-      gsap.to(groove, {
-        scale: maxDim / 24,
-        duration: 0.6,
-        ease: 'power3.out',
-        onComplete: enterSite,
-      });
-    } else {
-      enterSite();
-    }
+    // Straight cut from the video (the "butterfly") to the site — no
+    // groove-reveal scale-up wipe, so the dark #video-stage background
+    // never shows through mid-transition.
+    enterSite();
   };
 
   // Safety fallback: if the clip never becomes playable (blocked
@@ -328,40 +320,26 @@ function runHeroReveal() {
   const headLen = head.getTotalLength();
   gsap.set([arm, head], { strokeDasharray: (i) => (i ? headLen : armLen), strokeDashoffset: (i) => (i ? headLen : armLen) });
 
-  /* ---- cinematic curtain reveal ----
-     The photo sits behind a closed black frame. The top bar rises
-     and the bottom bar falls so the scene frames in like a film
-     opening — title, needle and notes rise to meet it. (The slow
-     push-in is handled by the CSS Ken Burns on .hero-bg-img.) */
-  const topBar = $('.letterbox.is-top');
-  const bottomBar = $('.letterbox.is-bottom');
+  /* ---- straight-to-hero reveal ----
+     No black curtain — the photo is visible immediately (the slow
+     push-in is handled by the CSS Ken Burns on .hero-bg-img). Title,
+     needle and notes simply rise/fade in over the scene, with a
+     light film-grain shimmer for texture. */
   const grain = $('.filmgrain');
-  const H = window.innerHeight;
-  const barH = Math.ceil(H / 2);
-
-  gsap.set([topBar, bottomBar], { height: 0 });          // start: no bars
   gsap.set(grain, { opacity: 0 });
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-  // 1. close the curtain instantly (the frame arrives black)
-  tl.set(topBar, { height: barH }, 0)
-    .set(bottomBar, { height: barH }, 0)
-    .set(grain, { opacity: 0.5 }, 0);
+  tl.to(grain, { opacity: 0.18, duration: 1.4, ease: 'sine.out' }, 0);
 
-  // 2. part the curtain — a genuinely cinematic widescreen reveal
-  tl.to(topBar, { height: 0, duration: 1.3, ease: 'expo.inOut' }, 0.5)
-    .to(bottomBar, { height: 0, duration: 1.3, ease: 'expo.inOut' }, 0.5)
-    .to(grain, { opacity: 0.18, duration: 2.2, ease: 'sine.out' }, 0.55);
-
-  // 3. print the title onto the scene
+  // print the title onto the scene, starting right away
   tl.to('.hero .reveal-up', {
     opacity: 1, y: 0, duration: 1.0, stagger: 0.14,
-  }, 1.4)
-    .fromTo('.hero-art', { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1.3 }, 1.4)
-    .to('.needle-arm', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 2.0)
-    .to('.needle-head', { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 2.5)
-    .to(grain, { opacity: 0.05, duration: 1.6, ease: 'sine.out' }, 2.3);
+  }, 0)
+    .fromTo('.hero-art', { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1.3 }, 0)
+    .to('.needle-arm', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.6)
+    .to('.needle-head', { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 1.1)
+    .to(grain, { opacity: 0.05, duration: 1.6, ease: 'sine.out' }, 0.9);
 }
 
 /* ============================================================
