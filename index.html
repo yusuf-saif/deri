@@ -39,73 +39,15 @@
 </button>
 
 <!-- ============ OPENING SEQUENCE ============ -->
-<!-- Loading -> burgundy cover -> ivory invitation film -> hero -->
+<!-- Loading -> envelope-open film clip -> hero -->
 <div id="opening" aria-hidden="false">
 
-  <div id="loading-screen" class="opening-layer">
-    <div class="entry-cover is-loading" aria-hidden="true">
-      <span class="cover-fold fold-left"></span>
-      <span class="cover-fold fold-right"></span>
-      <span class="cover-monogram">D <span class="amp">&amp;</span> D</span>
-      <span class="cover-shine"></span>
-    </div>
-    <p class="loading-label">preparing your invitation<span id="loading-pct">0%</span></p>
-  </div>
-
-  <div id="open-card" class="opening-layer" hidden>
-    <button id="open-btn" class="entry-button" type="button" aria-label="Open the invitation">
-      <span class="entry-cover is-ready" aria-hidden="true">
-        <span class="cover-fold fold-left"></span>
-        <span class="cover-fold fold-right"></span>
-        <span class="cover-monogram">D <span class="amp">&amp;</span> D</span>
-        <span class="cover-date">21 · 11 · 2026</span>
-        <span class="cover-shine"></span>
-      </span>
-      <span class="open-label">open invitation</span>
-    </button>
-  </div>
-
-  <div id="invitation-flow" class="opening-layer" hidden aria-hidden="true">
-    <div class="invitation-card" aria-hidden="true">
-      <span class="entry-butterfly">
-        <svg viewBox="0 0 180 116" role="img" aria-label="">
-          <path class="wing-fill" d="M87 55C74 16 45 2 22 14 0 25 7 60 39 67c20 5 39-1 48-12Z"/>
-          <path class="wing-fill lower-wing" d="M84 62C60 58 36 71 30 91c-5 15 11 22 29 10 14-9 22-22 25-39Z"/>
-          <path class="wing-fill" d="M93 55c13-39 42-53 65-41 22 11 15 46-17 53-20 5-39-1-48-12Z"/>
-          <path class="wing-fill lower-wing" d="M96 62c24-4 48 9 54 29 5 15-11 22-29 10-14-9-22-22-25-39Z"/>
-          <path class="wing-vein" d="M87 55C62 36 43 23 22 14M87 56C61 53 45 57 34 67M84 63C64 70 48 81 32 94M93 55c25-19 44-32 65-41M93 56c26-3 42 1 53 11M96 63c20 7 36 18 52 31M90 61c-8 16-20 28-36 38M90 61c8 16 20 28 36 38"/>
-          <path class="wing-edge" d="M87 55C74 16 45 2 22 14 0 25 7 60 39 67c20 5 39-1 48-12ZM84 62C60 58 36 71 30 91c-5 15 11 22 29 10 14-9 22-22 25-39ZM93 55c13-39 42-53 65-41 22 11 15 46-17 53-20 5-39-1-48-12ZM96 62c24-4 48 9 54 29 5 15-11 22-29 10-14-9-22-22-25-39Z"/>
-          <circle class="wing-dot" cx="37" cy="63" r="2.2"/>
-          <circle class="wing-dot" cx="143" cy="63" r="2.2"/>
-          <circle class="wing-dot" cx="56" cy="98" r="1.8"/>
-          <circle class="wing-dot" cx="124" cy="98" r="1.8"/>
-          <path class="body" d="M90 47c4 0 6 5 6 13s-2 21-6 21-6-13-6-21 2-13 6-13Z"/>
-          <path class="antenna" d="M88 49C78 34 66 30 56 32M92 49c10-15 22-19 32-17"/>
-        </svg>
-      </span>
-
-      <div class="invite-copy copy-intro">
-        <p>With joyful hearts</p>
-        <span>we request the honor of your presence</span>
-      </div>
-
-      <div class="invite-copy copy-names">
-        <p>we’re getting married</p>
-        <h2>Doose <span class="amp">&amp;</span><br>Deri</h2>
-      </div>
-
-      <div class="invite-copy copy-date">
-        <p class="script-line">Save<br>the<br>Date</p>
-        <strong>November 21, 2026</strong>
-        <span>3:00 PM · Family Worship Center<br>Wuye, Abuja</span>
-      </div>
-
-      <div class="invite-copy copy-rsvp">
-        <p class="script-line">kindly</p>
-        <strong>RSVP</strong>
-        <span>by 01 November 2026</span>
-      </div>
-    </div>
+  <div id="video-stage" class="opening-layer">
+    <video id="invite-video" class="invite-video"
+           src="assets/web/envelope-open.mp4"
+           poster="assets/web/envelope-open-poster.jpg"
+           muted playsinline preload="auto" aria-hidden="true"></video>
+    <span class="invite-video-tint" aria-hidden="true"></span>
   </div>
 
   <div id="groove-reveal" aria-hidden="true"></div>

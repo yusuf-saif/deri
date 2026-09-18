@@ -1,7 +1,7 @@
 /* ============================================================
    Doose & Deri — main
-   Opening sequence, real love songs with a generative music-box
-   fallback, GSAP scroll choreography, countdown, nav, RSVP.
+   Opening sequence, YouTube-backed love song, GSAP scroll
+   choreography, countdown, nav, RSVP.
    Every GSAP timeline lives here (no inline scripts in HTML).
    ============================================================ */
 
@@ -15,75 +15,30 @@ if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
 }
 
 /* ============================================================
-   LOVE SONGS — real tracks with a generative music-box fallback.
-   Drop your own purchased files into assets/audio/ with these
-   exact names:
-     assets/audio/i-do-aloe-blacc.mp3      "I Do" by Aloe Blacc
-     assets/audio/on-purpose-nico.mp3      "On Purpose" by Ni/co
-   The track follows the section being viewed: "I Do" plays for
-   the hero + ceremony, "On Purpose" for the rest of the site.
-   If a file hasn't been added yet it falls back to the
-   synthesized music box instead of breaking.
+   LOVE SONGS — played only through the official YouTube embed.
+   No downloaded files, no synth fallback: if the API isn't ready
+   or is blocked, we simply wait for it rather than layering in a
+   second audio source.
    ============================================================ */
 
-const MIDI = (m) => 440 * Math.pow(2, (m - 69) / 12);
-
-const TRACKS = [
+const SONGS = [
   {
     id: 'on-purpose',
-    file: 'assets/audio/on-purpose-nico.mp3',
-    label: 'On Purpose — Ni/co',
     sections: ['home', 'story', 'moments', 'wedding', 'dates', 'rsvp'],
   },
 ];
 
 const Music = {
   playing: false,
-  ctx: null,
-  master: null,
-  timer: null,
-  nextTime: 0,
-  step: 0,
-  active: new Set(),
-  tracks: {},
   currentId: null,
   activeSection: 'home',
 
-  // waltz, 72 bpm, 4 bars of 6 eighths
-  EIGHTH: 60 / 72 / 2,
-  TOTAL_STEPS: 24,
-  chords: [
-    { bass: 36, triad: [60, 64, 67] }, // C
-    { bass: 43, triad: [55, 59, 62] }, // G
-    { bass: 45, triad: [57, 60, 64] }, // Am
-    { bass: 41, triad: [53, 57, 60] }, // F
-  ],
-  // sweet pentatonic line over the four bars (null = rest)
-  melody: [
-    null, 64, null, 67, null, 69,
-    null, 71, null, 74, null, 71,
-    null, 69, null, 72, null, 76,
-    null, 69, null, 67, null, 64,
-  ],
-  arpPattern: [0, 1, 2, 1, 0, 1],
-
   init() {
-    TRACKS.forEach((t) => {
-      const el = new Audio(t.file);
-      el.loop = true;
-      el.preload = 'auto';
-      el.volume = 0;
-      t.el = el;
-      t.ok = false;
-      el.addEventListener('canplaythrough', () => { t.ok = true; });
-      el.addEventListener('error', () => { t.ok = false; });
-      this.tracks[t.id] = t;
-    });
     YouTube.load();
   },
 
   trackFor(section) {
-    return TRACKS.find((t) => t.sections.includes(section)) || TRACKS[0];
+    return SONGS.find((s) => s.sections.includes(section)) || SONGS[0];
   },
 
   setSection(section) {
@@ -100,174 +55,36 @@ const Music = {
   },
 
   playTrack(id) {
-    if (id === this.currentId) return;
     this.currentId = id;
-    this.stopBox();
-    TRACKS.forEach((t) => {
-      if (t.id !== id) { t.el.pause(); t.el.volume = 0; }
-    });
-    const track = this.tracks[id];
-    if (track && track.ok && track.el.readyState > 1) {
-      // 1. a real MP3 the owner dropped in
-      YouTube.pauseAll();
-      this.fadeIn(track.el);
-    } else if (YouTube.couldPlay()) {
-      // 2. official YouTube embed for these songs
-      YouTube.play(id);
-    } else {
-      // 3. graceful generative music-box fallback
-      YouTube.load();
-      this.startBox();
-    }
-  },
-
-  fadeIn(el, durS = 1.2) {
-    el.volume = 0;
-    el.play().catch(() => { /* media resume needs a gesture */ });
-    const t0 = performance.now();
-    const step = () => {
-      const k = Math.min(1, (performance.now() - t0) / (durS * 1000));
-      el.volume = k;
-      if (k < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    // If the YouTube API isn't ready yet, its onReady handler picks
+    // this up as soon as it is — we don't fall back to anything else.
+    if (YouTube.couldPlay()) YouTube.play(id);
   },
 
   stop() {
     this.playing = false;
     setMusicUI(false);
     this.currentId = null;
-    TRACKS.forEach((t) => { t.el.pause(); t.el.volume = 0; });
     YouTube.pauseAll();
-    this.stopBox();
   },
 
   toggle() {
     this.playing ? this.stop() : this.start();
   },
 
-  /* ---- silence the synthesized box ---- */
-  stopBox() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
+  resumeCurrent() {
+    if (!this.playing) {
+      this.start();
+      return;
     }
-    this.active.forEach((osc) => { try { osc.stop(); } catch (e) { /* already stopped */ } });
-    this.active.clear();
-    if (this.ctx && this.master) {
-      const now = this.ctx.currentTime;
-      this.master.gain.cancelScheduledValues(now);
-      this.master.gain.setValueAtTime(this.master.gain.value, now);
-      this.master.gain.linearRampToValueAtTime(0.0001, now + 0.4);
-    }
-  },
-
-  /* ---- synthesized music box ---- */
-  startBox() {
-    if (!this.ctx) this.buildGraph();
-    this.ctx.resume();
-    const now = this.ctx.currentTime;
-    this.step = 0;
-    this.nextTime = now + 0.12;
-    this.master.gain.cancelScheduledValues(now);
-    this.master.gain.setValueAtTime(0.0001, now);
-    this.master.gain.linearRampToValueAtTime(0.16, now + 1.2);
-    if (!this.timer) {
-      this.timer = setInterval(() => this.schedule(), 120);
-    }
-  },
-
-  buildGraph() {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    this.ctx = ctx;
-
-    this.master = ctx.createGain();
-    this.master.gain.value = 0.0001;
-    this.master.connect(ctx.destination);
-
-    this.bus = ctx.createGain();   // dry path
-    this.send = ctx.createGain();  // reverb send
-    this.dry = ctx.createGain();
-    this.wet = ctx.createGain();
-    this.bus.connect(this.dry); this.dry.connect(this.master);
-    this.bus.connect(this.send);
-    this.send.gain.value = 0.5;
-
-    const convolver = ctx.createConvolver();
-    convolver.buffer = this.impulse();
-    convolver.connect(this.wet); this.wet.connect(this.master);
-    this.wet.gain.value = 0.5;
-
-    this.convolver = convolver;
-  },
-
-  impulse() {
-    const rate = this.ctx.sampleRate;
-    const len = Math.floor(rate * 2.2);
-    const buf = this.ctx.createBuffer(2, len, rate);
-    for (let ch = 0; ch < 2; ch++) {
-      const data = buf.getChannelData(ch);
-      for (let i = 0; i < len; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.8);
-      }
-    }
-    return buf;
-  },
-
-  schedule() {
-    // lookahead well above one eighth (0.417s) so throttled tabs
-    // never dump a burst of overdue notes on refocus
-    while (this.nextTime < this.ctx.currentTime + 1.2) {
-      this.scheduleStep(this.step, this.nextTime);
-      this.nextTime += this.EIGHTH;
-      this.step = (this.step + 1) % this.TOTAL_STEPS;
-    }
-  },
-
-  scheduleStep(step, t) {
-    const bar = Math.floor(step / 6);
-    const pos = step % 6;
-    const chord = this.chords[bar];
-
-    if (pos === 0) this.tone(MIDI(chord.bass), t, 3.4, 0.5);
-
-    const arp = chord.triad[this.arpPattern[pos]];
-    this.tone(MIDI(arp), t, 2.2, 0.38);
-
-    const mel = this.melody[step];
-    if (mel != null) {
-      this.tone(MIDI(mel), t, 2.6, 0.85);
-      this.tone(MIDI(mel + 12), t, 1.7, 0.28); // music-box shimmer
-    }
-  },
-
-  tone(freq, t, dur, vol) {
-    const ctx = this.ctx;
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, t);
-
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-
-    osc.connect(g);
-    g.connect(this.bus);
-    g.connect(this.send);
-
-    this.active.add(osc);
-    osc.onended = () => this.active.delete(osc);
-
-    osc.start(t);
-    osc.stop(t + dur + 0.05);
+    const id = this.currentId || this.trackFor(this.activeSection).id;
+    if (YouTube.couldPlay()) YouTube.play(id);
   },
 };
 
 /* ============================================================
    YOUTUBE EMBED — official IFrame player for On Purpose.
-   Plays audio from youtube.com (no downloaded files, no rips)
-   and hands back to the generative box if the API is blocked.
+   Plays audio straight from youtube.com; no downloaded files.
    ============================================================ */
 
 const YT_VIDEOS = {
@@ -309,6 +126,9 @@ const YouTube = {
           playlist: YT_VIDEOS[id],
         },
         events: {
+          // The API loads in the background, so playback may already
+          // have been requested before the player existed — pick it
+          // up here if this song is still the one that should sound.
           onReady: () => {
             if (Music.playing && Music.trackFor(Music.activeSection).id === id) {
               this.play(id);
@@ -358,59 +178,61 @@ function setMusicUI(on) {
 }
 musicToggle.addEventListener('click', () => Music.toggle());
 
+function startMusicBestEffort() {
+  try {
+    Music.start();
+    Music.resumeCurrent();
+  } catch (err) {
+    console.warn('Music unavailable:', err);
+  }
+}
+
+// Browsers only allow audio to start on a real user gesture. A guest
+// who never clicks and just scrolls with a wheel/trackpad still
+// counts as "using the site," so the song should still come on —
+// it should only ever go quiet if they explicitly hit the toggle.
+function installMusicUnlock() {
+  const gestures = ['pointerdown', 'touchstart', 'keydown', 'click', 'wheel', 'scroll'];
+  const unlock = () => {
+    try {
+      Music.resumeCurrent();
+    } catch (err) {
+      console.warn('Music resume unavailable:', err);
+    }
+    gestures.forEach((type) => window.removeEventListener(type, unlock, true));
+  };
+
+  gestures.forEach((type) => window.addEventListener(type, unlock, { capture: true, passive: true }));
+}
+
 /* ============================================================
    OPENING SEQUENCE
    ============================================================ */
 
-const loadingScreen = $('#loading-screen');
-const openCard = $('#open-card');
-const openBtn = $('#open-btn');
+const inviteVideo = $('#invite-video');
 const groove = $('#groove-reveal');
 const opening = $('#opening');
 const site = $('#site');
-const pctLabel = $('#loading-pct');
 
-// Real assets to gate a "ready" page — add hero/og images here.
-const assetsToPreload = ['assets/web/IMG_4638.jpg'];
+// Real assets to warm the cache — the hero photo shown right after
+// the envelope, and the video poster for an instant first frame.
+// None of these gate the opening: the envelope plays immediately,
+// straight off the poster if the clip itself is still buffering.
+const assetsToPreload = ['assets/web/IMG_4638.jpg', 'assets/web/envelope-open-poster.jpg'];
 
 function preload(urls) {
-  if (!urls.length) return Promise.resolve();
-  return Promise.all(
-    urls.map(
-      (src) =>
-        new Promise((resolve) => {
-          const img = new Image();
-          img.onload = img.onerror = resolve;
-          img.src = src;
-        })
-    )
-  );
+  urls.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
 }
+preload(assetsToPreload);
 
-let pct = 0;
-const loadingTimer = setInterval(() => {
-  pct = Math.min(100, pct + Math.round(4 + Math.random() * 10));
-  pctLabel.textContent = `${pct}%`;
-  if (pct >= 100) clearInterval(loadingTimer);
-}, 150);
-
-preload(assetsToPreload).then(() => {
-  const finish = () => {
-    loadingScreen.hidden = true;
-    openCard.hidden = false;
-    requestAnimationFrame(() => {
-      setTimeout(() => openEnvelope({ auto: true }), 450);
-    });
-  };
-  const waitForCount = setInterval(() => {
-    if (pct >= 100) {
-      clearInterval(waitForCount);
-      setTimeout(finish, 250);
-    }
-  }, 100);
-});
+let openSequenceStarted = false;
+startOpeningVideo();
 
 function enterSite() {
+  startMusicBestEffort();
   opening.remove();
   site.hidden = false;
   showMusicToggle();
@@ -422,63 +244,68 @@ function enterSite() {
   if (heroContent) heroContent.focus({ preventScroll: true });
 }
 
-function openEnvelope({ auto = false } = {}) {
-  if (openBtn.disabled) return;
+/* ---- envelope-open film clip ----
+   Reduced-motion or playback-blocked guests should never be stuck
+   staring at a dead screen, so any failure path falls through to
+   enterSite() after a short, deliberate beat rather than hanging. */
+function startOpeningVideo() {
+  if (openSequenceStarted) return;
+  openSequenceStarted = true;
 
   const originX = window.innerWidth / 2;
   const originY = window.innerHeight / 2;
-
   groove.style.left = `${originX}px`;
   groove.style.top = `${originY}px`;
-  openBtn.disabled = true;
 
-  if (!auto) {
-    // Start the song now — we're inside the user gesture, so the
-    // browser's autoplay policy allows audio to begin. Never let a
-    // Web Audio failure trap the visitor on the loading screen.
-    try {
-      Music.start();
-    } catch (err) {
-      console.warn('Music unavailable:', err);
-    }
-  }
+  startMusicBestEffort();
 
-  if (prefersReducedMotion || !hasGSAP) {
-    enterSite();
+  if (prefersReducedMotion || !inviteVideo) {
+    // Respect reduced motion: hold on the poster frame briefly,
+    // then go straight to the site rather than play the clip.
+    setTimeout(enterSite, 600);
     return;
   }
 
-  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.05;
-  const cover = openBtn.querySelector('.entry-cover');
-  const coverFolds = openBtn.querySelectorAll('.cover-fold');
-  const coverMonogram = openBtn.querySelector('.cover-monogram');
-  const coverDate = openBtn.querySelector('.cover-date');
-  const openLabel = openBtn.querySelector('.open-label');
+  let handedOff = false;
+  const goToSite = () => {
+    if (handedOff) return;
+    handedOff = true;
+    if (hasGSAP) {
+      gsap.set(groove, { opacity: 0.96, scale: 0 });
+      const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.05;
+      gsap.to(groove, {
+        scale: maxDim / 24,
+        duration: 0.6,
+        ease: 'power3.out',
+        onComplete: enterSite,
+      });
+    } else {
+      enterSite();
+    }
+  };
 
-  const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, onComplete: enterSite });
-  tl.to(openLabel, { opacity: 0, y: 14, duration: 0.28 }, 0)
-    .to([coverMonogram, coverDate], { opacity: 0, y: -10, duration: 0.34 }, 0.06)
-    .to(coverFolds, { opacity: 0.28, duration: 0.44 }, 0.08)
-    .to(cover, {
-      x: -window.innerWidth * 0.18,
-      rotate: -4,
-      rotateY: -72,
-      scale: 1.04,
-      opacity: 0,
-      filter: 'blur(8px)',
-      duration: 0.82,
-      ease: 'power3.inOut',
-    }, 0.18)
-    .to(openCard, { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, 0.36)
-    .to(groove, {
-      scale: maxDim / 24,
-      duration: 0.95,
-      ease: 'power3.out',
-      opacity: 0.98,
-    }, 0.44);
+  // Safety fallback: if the clip never becomes playable (blocked
+  // autoplay, network failure, slow connection), don't hang here.
+  const fallbackTimer = setTimeout(goToSite, 6000);
+
+  inviteVideo.addEventListener('ended', () => {
+    clearTimeout(fallbackTimer);
+    goToSite();
+  });
+  inviteVideo.addEventListener('error', () => {
+    clearTimeout(fallbackTimer);
+    goToSite();
+  });
+
+  const playPromise = inviteVideo.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(() => {
+      // Autoplay blocked — don't wait on a frozen poster.
+      clearTimeout(fallbackTimer);
+      goToSite();
+    });
+  }
 }
-
-openBtn.addEventListener('click', () => openEnvelope());
 
 function showMusicToggle() {
   musicToggle.hidden = false;
@@ -836,6 +663,8 @@ momentCards.forEach((card) => {
    BOOT
    ============================================================ */
 Music.init();
+installMusicUnlock();
+startMusicBestEffort();
 
 // If JS runs but GSAP/CDN failed, reveal content & controls anyway
 if (!hasGSAP) {

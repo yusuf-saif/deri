@@ -247,389 +247,31 @@ p { line-height: 1.7; }
   gap: 1.4rem;
   padding: clamp(1.25rem, 4vw, 3rem);
 }
+#video-stage { z-index: 1; }
 
-#loading-screen,
-#open-card {
-  color: rgba(255, 246, 235, 0.82);
-  background:
-    radial-gradient(82% 54% at 50% 16%, rgba(168, 181, 160, 0.62), rgba(47, 58, 42, 0) 68%),
-    linear-gradient(155deg, var(--entry-sage-soft) 0%, var(--entry-sage) 42%, var(--entry-sage-deep) 100%);
+/* Envelope-open film clip — real footage replacing the CSS envelope.
+   Full-bleed cover treatment on a dark backdrop, matching how
+   .hero-bg-img handles full-bleed photography elsewhere. */
+#video-stage {
+  padding: 0;
+  background: var(--sage-dark);
 }
-#loading-screen::before,
-#open-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.34;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 18% 24%, transparent 0 12px, rgba(255, 222, 205, 0.18) 13px 14px, transparent 15px),
-    radial-gradient(ellipse at 23% 31%, transparent 0 16px, rgba(255, 222, 205, 0.16) 17px 18px, transparent 19px),
-    radial-gradient(ellipse at 79% 19%, transparent 0 14px, rgba(255, 222, 205, 0.16) 15px 16px, transparent 17px),
-    radial-gradient(ellipse at 75% 31%, transparent 0 18px, rgba(255, 222, 205, 0.14) 19px 20px, transparent 21px),
-    radial-gradient(ellipse at 16% 78%, transparent 0 18px, rgba(255, 222, 205, 0.14) 19px 20px, transparent 21px),
-    radial-gradient(ellipse at 86% 76%, transparent 0 16px, rgba(255, 222, 205, 0.12) 17px 18px, transparent 19px),
-    repeating-linear-gradient(128deg, rgba(255, 230, 210, 0.1) 0 1px, transparent 1px 14px);
-  filter: drop-shadow(0 1px 0 rgba(30, 4, 11, 0.42));
-}
-
-.entry-cover {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  display: block;
-  width: min(76vw, 360px);
-  height: min(70vh, 520px);
-  min-height: 390px;
-  border-radius: 6px;
-  overflow: hidden;
-  transform: translate(-50%, -50%) rotate(-0.6deg);
-  transform-style: preserve-3d;
-  background:
-    linear-gradient(135deg, rgba(255, 237, 223, 0.16), rgba(255, 255, 255, 0) 34%),
-    linear-gradient(155deg, #a8b5a0 0%, #5e7156 44%, #2f3a2a 100%);
-  box-shadow:
-    0 34px 80px -34px rgba(24, 32, 21, 0.66),
-    inset 0 0 0 1px rgba(255, 235, 218, 0.2),
-    inset 0 0 55px rgba(25, 36, 22, 0.3);
-}
-.entry-cover::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 19% 23%, transparent 0 15px, rgba(255, 222, 205, 0.18) 16px 17px, transparent 18px),
-    radial-gradient(ellipse at 26% 29%, transparent 0 21px, rgba(255, 222, 205, 0.14) 22px 23px, transparent 24px),
-    radial-gradient(ellipse at 79% 21%, transparent 0 18px, rgba(255, 222, 205, 0.14) 19px 20px, transparent 21px),
-    radial-gradient(ellipse at 75% 70%, transparent 0 25px, rgba(255, 222, 205, 0.12) 26px 27px, transparent 28px),
-    radial-gradient(ellipse at 19% 73%, transparent 0 23px, rgba(255, 222, 205, 0.12) 24px 25px, transparent 26px),
-    repeating-linear-gradient(38deg, rgba(255, 244, 189, 0.12) 0 1px, transparent 1px 14px);
-  mix-blend-mode: screen;
-  opacity: 0.82;
-  filter: drop-shadow(0 1px 0 rgba(23, 5, 8, 0.6));
-}
-.entry-cover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(128deg, transparent 49.7%, rgba(22, 31, 19, 0.36) 50%, rgba(255, 244, 189, 0.12) 50.4%, transparent 50.8%),
-    linear-gradient(232deg, transparent 49.7%, rgba(22, 31, 19, 0.36) 50%, rgba(255, 244, 189, 0.12) 50.4%, transparent 50.8%);
-  pointer-events: none;
-}
-.cover-fold {
-  position: absolute;
-  inset: 0;
-  opacity: 0.78;
-  pointer-events: none;
-}
-.fold-left {
-  clip-path: polygon(0 0, 50% 50%, 0 100%);
-  background:
-    linear-gradient(90deg, rgba(47, 58, 42, 0.34), rgba(255, 237, 223, 0.03)),
-    rgba(168, 181, 160, 0.28);
-}
-.fold-right {
-  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
-  background:
-    linear-gradient(270deg, rgba(22, 31, 19, 0.44), rgba(255, 237, 223, 0.03)),
-    rgba(94, 113, 86, 0.42);
-}
-.cover-monogram,
-.cover-date {
-  position: absolute;
-  left: 50%;
-  z-index: 2;
-  color: rgba(255, 246, 235, 0.76);
-  text-shadow: 0 1px 0 rgba(32, 4, 10, 0.4);
-  transform: translateX(-50%);
-}
-.cover-monogram {
-  top: 47%;
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 9vw, 4.1rem);
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-.cover-date {
-  top: calc(47% + clamp(3.1rem, 10vw, 5.2rem));
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-}
-.cover-shine {
-  position: absolute;
-  inset: -32%;
-  z-index: 1;
-  background: linear-gradient(110deg, transparent 34%, rgba(255, 245, 234, 0.16) 47%, transparent 60%);
-  transform: translateX(-28%) rotate(3deg);
-}
-.entry-cover.is-loading {
-  animation: coverBreath 4.6s ease-in-out infinite;
-}
-.entry-cover.is-ready {
-  animation: bob 4.6s ease-in-out infinite;
-}
-.entry-cover.is-ready .cover-shine {
-  animation: coverShine 4.2s ease-in-out infinite;
-}
-
-@keyframes coverBreath {
-  0%, 100% { transform: translate(-50%, -50%) rotate(-0.6deg) scale(1); }
-  50% { transform: translate(-50%, calc(-50% - 6px)) rotate(-0.2deg) scale(1.01); }
-}
-@keyframes coverShine {
-  0%, 100% { transform: translateX(-36%) rotate(3deg); opacity: 0.25; }
-  50% { transform: translateX(30%) rotate(3deg); opacity: 0.72; }
-}
-
-.loading-label {
-  position: relative;
-  z-index: 1;
-  margin: calc(min(70vh, 520px) + 1.6rem) 0 0;
-  font-size: 0.76rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 246, 235, 0.76);
-}
-#loading-pct {
-  margin-left: 0.5em;
-  font-variant-numeric: tabular-nums;
-  color: rgba(244, 206, 168, 0.95);
-}
-
-.entry-button {
-  position: relative;
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.4rem;
-  width: min(100vw, 520px);
-  min-height: min(88vh, 680px);
-  cursor: pointer;
-  overflow: visible;
-  padding: 1rem;
-  transition: transform 0.3s ease;
-}
-.entry-button:hover .entry-cover,
-.entry-button:focus-visible .entry-cover {
-  box-shadow:
-    0 42px 92px -34px rgba(24, 32, 21, 0.78),
-    inset 0 0 0 1px rgba(255, 235, 218, 0.22),
-    inset 0 0 55px rgba(25, 36, 22, 0.22);
-}
-.entry-button:hover .cover-monogram,
-.entry-button:focus-visible .cover-monogram {
-  color: rgba(255, 246, 235, 0.9);
-}
-#open-btn:disabled {
-  cursor: default;
-}
-#open-btn:disabled .open-label {
-  opacity: 0.55;
-}
-
-@keyframes bob {
-  0%, 100% { transform: translate(-50%, -50%) rotate(-0.6deg); }
-  50% { transform: translate(-50%, calc(-50% - 8px)) rotate(0.2deg); }
-}
-
-.open-label {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(1.8rem, 6vh, 4rem);
-  z-index: 2;
-  color: rgba(255, 246, 235, 0.8);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  text-shadow: 0 1px 0 rgba(32, 4, 10, 0.38);
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-#invitation-flow {
-  background:
-    radial-gradient(70% 28% at 50% 12%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0) 74%),
-    linear-gradient(180deg, #fbfaf5 0%, var(--ivory) 66%, #ebe4d7 100%);
-}
-.invitation-card {
-  position: relative;
-  width: min(100vw, 520px);
-  height: 100dvh;
-  min-height: 620px;
-  max-height: 920px;
-  overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0)),
-    var(--vellum);
-  box-shadow: 0 30px 90px -54px rgba(63, 45, 31, 0.45);
-  isolation: isolate;
-}
-.invitation-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(circle at 26% 32%, rgba(82, 64, 48, 0.045) 0 1px, transparent 1.5px),
-    radial-gradient(circle at 72% 58%, rgba(176, 139, 91, 0.055) 0 1px, transparent 1.5px),
-    repeating-linear-gradient(88deg, rgba(69, 55, 42, 0.025) 0 1px, transparent 1px 8px);
-  opacity: 0.9;
-}
-.invitation-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(74% 38% at 50% 12%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0) 66%),
-    linear-gradient(180deg, rgba(74, 42, 28, 0), rgba(74, 42, 28, 0.07));
-}
-.entry-butterfly {
-  position: absolute;
-  top: clamp(2rem, 8vh, 4.8rem);
-  left: 50%;
-  z-index: 3;
-  width: clamp(118px, 34vw, 168px);
-  color: var(--butter-deep);
-  filter: drop-shadow(0 15px 13px rgba(78, 55, 35, 0.22));
-  transform: translateX(-50%);
-  transform-origin: 50% 60%;
-}
-.entry-butterfly svg {
-  display: flex;
+.invite-video {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: var(--sage-dark);
 }
-.wing-fill {
-  fill: rgba(242, 213, 126, 0.34);
-  stroke: rgba(184, 148, 46, 0.62);
-  stroke-width: 1;
-}
-.lower-wing {
-  fill: rgba(255, 244, 189, 0.42);
-}
-.wing-edge,
-.wing-vein,
-.antenna {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.45;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.wing-vein {
-  opacity: 0.36;
-  stroke-width: 0.9;
-}
-.body {
-  fill: var(--butter-deep);
-}
-.wing-dot {
-  fill: currentColor;
-  opacity: 0.66;
-}
-.invite-copy {
+/* Recolors the burgundy footage to our sage palette: "color" blend
+   mode takes hue/saturation from this layer but keeps the video's
+   own luminance, so the embossed floral shading survives the tint. */
+.invite-video-tint {
   position: absolute;
-  left: clamp(1.5rem, 8vw, 3.8rem);
-  right: clamp(1.5rem, 8vw, 3.8rem);
-  z-index: 2;
-  color: rgba(75, 57, 46, 0.72);
-  text-align: center;
-  opacity: 0;
-  transform: translateY(18px);
-}
-.invite-copy p,
-.invite-copy span,
-.invite-copy strong {
-  display: block;
-  margin: 0;
-}
-.copy-intro {
-  top: 35%;
-}
-.copy-intro p,
-.copy-names p {
-  font-size: clamp(0.62rem, 2vw, 0.76rem);
-  font-weight: 500;
-  letter-spacing: 0.38em;
-  line-height: 1.8;
-  text-transform: uppercase;
-  color: var(--entry-sage-deep);
-}
-.copy-intro span {
-  margin-top: 0.7rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 5vw, 1.55rem);
-  font-style: italic;
-  line-height: 1.25;
-  color: rgba(83, 72, 63, 0.58);
-}
-.copy-names {
-  top: 42%;
-}
-.copy-names h2 {
-  margin-top: 0.9rem;
-  color: rgba(91, 77, 68, 0.66);
-  font-family: var(--font-script);
-  font-size: clamp(4.2rem, 17vw, 7rem);
-  font-weight: 400;
-  line-height: 0.82;
-}
-.copy-names .amp {
-  color: rgba(184, 148, 46, 0.32);
-  font-size: 0.7em;
-}
-.copy-date {
-  top: 33%;
-}
-.script-line {
-  color: var(--entry-sage-deep);
-  font-family: var(--font-script);
-  font-size: clamp(3.5rem, 13vw, 5.5rem);
-  line-height: 0.86;
-}
-.copy-date strong {
-  margin-top: 2.1rem;
-  color: rgba(84, 75, 68, 0.74);
-  font-family: var(--font-display);
-  font-size: clamp(1rem, 4vw, 1.26rem);
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.copy-date span,
-.copy-rsvp span {
-  margin-top: 1.5rem;
-  color: rgba(94, 113, 86, 0.82);
-  font-size: clamp(0.62rem, 2vw, 0.78rem);
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  line-height: 1.8;
-  text-transform: uppercase;
-}
-.copy-rsvp {
-  top: 42%;
-}
-.copy-rsvp .script-line {
-  margin-bottom: -0.15rem;
-  font-size: clamp(2.8rem, 11vw, 4.2rem);
-}
-.copy-rsvp strong {
-  color: var(--entry-sage-deep);
-  font-family: var(--font-display);
-  font-size: clamp(2.1rem, 9vw, 3.6rem);
-  font-weight: 400;
-  letter-spacing: 0.26em;
-  text-indent: 0.26em;
+  inset: 0;
+  background: linear-gradient(155deg, var(--sage) 0%, var(--sage-deep) 55%, var(--sage-dark) 100%);
+  mix-blend-mode: color;
+  pointer-events: none;
 }
 
 /* A vinyl record: concentric grooves + a butter "D & D" label */
@@ -2181,23 +1823,6 @@ body.gsap-missing .hero-art {
   .hero-needle { display: none; }
   .hero-corner { width: 40px; height: 40px; opacity: 0.45; }
 
-  .entry-cover {
-    width: min(82vw, 330px);
-    height: min(68vh, 492px);
-    min-height: 356px;
-  }
-  .loading-label {
-    margin-top: calc(min(68vh, 492px) + 1.25rem);
-  }
-  .invitation-card {
-    width: 100vw;
-    min-height: 100dvh;
-    max-height: none;
-  }
-  .copy-names h2 {
-    font-size: clamp(3.75rem, 18vw, 6.4rem);
-  }
-
   .story-chapter { grid-template-columns: 48px 1fr; gap: 1rem; }
   .timeline-line { left: 24px; }
   .story-chapter::before { left: 18.5px; }
@@ -2212,27 +1837,12 @@ body.gsap-missing .hero-art {
   .guest-photo-card { flex-basis: min(72vw, 240px); height: min(92vw, 300px); }
 }
 
-@media (max-width: 360px) {
-  .entry-cover { width: min(84vw, 302px); min-height: 332px; }
-  .copy-date span,
-  .copy-rsvp span { letter-spacing: 0.08em; }
-}
-
-@media (max-width: 330px) {
-  .entry-cover { min-height: 312px; }
-  .copy-intro p,
-  .copy-names p { letter-spacing: 0.28em; }
-}
-
 /* ============================================================
    REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .record,
-  .entry-cover.is-loading,
-  .entry-cover.is-ready,
-  .entry-cover.is-ready .cover-shine,
   .record-wrap,
   .note-deco,
   .quote-wave i,
