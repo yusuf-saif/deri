@@ -30,12 +30,17 @@
 <!-- Cinematic film grain over the whole page -->
 <div class="grain" aria-hidden="true"></div>
 
-<!-- Music toggle — appears once the invitation is opened -->
+<!-- Music toggle — appears once the invitation opens. Autoplay-with-sound
+     is blocked by browsers until a real tap/click/scroll happens, so this
+     starts labeled ("Play our song") as a clear, one-tap way to guarantee
+     the song starts audibly; it collapses to an icon-only button once
+     playback is actually audible. -->
 <button id="music-toggle" class="music-toggle" type="button" aria-label="Play our song" aria-pressed="false" hidden>
   <span class="mt-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-1.8-2.4V5.6l10-1.9v11a2.5 2.5 0 1 1-1.8-2.4V7L9 8.4v10.1Z"/></svg>
   </span>
   <span class="mt-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="mt-label" aria-hidden="true">Play our song</span>
 </button>
 
 <!-- ============ OPENING SEQUENCE — OLD (video-gate), DISABLED ============
@@ -76,8 +81,8 @@
   <div class="opening-layer">
     <p class="opening-eyebrow">Doose &amp; Deri invite you</p>
 
-    <div class="opening-start" aria-hidden="true">
-      <span class="opening-record">
+    <button id="opening-start" class="opening-start" type="button" aria-label="Play our song">
+      <span class="opening-record" aria-hidden="true">
         <span class="record"></span>
         <svg class="opening-needle" viewBox="0 0 60 60" aria-hidden="true">
           <path d="M46 8 L30 30" class="needle-arm"/>
@@ -86,7 +91,8 @@
         </svg>
       </span>
       <span class="opening-start-text">Doose &amp; Deri</span>
-    </div>
+      <span class="opening-start-hint">Tap for sound</span>
+    </button>
   </div>
 
   <div id="groove-reveal" aria-hidden="true"></div>

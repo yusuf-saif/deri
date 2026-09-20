@@ -66,6 +66,11 @@ const SONGS = [
 
 const Music = {
   playing: false,
+  // Flips true (one-way) the first time playback is genuinely known to
+  // be audible — i.e. requested from a real user gesture, since that's
+  // the only case a browser actually allows sound. Drives the
+  // music-toggle's "tap for sound" pill vs. plain icon-button look.
+  audible: false,
   currentId: null,
   activeSection: 'home',
 
@@ -112,7 +117,16 @@ const Music = {
   },
 
   toggle() {
-    this.playing ? this.stop() : this.start();
+    if (this.playing && this.audible) {
+      this.stop();
+      return;
+    }
+    // A tap on the toggle is a real user gesture — the one guaranteed
+    // way to make sound audible — regardless of whether `playing` was
+    // already true from an earlier, browser-blocked autoplay attempt.
+    this.audible = true;
+    markAudible();
+    this.start();
   },
 
   resumeCurrent() {
@@ -183,6 +197,12 @@ const YouTube = {
     });
   },
 
+  // Always requests real, unmuted playback — some browsers (a guest
+  // who's visited/played audio on this site before, for instance) will
+  // actually honor an unmuted autoplay request. Where it's blocked, this
+  // silently fails and installMusicUnlock()'s retry picks it up on the
+  // guest's first tap/scroll — deliberately muting up front would only
+  // rule out the browsers that *would* have let it through.
   play(id) {
     const p = this.players[id];
     if (!p) return;
@@ -220,6 +240,9 @@ function setMusicUI(on) {
   musicToggle.setAttribute('aria-pressed', String(on));
   musicToggle.setAttribute('aria-label', on ? 'Pause our song' : 'Play our song');
 }
+function markAudible() {
+  musicToggle.classList.add('is-audible');
+}
 musicToggle.addEventListener('click', () => Music.toggle());
 
 function startMusicBestEffort(options = {}) {
@@ -231,13 +254,22 @@ function startMusicBestEffort(options = {}) {
   }
 }
 
-// Browsers only allow audio to start on a real user gesture. A guest
-// who interacts through touch, keyboard, or click still
-// counts as having opened the invitation, so we retry playback there.
+// Browsers only allow audio to start on a real user gesture. A tap, a
+// swipe (which fires touchstart), a click, a keypress, or a scroll/
+// wheel anywhere on the page all count and retry playback here — a
+// bare mouse hover never does, in any browser, so that one genuinely
+// can't be added to this list. Clicks on the music-toggle or the
+// preloader's record are skipped here since their own click handlers
+// (both Music.toggle()) already own that gesture — letting both fire
+// would start playback then immediately pause it.
 function installMusicUnlock() {
-  const gestures = ['pointerdown', 'touchstart', 'keydown', 'click'];
-  const unlock = () => {
+  const gestures = ['pointerdown', 'touchstart', 'keydown', 'click', 'wheel', 'scroll'];
+  const unlock = (event) => {
+    if (musicToggle.contains(event.target)) return;
+    if (openingStart && openingStart.contains(event.target)) return;
     try {
+      Music.audible = true;
+      markAudible();
       Music.resumeCurrent();
     } catch (err) {
       console.warn('Music resume unavailable:', err);
@@ -416,6 +448,14 @@ function installOpeningStart() {
     enterSite();
     return;
   }
+  // The reveal itself always auto-plays (see below) — this click is
+  // purely a guaranteed, one-tap way to make the song audible, using
+  // the exact same Music.toggle() the persistent music-toggle button
+  // uses once the site is revealed.
+  openingStart.addEventListener('click', (event) => {
+    event.stopPropagation();
+    Music.toggle();
+  });
   // Give the record a frame to paint before animating it.
   requestAnimationFrame(() => requestAnimationFrame(startOpening));
 }
@@ -456,7 +496,7 @@ function startOpening() {
     .to('.opening-record', { scale: 1.06, duration: 0.25 }, 0.05)
     .to('.opening-record', { scale: 1, duration: 0.3 }, 0.3)
     // t=0.15–0.50s: the label copy fades up and out as the groove takes over
-    .to(['.opening-start-text', '.opening-eyebrow'], {
+    .to(['.opening-start-text', '.opening-start-hint', '.opening-eyebrow'], {
       opacity: 0, y: -6, duration: 0.35,
     }, 0.15)
     // t=0.30–1.15s: the groove ripples out from the record and floods
