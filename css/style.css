@@ -23,11 +23,18 @@
   --cream: #FBF7E8;
   --paper: #FFFDF4;
 
-  --brown: var(--sage-deep);
-  --brown-deep: var(--sage-dark);
-  --brown-soft: rgba(77, 95, 70, 0.7);
+  --text-strong: #1F2A1C;
+  --text-body: #40503A;
+  --text-muted: #4C5B45;
+  --text-inverse: #FFFDF4;
+  --text-inverse-muted: #F8F1D8;
+  --accent-ink: #8F4A38;
+
+  --brown: var(--text-body);
+  --brown-deep: var(--text-strong);
+  --brown-soft: var(--text-muted);
   --peach: var(--butter);
-  --peach-deep: var(--coral-deep);
+  --peach-deep: var(--accent-ink);
   --pink: var(--butter-soft);
   --lavender: var(--sage-soft);
   --gold: var(--butter);
@@ -63,7 +70,7 @@ body {
   background: var(--cream);
   color: var(--brown);
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -106,10 +113,11 @@ p { line-height: 1.7; }
 
 .eyebrow {
   font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--brown);
-  opacity: 0.8;
+  color: var(--brown-soft);
+  opacity: 1;
   margin: 0 0 1rem;
 }
 
@@ -199,8 +207,15 @@ p { line-height: 1.7; }
 .music-toggle.is-playing .mt-eq { display: flex; }
 
 /* ============================================================
-   OPENING SEQUENCE
-   ============================================================ */
+   OPENING SEQUENCE — OLD (video-gate), DISABLED
+   Kept for reference only, not deleted. This was the "tap a pill
+   button -> full-screen envelope-open.mp4 -> straight cut to hero"
+   gate. Superseded below by a record/needle groove-reveal that
+   matches the site's documented music motif more closely. To
+   restore: un-comment this block, restore the matching HTML block
+   in index.html and JS block in js/main.js, and remove/rename the
+   "OPENING SEQUENCE — NEW" rules further down so ids don't collide.
+
 #opening {
   position: fixed;
   inset: 0;
@@ -249,9 +264,9 @@ p { line-height: 1.7; }
 }
 #video-stage { z-index: 1; }
 
-/* Envelope-open film clip — real footage replacing the CSS envelope.
+Envelope-open film clip — real footage replacing the CSS envelope.
    Full-bleed cover treatment on a dark backdrop, matching how
-   .hero-bg-img handles full-bleed photography elsewhere. */
+   .hero-bg-img handles full-bleed photography elsewhere.
 #video-stage {
   padding: 0;
   background: var(--sage-dark);
@@ -263,15 +278,148 @@ p { line-height: 1.7; }
   object-position: center;
   background: var(--sage-dark);
 }
-/* Recolors the burgundy footage to our sage palette: "color" blend
+Recolors the burgundy footage to our sage palette: "color" blend
    mode takes hue/saturation from this layer but keeps the video's
-   own luminance, so the embossed floral shading survives the tint. */
+   own luminance, so the embossed floral shading survives the tint.
 .invite-video-tint {
   position: absolute;
   inset: 0;
   background: linear-gradient(155deg, var(--sage) 0%, var(--sage-deep) 55%, var(--sage-dark) 100%);
   mix-blend-mode: color;
   pointer-events: none;
+}
+
+.opening-start {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(2.75rem, 8vh, 5rem);
+  z-index: 1002;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.38rem;
+  min-width: min(78vw, 270px);
+  padding: 1rem 1.35rem 0.9rem;
+  border: 1px solid rgba(255, 253, 244, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 253, 244, 0.88);
+  color: var(--brown-deep);
+  font-family: var(--font-body);
+  box-shadow: 0 18px 44px -20px rgba(13, 10, 8, 0.58);
+  cursor: pointer;
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out),
+              background 0.25s ease, border-color 0.25s ease;
+}
+.opening-start:hover {
+  background: var(--paper);
+  border-color: var(--gold);
+  transform: translateX(-50%) translateY(-3px);
+}
+.opening-start.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(12px);
+}
+.opening-start-mark {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.opening-start-text {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+end of "OPENING SEQUENCE — OLD" block ============================ */
+
+/* ============================================================
+   OPENING SEQUENCE — NEW
+   A record + needle "Open invitation" moment: a slow-turning vinyl
+   the guest taps, a needle-drop, then a warm groove ripple wipes
+   into the hero. Reuses --ease-out and the .record/.needle-* visual
+   language already established in the hero art for consistency.
+   ============================================================ */
+#opening {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background:
+    radial-gradient(78% 44% at 50% 6%, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0) 66%),
+    linear-gradient(180deg, var(--paper) 0%, var(--cream) 62%, var(--lavender) 100%);
+  color: var(--brown-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.opening-layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 6vw, 3rem);
+  text-align: center;
+}
+
+.opening-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--brown-soft);
+  margin: 0;
+}
+
+/* Purely decorative now (the sequence auto-plays on load, no tap
+   needed) — high-contrast text (--brown-deep on --paper) so it still
+   reads clearly for the moment it's on screen. */
+.opening-start {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: min(80vw, 300px);
+  min-height: 64px;
+  padding: 1.7rem 2rem 1.5rem;
+  border: 1px solid rgba(101, 70, 51, 0.18);
+  border-radius: 28px;
+  background: var(--paper);
+  color: var(--brown-deep);
+  font-family: var(--font-body);
+  box-shadow: var(--shadow-soft);
+  transition: opacity 0.35s var(--ease-out);
+}
+.opening-start.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* A vinyl record: concentric grooves + a butter "D & D" label,
+   the same visual language as .hero-art's record. Idle motion is
+   a slow literal turntable spin (not a generic UI spinner) plus a
+   gentle glow "breath" using the project's existing --ease-out. */
+.opening-record {
+  position: relative;
+  width: clamp(96px, 30vw, 128px);
+  height: clamp(96px, 30vw, 128px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: recordGlow 3.4s var(--ease-out) infinite;
+}
+.opening-record .record { width: 100%; height: 100%; }
+.opening-record .record::after { width: 30%; height: 30%; font-size: 9px; }
+
+@keyframes recordGlow {
+  0%, 100% { filter: drop-shadow(0 14px 30px rgba(31, 42, 28, 0.16)); }
+  50% { filter: drop-shadow(0 20px 40px rgba(31, 42, 28, 0.28)); }
 }
 
 /* A vinyl record: concentric grooves + a butter "D & D" label */
@@ -313,6 +461,29 @@ p { line-height: 1.7; }
   to { transform: rotate(360deg); }
 }
 
+/* the tonearm sitting beside the record, ready to "drop" on open */
+.opening-needle {
+  position: absolute;
+  top: -4px;
+  right: -12px;
+  width: 42%;
+  height: 42%;
+  transform: rotate(-24deg);
+  transform-origin: 76% 14%;
+}
+.opening-needle .needle-arm,
+.opening-needle .needle-head { stroke-width: 3; }
+
+/* Clear, generous, legible label copy — no sub-0.75rem uppercase
+   micro-text; strong contrast against --paper. */
+.opening-start-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+/* groove ripple: scales from the record out to flood the screen,
+   then enterSite() removes #opening once it's fully covered */
 #groove-reveal {
   position: fixed;
   left: 50%;
@@ -320,8 +491,9 @@ p { line-height: 1.7; }
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(251, 250, 245, 0.98) 0%, rgba(244, 236, 221, 0.72) 48%, rgba(244, 236, 221, 0) 74%);
+  background: radial-gradient(circle, var(--paper) 0%, var(--cream) 48%, rgba(251, 247, 232, 0) 74%);
   transform: translate(-50%, -50%) scale(0);
+  transform-origin: center;
   z-index: 1001;
   pointer-events: none;
   box-shadow: 0 0 0 1px rgba(251, 247, 232, 0.25);
@@ -340,7 +512,9 @@ p { line-height: 1.7; }
   align-items: center;
   justify-content: space-between;
   padding: 1.3rem 2.2rem;
-  color: var(--brown);
+  color: var(--brown-deep);
+  background: linear-gradient(to bottom, rgba(251, 247, 232, 0.78), rgba(251, 247, 232, 0));
+  text-shadow: 0 1px 2px rgba(251, 247, 232, 0.85);
   transition: background 0.4s, box-shadow 0.4s, padding 0.4s;
 }
 .nav.scrolled {
@@ -350,6 +524,7 @@ p { line-height: 1.7; }
   box-shadow: 0 1px 0 rgba(47, 58, 42, 0.08);
   padding-top: 1rem;
   padding-bottom: 1rem;
+  text-shadow: none;
 }
 
 .nav-mark {
@@ -366,9 +541,10 @@ p { line-height: 1.7; }
 }
 .nav-links a {
   position: relative;
-  color: var(--brown);
+  color: var(--brown-deep);
   text-decoration: none;
   font-size: 0.8rem;
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 0.25rem 0;
@@ -502,9 +678,9 @@ p { line-height: 1.7; }
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(58% 42% at 50% 54%, rgba(251, 247, 232, 0.5) 0%, rgba(251, 247, 232, 0.14) 55%, rgba(251, 247, 232, 0) 75%),
-    linear-gradient(to bottom, rgba(251, 247, 232, 0.94) 0%, rgba(251, 247, 232, 0.55) 24%, rgba(251, 247, 232, 0.16) 55%, rgba(251, 247, 232, 0.72) 84%, var(--cream) 100%),
-    radial-gradient(95% 80% at 50% 45%, rgba(255, 253, 249, 0.3) 0%, rgba(255, 253, 249, 0) 70%);
+    radial-gradient(62% 48% at 50% 54%, rgba(251, 247, 232, 0.72) 0%, rgba(251, 247, 232, 0.28) 55%, rgba(251, 247, 232, 0) 78%),
+    linear-gradient(to bottom, rgba(251, 247, 232, 0.96) 0%, rgba(251, 247, 232, 0.68) 24%, rgba(251, 247, 232, 0.24) 55%, rgba(251, 247, 232, 0.76) 84%, var(--cream) 100%),
+    radial-gradient(95% 80% at 50% 45%, rgba(255, 253, 249, 0.4) 0%, rgba(255, 253, 249, 0) 70%);
 }
 
 /* gold corner ornaments */
@@ -675,11 +851,11 @@ p { line-height: 1.7; }
     0 0 14px rgba(251, 247, 232, 0.75);
 }
 .hero-songs a {
-  color: var(--gold);
+  color: var(--peach-deep);
   text-decoration: none;
-  border-bottom: 1px solid rgba(242, 213, 126, 0.6);
+  border-bottom: 1px solid rgba(143, 74, 56, 0.6);
   text-shadow:
-    0 1px 2px rgba(47, 58, 42, 0.55),
+    0 1px 2px rgba(251, 247, 232, 0.95),
     0 0 12px rgba(251, 247, 232, 0.9);
   transition: color 0.3s ease, border-color 0.3s ease;
 }
@@ -704,10 +880,10 @@ p { line-height: 1.7; }
   align-items: center;
   min-width: 4.6rem;
   padding: 0.85rem 0.7rem 0.75rem;
-  background: rgba(255, 253, 249, 0.55);
+  background: rgba(255, 253, 249, 0.82);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 253, 249, 0.85);
+  border: 1px solid rgba(255, 253, 249, 0.96);
   border-radius: 14px;
   box-shadow: 0 12px 30px -14px rgba(47, 58, 42, 0.3);
 }
@@ -719,11 +895,11 @@ p { line-height: 1.7; }
   color: var(--brown-deep);
 }
 .count-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--brown);
-  opacity: 0.75;
+  color: var(--brown-soft);
+  opacity: 1;
   margin-top: 0.35rem;
 }
 .count-colon {
@@ -743,11 +919,11 @@ p { line-height: 1.7; }
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.62rem;
-  letter-spacing: 0.26em;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--brown-deep);
-  opacity: 0.8;
+  opacity: 1;
   text-decoration: none;
 }
 .cue-line {
@@ -836,8 +1012,8 @@ p { line-height: 1.7; }
   font-family: var(--font-display);
   font-style: italic;
   font-size: 0.98rem;
-  color: var(--brown);
-  opacity: 0.75;
+  color: var(--brown-soft);
+  opacity: 1;
   padding: 0.55rem 0.2rem 0.25rem;
 }
 .photo-frame.noimg { background: linear-gradient(160deg, var(--pink), var(--lavender)); min-height: 240px; }
@@ -896,8 +1072,8 @@ p { line-height: 1.7; }
 }
 .chapter-copy p {
   margin: 0;
-  color: var(--brown);
-  opacity: 0.85;
+  color: var(--brown-soft);
+  opacity: 1;
   max-width: 52ch;
 }
 
@@ -972,7 +1148,7 @@ p { line-height: 1.7; }
   font-style: italic;
   font-size: 1.05rem;
   color: var(--brown-deep);
-  opacity: 0.85;
+  opacity: 1;
 }
 .moment:hover { z-index: 5; }
 .moment:hover .polaroid {
@@ -1012,7 +1188,7 @@ p { line-height: 1.7; }
   flex: 0 0 220px;
   height: 280px;
   overflow: hidden;
-  color: var(--paper);
+  color: var(--text-inverse);
   background: var(--sage-dark);
   border: 1px solid rgba(47, 58, 42, 0.16);
   border-radius: 4px;
@@ -1024,8 +1200,8 @@ p { line-height: 1.7; }
 .guest-photo-card:not(.is-upload)::after {
   content: "";
   position: absolute;
-  inset: 45% 0 0;
-  background: linear-gradient(to bottom, transparent, rgba(47, 58, 42, 0.78));
+  inset: 34% 0 0;
+  background: linear-gradient(to bottom, transparent, rgba(31, 42, 28, 0.92));
 }
 .guest-photo-card img {
   display: block;
@@ -1047,6 +1223,7 @@ p { line-height: 1.7; }
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-style: italic;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
 }
 .guest-photo-card:hover {
   z-index: 2;
@@ -1098,7 +1275,7 @@ p { line-height: 1.7; }
   color: var(--peach-deep);
   font-size: 1.9rem;
   line-height: 1;
-  opacity: 0.7;
+  opacity: 0.95;
 }
 .guest-photo-card.is-placeholder strong {
   position: static;
@@ -1115,7 +1292,7 @@ p { line-height: 1.7; }
   font-style: normal;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.85;
+  opacity: 1;
 }
 
 .upload-mark {
@@ -1164,8 +1341,8 @@ p { line-height: 1.7; }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(47, 58, 42, 0.6) 0%, rgba(47, 58, 42, 0.45) 50%, rgba(47, 58, 42, 0.68) 100%),
-    radial-gradient(90% 80% at 50% 50%, rgba(47, 58, 42, 0) 0%, rgba(47, 58, 42, 0.35) 100%);
+    linear-gradient(to bottom, rgba(31, 42, 28, 0.72) 0%, rgba(31, 42, 28, 0.58) 50%, rgba(31, 42, 28, 0.78) 100%),
+    radial-gradient(90% 80% at 50% 50%, rgba(31, 42, 28, 0.18) 0%, rgba(31, 42, 28, 0.52) 100%);
 }
 
 /* scalloped cream (top) and butter (bottom) transitions over the photo */
@@ -1209,17 +1386,17 @@ p { line-height: 1.7; }
   font-style: italic;
   font-size: clamp(1.7rem, 4.6vw, 2.9rem);
   line-height: 1.35;
-  color: var(--paper);
+  color: var(--text-inverse);
   margin: 0 0 1.2rem;
-  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 5px 24px rgba(0, 0, 0, 0.52);
 }
 .quote cite {
   font-style: normal;
   font-size: 0.75rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--paper);
-  opacity: 0.85;
+  color: var(--text-inverse-muted);
+  opacity: 1;
 }
 
 /* ============================================================
@@ -1267,7 +1444,7 @@ p { line-height: 1.7; }
   font-size: 1.6rem;
   margin-bottom: 0.6rem;
 }
-.detail-place { margin: 0 0 0.25rem; color: var(--brown); opacity: 0.85; }
+.detail-place { margin: 0 0 0.25rem; color: var(--brown-soft); opacity: 1; }
 .detail-time {
   margin: 0;
   font-size: 0.78rem;
@@ -1311,7 +1488,7 @@ p { line-height: 1.7; }
   max-width: 540px;
   font-size: 1rem;
   color: var(--brown-deep);
-  opacity: 0.95;
+  opacity: 1;
 }
 
 /* ============================================================
@@ -1348,8 +1525,8 @@ p { line-height: 1.7; }
 .date-card p {
   margin: 0;
   font-size: 0.92rem;
-  color: var(--brown);
-  opacity: 0.88;
+  color: var(--brown-soft);
+  opacity: 1;
 }
 
 /* ============================================================
@@ -1380,8 +1557,8 @@ p { line-height: 1.7; }
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--brown);
-  opacity: 0.75;
+  color: var(--brown-soft);
+  opacity: 1;
   margin-bottom: 0.5rem;
 }
 .gift-acct {
@@ -1395,8 +1572,8 @@ p { line-height: 1.7; }
   margin: 0;
   font-size: 0.85rem;
   line-height: 1.6;
-  color: var(--brown);
-  opacity: 0.85;
+  color: var(--brown-soft);
+  opacity: 1;
 }
 .gift-list {
   display: flex;
@@ -1408,8 +1585,8 @@ p { line-height: 1.7; }
 }
 .gift-item {
   font-size: 0.85rem;
-  color: var(--brown);
-  opacity: 0.85;
+  color: var(--brown-soft);
+  opacity: 1;
 }
 .gift-item::before {
   content: '♪\00a0';
@@ -1445,7 +1622,7 @@ p { line-height: 1.7; }
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
-  background: rgba(255, 253, 249, 0.72);
+  background: rgba(255, 253, 249, 0.9);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 253, 249, 0.92);
@@ -1479,8 +1656,8 @@ p { line-height: 1.7; }
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--brown);
-  opacity: 0.7;
+  color: var(--brown-soft);
+  opacity: 1;
 }
 
 /* ============================================================
@@ -1529,19 +1706,19 @@ p { line-height: 1.7; }
 .hashtag-chip:hover {
   transform: translateY(-2px);
   border-color: var(--gold);
-  color: var(--brown);
+  color: var(--brown-deep);
   box-shadow: 0 12px 28px -12px rgba(47, 58, 42, 0.36);
 }
 .hashtag-chip.copied {
   border-color: var(--sage);
   background: var(--sage-soft);
-  color: var(--sage-deep);
+  color: var(--brown-deep);
 }
 
 .hashtag-status {
   font-size: 0.88rem;
-  color: var(--brown);
-  opacity: 0.8;
+  color: var(--brown-soft);
+  opacity: 1;
   min-height: 1.6em;
   margin: 1.4rem 0 0;
   font-style: italic;
@@ -1566,7 +1743,7 @@ p { line-height: 1.7; }
   gap: 1.4rem;
   margin-top: 1rem;
   text-align: left;
-  background: rgba(255, 253, 249, 0.65);
+  background: rgba(255, 253, 249, 0.9);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 253, 249, 0.9);
@@ -1579,19 +1756,20 @@ p { line-height: 1.7; }
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--brown);
-  opacity: 0.8;
+  font-weight: 500;
+  color: var(--brown-soft);
+  opacity: 1;
 }
 .field-label em {
   font-style: italic;
   text-transform: lowercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
+  opacity: 1;
 }
 .rsvp-form input {
   font-family: var(--font-body);
   font-size: 1.02rem;
-  font-weight: 300;
+  font-weight: 400;
   padding: 0.8rem 1rem;
   border: 1px solid rgba(47, 58, 42, 0.2);
   border-radius: 10px;
@@ -1599,7 +1777,7 @@ p { line-height: 1.7; }
   color: var(--brown-deep);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
-.rsvp-form input::placeholder { color: rgba(77, 95, 70, 0.4); }
+.rsvp-form input::placeholder { color: rgba(64, 80, 58, 0.68); }
 .rsvp-form input:focus {
   outline: 2px solid var(--brown-deep);
   outline-offset: 2px;
@@ -1633,18 +1811,18 @@ p { line-height: 1.7; }
 }
 .rsvp-submit:active { transform: translateY(0) scale(0.99); }
 .rsvp-submit.is-sent {
-  background: linear-gradient(135deg, var(--sage), var(--sage-deep));
+  background: linear-gradient(135deg, var(--sage-deep), var(--sage-dark));
 }
 
 .form-status {
   font-size: 0.88rem;
-  color: var(--brown);
-  opacity: 0.8;
+  color: var(--brown-soft);
+  opacity: 1;
   min-height: 1.4em;
   margin: 0.2rem 0 0;
   text-align: center;
 }
-.form-status.error { color: var(--coral-deep); }
+.form-status.error { color: var(--peach-deep); }
 .rsvp-invite-note {
   display: inline-block;
   margin: 1.35rem auto 0;
@@ -1690,14 +1868,14 @@ p { line-height: 1.7; }
   font-family: var(--font-display);
   font-size: 1.05rem;
   margin: 0.3rem 0;
-  opacity: 0.8;
+  opacity: 1;
 }
 .footer-note {
   font-family: var(--font-body) !important;
   font-size: 0.78rem !important;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.7 !important;
+  opacity: 0.85 !important;
   margin-top: 1rem !important;
 }
 
@@ -1791,13 +1969,15 @@ body.gsap-missing .hero-art {
     align-items: center;
     justify-content: center;
     gap: 2.2rem;
-    background: rgba(251, 247, 232, 0.96);
+    background: rgba(251, 247, 232, 0.98);
     -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
     display: none;
   }
   .nav-links a {
     font-size: 1.05rem;
+    color: var(--brown-deep);
+    font-weight: 500;
     letter-spacing: 0.2em;
     opacity: 0;
     transform: translateY(14px);
@@ -1847,6 +2027,7 @@ body.gsap-missing .hero-art {
   html { scroll-behavior: auto; }
   .record,
   .record-wrap,
+  .opening-record,
   .note-deco,
   .quote-wave i,
   .mt-eq i,
@@ -1858,6 +2039,18 @@ body.gsap-missing .hero-art {
   }
   .hero-bg::before {
     display: none;
+  }
+  /* New opening sequence: no spin, no needle-drop, no groove wipe —
+     js/main.js skips straight to enterSite() and this just makes
+     sure nothing left mid-transition is visible or animated. */
+  .opening-needle {
+    transform: rotate(0deg);
+  }
+  .opening-start {
+    transition: none !important;
+  }
+  #groove-reveal {
+    display: none !important;
   }
   .reveal-up,
   body.gsap-missing .reveal-up {

@@ -38,8 +38,12 @@
   <span class="mt-eq" aria-hidden="true"><i></i><i></i><i></i></span>
 </button>
 
-<!-- ============ OPENING SEQUENCE ============ -->
-<!-- Loading -> envelope-open film clip -> hero -->
+<!-- ============ OPENING SEQUENCE — OLD (video-gate), DISABLED ============
+     Kept for reference, not deleted. Original flow: tap a pill button ->
+     full-screen envelope-open.mp4 clip -> straight cut to hero. See
+     matching disabled blocks in css/style.css and js/main.js (both
+     headed "OPENING SEQUENCE — OLD") to restore this if wanted later.
+
 <div id="opening" aria-hidden="false">
 
   <div id="video-stage" class="opening-layer">
@@ -48,6 +52,41 @@
            poster="assets/web/envelope-open-poster.jpg"
            muted playsinline preload="auto" aria-hidden="true"></video>
     <span class="invite-video-tint" aria-hidden="true"></span>
+  </div>
+
+  <button id="opening-start" class="opening-start" type="button" aria-label="Open invitation with music">
+    <span class="opening-start-mark">D <span class="amp">&amp;</span> D</span>
+    <span class="opening-start-text">Open invitation</span>
+  </button>
+
+</div>
+============ end OPENING SEQUENCE — OLD ============ -->
+
+<!-- ============ OPENING SEQUENCE — NEW ============ -->
+<!-- Auto-plays on load: record spins, needle drops, groove-reveal
+     wipes into the hero. No tap required. -->
+<div id="opening" aria-hidden="false">
+
+  <!-- entry-audio (inspo2-audio.m4a) was the wrong track and is
+       disabled here — Music/YouTube now plays "On Purpose" (see
+       SONGS / YT_VIDEOS in js/main.js) as the opening soundtrack.
+  <audio id="entry-audio" src="assets/audio/inspo2-audio.m4a" preload="auto" loop></audio>
+  -->
+
+  <div class="opening-layer">
+    <p class="opening-eyebrow">Doose &amp; Deri invite you</p>
+
+    <div class="opening-start" aria-hidden="true">
+      <span class="opening-record">
+        <span class="record"></span>
+        <svg class="opening-needle" viewBox="0 0 60 60" aria-hidden="true">
+          <path d="M46 8 L30 30" class="needle-arm"/>
+          <path d="M30 30 L24 40" class="needle-head"/>
+          <circle cx="46" cy="8" r="3" class="needle-pivot"/>
+        </svg>
+      </span>
+      <span class="opening-start-text">Doose &amp; Deri</span>
+    </div>
   </div>
 
   <div id="groove-reveal" aria-hidden="true"></div>

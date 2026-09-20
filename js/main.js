@@ -1,6 +1,6 @@
 /* ============================================================
    Doose & Deri — main
-   Opening sequence, YouTube-backed love song, GSAP scroll
+   Opening sequence, entry soundtrack, GSAP scroll
    choreography, countdown, nav, RSVP.
    Every GSAP timeline lives here (no inline scripts in HTML).
    ============================================================ */
@@ -9,17 +9,53 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const hasGSAP = typeof gsap !== 'undefined';
+const entryAudio = $('#entry-audio');
 
 if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 /* ============================================================
-   LOVE SONGS — played only through the official YouTube embed.
-   No downloaded files, no synth fallback: if the API isn't ready
-   or is blocked, we simply wait for it rather than layering in a
-   second audio source.
+   LOVE SONGS — the local invitation soundtrack starts with the
+   entry video. The YouTube player remains as a fallback if the
+   local track is not present.
    ============================================================ */
+
+const LocalSong = {
+  volume: 0.82,
+
+  available() {
+    return !!entryAudio;
+  },
+
+  init() {
+    if (!this.available()) return;
+    entryAudio.loop = true;
+    entryAudio.volume = this.volume;
+    entryAudio.muted = false;
+  },
+
+  rewind() {
+    if (!this.available()) return;
+    try { entryAudio.currentTime = 0; } catch (e) { /* media may not be ready yet */ }
+  },
+
+  play() {
+    if (!this.available()) return false;
+    const playPromise = entryAudio.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        // The next trusted gesture will call resumeCurrent() again.
+      });
+    }
+    return true;
+  },
+
+  pause() {
+    if (!this.available()) return;
+    entryAudio.pause();
+  },
+};
 
 const SONGS = [
   {
@@ -34,7 +70,8 @@ const Music = {
   activeSection: 'home',
 
   init() {
-    YouTube.load();
+    LocalSong.init();
+    if (!LocalSong.available()) YouTube.load();
   },
 
   trackFor(section) {
@@ -47,8 +84,12 @@ const Music = {
     if (this.playing) this.playTrack(this.trackFor(section).id);
   },
 
-  start() {
-    if (this.playing) return;
+  start(options = {}) {
+    if (options.restart) LocalSong.rewind();
+    if (this.playing) {
+      this.resumeCurrent();
+      return;
+    }
     this.playing = true;
     setMusicUI(true);
     this.playTrack(this.trackFor(this.activeSection).id);
@@ -56,8 +97,9 @@ const Music = {
 
   playTrack(id) {
     this.currentId = id;
+    if (LocalSong.play()) return;
     // If the YouTube API isn't ready yet, its onReady handler picks
-    // this up as soon as it is — we don't fall back to anything else.
+    // this up as soon as it is.
     if (YouTube.couldPlay()) YouTube.play(id);
   },
 
@@ -65,6 +107,7 @@ const Music = {
     this.playing = false;
     setMusicUI(false);
     this.currentId = null;
+    LocalSong.pause();
     YouTube.pauseAll();
   },
 
@@ -78,6 +121,7 @@ const Music = {
       return;
     }
     const id = this.currentId || this.trackFor(this.activeSection).id;
+    if (LocalSong.play()) return;
     if (YouTube.couldPlay()) YouTube.play(id);
   },
 };
@@ -130,7 +174,7 @@ const YouTube = {
           // have been requested before the player existed — pick it
           // up here if this song is still the one that should sound.
           onReady: () => {
-            if (Music.playing && Music.trackFor(Music.activeSection).id === id) {
+            if (!LocalSong.available() && Music.playing && Music.trackFor(Music.activeSection).id === id) {
               this.play(id);
             }
           },
@@ -178,9 +222,9 @@ function setMusicUI(on) {
 }
 musicToggle.addEventListener('click', () => Music.toggle());
 
-function startMusicBestEffort() {
+function startMusicBestEffort(options = {}) {
   try {
-    Music.start();
+    Music.start(options);
     Music.resumeCurrent();
   } catch (err) {
     console.warn('Music unavailable:', err);
@@ -188,11 +232,10 @@ function startMusicBestEffort() {
 }
 
 // Browsers only allow audio to start on a real user gesture. A guest
-// who never clicks and just scrolls with a wheel/trackpad still
-// counts as "using the site," so the song should still come on —
-// it should only ever go quiet if they explicitly hit the toggle.
+// who interacts through touch, keyboard, or click still
+// counts as having opened the invitation, so we retry playback there.
 function installMusicUnlock() {
-  const gestures = ['pointerdown', 'touchstart', 'keydown', 'click', 'wheel', 'scroll'];
+  const gestures = ['pointerdown', 'touchstart', 'keydown', 'click'];
   const unlock = () => {
     try {
       Music.resumeCurrent();
@@ -206,63 +249,82 @@ function installMusicUnlock() {
 }
 
 /* ============================================================
-   OPENING SEQUENCE
-   ============================================================ */
+   OPENING SEQUENCE — OLD (video-gate), DISABLED
+   Kept for reference only, not deleted. This drove the "tap a pill
+   button -> full-screen envelope-open.mp4 -> straight cut to hero"
+   gate. Superseded by the "OPENING SEQUENCE — NEW" block below it,
+   which matches the current index.html/style.css markup (record +
+   needle groove-reveal). To restore: un-comment this, restore the
+   matching HTML/CSS blocks (also headed "OPENING SEQUENCE — OLD"),
+   and remove the NEW block below so functions aren't redeclared.
 
 const inviteVideo = $('#invite-video');
-const groove = $('#groove-reveal');
-const opening = $('#opening');
-const site = $('#site');
+const openingStartOld = $('#opening-start');
+const grooveOld = $('#groove-reveal');
+const openingOld = $('#opening');
+const siteOld = $('#site');
 
 // Real assets to warm the cache — the hero photo shown right after
 // the envelope, and the video poster for an instant first frame.
 // None of these gate the opening: the envelope plays immediately,
 // straight off the poster if the clip itself is still buffering.
-const assetsToPreload = ['assets/web/IMG_4638.jpg', 'assets/web/envelope-open-poster.jpg'];
+const assetsToPreloadOld = ['assets/web/IMG_4638.jpg', 'assets/web/envelope-open-poster.jpg'];
 
-function preload(urls) {
+function preloadOld(urls) {
   urls.forEach((src) => {
     const img = new Image();
     img.src = src;
   });
 }
-preload(assetsToPreload);
+preloadOld(assetsToPreloadOld);
 
-let openSequenceStarted = false;
-startOpeningVideo();
+let openSequenceStartedOld = false;
 
-function enterSite() {
-  startMusicBestEffort();
-  opening.remove();
-  site.hidden = false;
+function enterSiteOld() {
+  if (Music.playing) Music.resumeCurrent();
+  openingOld.remove();
+  siteOld.hidden = false;
   showMusicToggle();
   runHeroReveal();
   initScrollChoreography();
   startCountdown();
-  // move keyboard focus into the revealed page
   const heroContent = $('.hero-content');
   if (heroContent) heroContent.focus({ preventScroll: true });
 }
 
-/* ---- envelope-open film clip ----
-   Reduced-motion or playback-blocked guests should never be stuck
+Reduced-motion or playback-blocked guests should never be stuck
    staring at a dead screen, so any failure path falls through to
-   enterSite() after a short, deliberate beat rather than hanging. */
+   enterSiteOld() after a short, deliberate beat rather than hanging.
+function installOpeningStartOld() {
+  if (!openingStartOld) {
+    startOpeningVideo();
+    return;
+  }
+
+  openingOld.addEventListener('click', startOpeningVideo, { once: true });
+  openingStartOld.addEventListener('click', (event) => {
+    event.stopPropagation();
+    startOpeningVideo();
+  }, { once: true });
+}
+
 function startOpeningVideo() {
-  if (openSequenceStarted) return;
-  openSequenceStarted = true;
+  if (openSequenceStartedOld) return;
+  openSequenceStartedOld = true;
+
+  openingStartOld?.classList.add('is-hidden');
+  if (openingStartOld) openingStartOld.disabled = true;
 
   const originX = window.innerWidth / 2;
   const originY = window.innerHeight / 2;
-  groove.style.left = `${originX}px`;
-  groove.style.top = `${originY}px`;
+  grooveOld.style.left = `${originX}px`;
+  grooveOld.style.top = `${originY}px`;
 
-  startMusicBestEffort();
+  showMusicToggle();
+  startMusicBestEffort({ restart: true });
 
   if (prefersReducedMotion || !inviteVideo) {
-    // Respect reduced motion: hold on the poster frame briefly,
-    // then go straight to the site rather than play the clip.
-    setTimeout(enterSite, 600);
+    setTimeout(enterSiteOld, 600);
     return;
   }
 
@@ -270,15 +332,12 @@ function startOpeningVideo() {
   const goToSite = () => {
     if (handedOff) return;
     handedOff = true;
-    // Straight cut from the video (the "butterfly") to the site — no
-    // groove-reveal scale-up wipe, so the dark #video-stage background
-    // never shows through mid-transition.
-    enterSite();
+    enterSiteOld();
   };
 
-  // Safety fallback: if the clip never becomes playable (blocked
-  // autoplay, network failure, slow connection), don't hang here.
   const fallbackTimer = setTimeout(goToSite, 6000);
+
+  try { inviteVideo.currentTime = 0; } catch (e) { } // media may not be ready yet
 
   inviteVideo.addEventListener('ended', () => {
     clearTimeout(fallbackTimer);
@@ -292,14 +351,124 @@ function startOpeningVideo() {
   const playPromise = inviteVideo.play();
   if (playPromise && typeof playPromise.catch === 'function') {
     playPromise.catch(() => {
-      // Autoplay blocked — don't wait on a frozen poster.
       clearTimeout(fallbackTimer);
       goToSite();
     });
   }
 }
 
+end of "OPENING SEQUENCE — OLD" block ============================ */
+
+/* ============================================================
+   OPENING SEQUENCE — NEW
+   Loading/idle -> record "Open invitation" tap -> needle-drop ->
+   groove-reveal ripple wipe -> hero. Matches index.html's current
+   #opening markup and css/style.css's "OPENING SEQUENCE — NEW"
+   rules. Still resolves to enterSite() calling startCountdown()
+   and initScrollChoreography() exactly as before.
+   ============================================================ */
+
+const openingStart = $('#opening-start');
+const groove = $('#groove-reveal');
+const opening = $('#opening');
+const site = $('#site');
+
+// Real assets to warm the cache — the hero photo shown right after
+// the needle drops. Doesn't gate the opening in any way.
+const assetsToPreload = ['assets/web/IMG_4638.jpg'];
+
+function preload(urls) {
+  urls.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+preload(assetsToPreload);
+
+let openSequenceStarted = false;
+
+function enterSite() {
+  if (Music.playing) Music.resumeCurrent();
+  opening.remove();
+  site.hidden = false;
+  showMusicToggle();
+  runHeroReveal();
+  initScrollChoreography();
+  startCountdown();
+  // move keyboard focus into the revealed page
+  const heroContent = $('.hero-content');
+  if (heroContent) heroContent.focus({ preventScroll: true });
+}
+
+/* ---- record + needle-drop groove reveal ----
+   Auto-plays on load, no tap required: the tonearm drops, the groove
+   ripples out from the record to flood the screen, and enterSite()
+   fires right as the ripple finishes covering it — so nothing dark or
+   half-transitioned is ever visible. Reduced-motion guests skip
+   straight to a quick, plain hand-off with no spin/drop/ripple at all.
+
+   Autoplay-with-sound is blocked by browsers without a user gesture,
+   so the music start attempted here may be silently deferred by the
+   browser; installMusicUnlock() (see BOOT) retries on the guest's
+   first tap/scroll/keypress so sound starts as soon as it's allowed. */
+function installOpeningStart() {
+  if (!openingStart) {
+    enterSite();
+    return;
+  }
+  // Give the record a frame to paint before animating it.
+  requestAnimationFrame(() => requestAnimationFrame(startOpening));
+}
+
+function startOpening() {
+  if (openSequenceStarted) return;
+  openSequenceStarted = true;
+
+  showMusicToggle();
+  startMusicBestEffort({ restart: true });
+
+  if (prefersReducedMotion || !hasGSAP) {
+    openingStart.classList.add('is-hidden');
+    // No spin, no needle-drop, no ripple — just a quick, clean
+    // hand-off straight to the hero.
+    setTimeout(enterSite, 200);
+    return;
+  }
+
+  // centre the groove ripple on the record itself
+  const rect = openingStart.getBoundingClientRect();
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top + rect.height / 2;
+  groove.style.left = `${originX}px`;
+  groove.style.top = `${originY}px`;
+
+  // scale big enough that the circle floods every screen corner
+  const diag = Math.hypot(window.innerWidth, window.innerHeight);
+  const grooveScale = (diag * 1.15) / 24;
+
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  // t=0.00–0.40s: the tonearm drops onto the record
+  tl.to('.opening-needle', { rotate: 0, duration: 0.4, ease: 'power2.inOut' }, 0)
+    // t=0.05–0.30s / t=0.30–0.60s: the record wrapper settles with a
+    // little life (scaling the wrapper, not .record itself, so this
+    // doesn't fight the CSS spin keyframe already animating .record)
+    .to('.opening-record', { scale: 1.06, duration: 0.25 }, 0.05)
+    .to('.opening-record', { scale: 1, duration: 0.3 }, 0.3)
+    // t=0.15–0.50s: the label copy fades up and out as the groove takes over
+    .to(['.opening-start-text', '.opening-eyebrow'], {
+      opacity: 0, y: -6, duration: 0.35,
+    }, 0.15)
+    // t=0.30–1.15s: the groove ripples out from the record and floods
+    // the screen; enterSite() fires the instant it's fully covered
+    .to(groove, {
+      scale: grooveScale, duration: 0.85, ease: 'power3.out',
+      onComplete: enterSite,
+    }, 0.3);
+}
+
 function showMusicToggle() {
+  if (!musicToggle.hidden && musicToggle.classList.contains('is-ready')) return;
   musicToggle.hidden = false;
   requestAnimationFrame(() => musicToggle.classList.add('is-ready'));
 }
@@ -642,7 +811,7 @@ momentCards.forEach((card) => {
    ============================================================ */
 Music.init();
 installMusicUnlock();
-startMusicBestEffort();
+installOpeningStart();
 
 // If JS runs but GSAP/CDN failed, reveal content & controls anyway
 if (!hasGSAP) {
