@@ -67,36 +67,29 @@
 </div>
 ============ end OPENING SEQUENCE — OLD ============ -->
 
-<!-- ============ OPENING SEQUENCE — NEW ============ -->
-<!-- Auto-plays on load: record spins, needle drops, groove-reveal
-     wipes into the hero. No tap required. -->
+<!-- ============ OPENING SEQUENCE ============ -->
+<!-- Loading waveform -> spinning record "tap to begin" -> groove
+     ripple reveals the hero. The site's documented music motif:
+     loading = equalizer bars, open = a record, reveal = a groove. -->
 <div id="opening" aria-hidden="false">
 
-  <!-- entry-audio (inspo2-audio.m4a) was the wrong track and is
-       disabled here — Music/YouTube now plays "On Purpose" (see
-       SONGS / YT_VIDEOS in js/main.js) as the opening soundtrack.
-  <audio id="entry-audio" src="assets/audio/inspo2-audio.m4a" preload="auto" loop></audio>
-  -->
+  <div id="loading-screen" class="opening-layer">
+    <div class="waveform" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <p class="loading-label">tuning our melody<span id="loading-pct">0%</span></p>
+    <p class="loading-couple">DOOSE <span class="amp">&amp;</span> DERI</p>
+    <p class="loading-date">21 November 2026 · Abuja</p>
+  </div>
 
-  <div class="opening-layer">
-    <p class="opening-eyebrow">Doose &amp; Deri invite you</p>
-
-    <button id="opening-start" class="opening-start" type="button" aria-label="Play our song">
-      <span class="opening-record" aria-hidden="true">
-        <span class="record"></span>
-        <svg class="opening-needle" viewBox="0 0 60 60" aria-hidden="true">
-          <path d="M46 8 L30 30" class="needle-arm"/>
-          <path d="M30 30 L24 40" class="needle-head"/>
-          <circle cx="46" cy="8" r="3" class="needle-pivot"/>
-        </svg>
-      </span>
-      <span class="opening-start-text">Doose &amp; Deri</span>
-      <span class="opening-start-hint">Tap for sound</span>
+  <div id="open-card" class="opening-layer" hidden>
+    <button id="open-btn" type="button" aria-label="Open the invitation">
+      <span class="record" aria-hidden="true"></span>
+      <span class="open-label">tap to begin</span>
     </button>
   </div>
 
   <div id="groove-reveal" aria-hidden="true"></div>
-
 </div>
 
 <!-- ============ SITE CONTENT (hidden until opened) ============ -->

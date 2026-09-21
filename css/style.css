@@ -357,11 +357,10 @@ Recolors the burgundy footage to our sage palette: "color" blend
 end of "OPENING SEQUENCE — OLD" block ============================ */
 
 /* ============================================================
-   OPENING SEQUENCE — NEW
-   A record + needle "Open invitation" moment: a slow-turning vinyl
-   the guest taps, a needle-drop, then a warm groove ripple wipes
-   into the hero. Reuses --ease-out and the .record/.needle-* visual
-   language already established in the hero art for consistency.
+   OPENING SEQUENCE
+   The site's documented music motif: a five-bar waveform loader
+   "tunes our melody", a slowly spinning record is the open button,
+   and a groove ripple wipes from the record into the hero.
    ============================================================ */
 #opening {
   position: fixed;
@@ -378,80 +377,109 @@ end of "OPENING SEQUENCE — OLD" block ============================ */
   isolation: isolate;
 }
 
+/* The two layers stack on top of each other so hiding one and
+   revealing the other never shows both at once. */
 .opening-layer {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
+  justify-content: center;
+  gap: 1.25rem;
   padding: clamp(1.5rem, 6vw, 3rem);
   text-align: center;
 }
 
-.opening-eyebrow {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  letter-spacing: 0.05em;
+/* Waveform loader — five bars pulsing like an equalizer */
+.waveform {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 40px;
+}
+.waveform span {
+  width: 5px;
+  background: var(--brown);
+  border-radius: 3px;
+  animation: pulse 1s ease-in-out infinite;
+}
+.waveform span:nth-child(1) { animation-delay: 0s; }
+.waveform span:nth-child(2) { animation-delay: 0.1s; }
+.waveform span:nth-child(3) { animation-delay: 0.2s; }
+.waveform span:nth-child(4) { animation-delay: 0.3s; }
+.waveform span:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes pulse {
+  0%, 100% { height: 10px; }
+  50% { height: 36px; }
+}
+
+.loading-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brown);
+  opacity: 0.7;
+  margin: 0;
+}
+#loading-pct { margin-left: 0.5em; font-variant-numeric: tabular-nums; }
+
+/* the couple + date sit below the loader, as on an invitation */
+.loading-couple {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 6vw, 2.3rem);
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  color: var(--brown-deep);
+  margin: 0.4rem 0 0;
+}
+.loading-date {
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--brown-soft);
   margin: 0;
 }
 
-/* The reveal always auto-plays (see js/main.js) — this button's only
-   job is a guaranteed, one-tap way to make the song audible. High-
-   contrast text (--brown-deep on --paper) so it stays legible for the
-   moment it's on screen. */
-.opening-start {
-  display: inline-flex;
+/* Open card — the spinning record IS the button. The tap is also
+   the user gesture that makes the song audible (see js/main.js). */
+#open-btn {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
-  min-width: min(80vw, 300px);
-  min-height: 64px;
-  padding: 1.7rem 2rem 1.5rem;
-  border: 1px solid rgba(101, 70, 51, 0.18);
-  border-radius: 28px;
-  background: var(--paper);
+  gap: 1rem;
+  padding: 1rem;
+  background: none;
+  border: none;
   color: var(--brown-deep);
   font-family: var(--font-body);
-  box-shadow: var(--shadow-soft);
   cursor: pointer;
-  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out),
-              box-shadow 0.35s var(--ease-out), border-color 0.25s ease;
+  animation: bob 2.4s var(--ease-out) infinite;
 }
-.opening-start:hover {
-  transform: translateY(-3px);
-  border-color: var(--gold);
-  box-shadow: var(--shadow-card);
-}
-.opening-start:focus-visible {
+#open-btn:focus-visible {
   outline: 2px solid var(--brown-deep);
-  outline-offset: 3px;
+  outline-offset: 6px;
+  border-radius: 28px;
 }
-.opening-start.is-hidden {
-  opacity: 0;
-  pointer-events: none;
+#open-btn .record { width: 96px; height: 96px; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
-/* A vinyl record: concentric grooves, the same visual language as
-   .hero-art's record. Idle motion is a slow literal turntable spin
-   (not a generic UI spinner) plus a gentle glow "breath" using the
-   project's existing --ease-out. */
-.opening-record {
-  position: relative;
-  width: clamp(96px, 30vw, 128px);
-  height: clamp(96px, 30vw, 128px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: recordGlow 3.4s var(--ease-out) infinite;
-}
-.opening-record .record { width: 100%; height: 100%; }
-
-@keyframes recordGlow {
-  0%, 100% { filter: drop-shadow(0 14px 30px rgba(31, 42, 28, 0.16)); }
-  50% { filter: drop-shadow(0 20px 40px rgba(31, 42, 28, 0.28)); }
+.open-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brown);
 }
 
-/* A vinyl record: concentric grooves, no center label */
+/* A vinyl record: concentric grooves, no center label. Shared with
+   the hero art (see .hero-art .record). */
 .record {
   position: relative;
   width: 108px;
@@ -471,31 +499,6 @@ end of "OPENING SEQUENCE — OLD" block ============================ */
   to { transform: rotate(360deg); }
 }
 
-/* the tonearm sitting beside the record, ready to "drop" on open */
-.opening-needle {
-  position: absolute;
-  top: -4px;
-  right: -12px;
-  width: 42%;
-  height: 42%;
-  transform: rotate(-24deg);
-  transform-origin: 76% 14%;
-}
-.opening-needle .needle-arm,
-.opening-needle .needle-head { stroke-width: 3; }
-
-/* Clear, generous, legible label copy — no sub-0.75rem uppercase
-   micro-text; strong contrast against --paper. */
-.opening-start-text {
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  line-height: 1.3;
-}
-.opening-start-hint {
-  font-size: 0.85rem;
-  color: var(--brown-soft);
-}
 /* groove ripple: scales from the record out to flood the screen,
    then enterSite() removes #opening once it's fully covered */
 #groove-reveal {
@@ -2036,31 +2039,23 @@ body.gsap-missing .hero-art {
   html { scroll-behavior: auto; }
   .record,
   .record-wrap,
-  .opening-record,
   .note-deco,
   .quote-wave i,
   .mt-eq i,
   .cue-line::after,
   .hero-bg-img,
   .hero-bg::before,
-  .hero-bg::after {
+  .hero-bg::after,
+  .waveform span,
+  #open-btn {
     animation: none !important;
   }
   .hero-bg::before {
     display: none;
   }
-  /* New opening sequence: no spin, no needle-drop, no groove wipe —
-     js/main.js skips straight to enterSite() and this just makes
-     sure nothing left mid-transition is visible or animated. */
-  .opening-needle {
-    transform: rotate(0deg);
-  }
-  .opening-start {
-    transition: none !important;
-  }
-  .opening-start:hover {
-    transform: none;
-  }
+  /* Opening sequence: no spin, no bob, no groove wipe — js/main.js
+     skips straight to enterSite() and this just makes sure nothing
+     left mid-transition is visible or animated. */
   #groove-reveal {
     display: none !important;
   }

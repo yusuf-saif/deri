@@ -266,7 +266,7 @@ function installMusicUnlock() {
   const gestures = ['pointerdown', 'touchstart', 'keydown', 'click', 'wheel', 'scroll'];
   const unlock = (event) => {
     if (musicToggle.contains(event.target)) return;
-    if (openingStart && openingStart.contains(event.target)) return;
+    if (openBtn && openBtn.contains(event.target)) return;
     try {
       Music.audible = true;
       markAudible();
@@ -392,32 +392,49 @@ function startOpeningVideo() {
 end of "OPENING SEQUENCE — OLD" block ============================ */
 
 /* ============================================================
-   OPENING SEQUENCE — NEW
-   Loading/idle -> record "Open invitation" tap -> needle-drop ->
-   groove-reveal ripple wipe -> hero. Matches index.html's current
-   #opening markup and css/style.css's "OPENING SEQUENCE — NEW"
-   rules. Still resolves to enterSite() calling startCountdown()
-   and initScrollChoreography() exactly as before.
+   OPENING SEQUENCE
+   Waveform loader -> spinning record "tap to begin" -> groove
+   ripple reveal -> hero.
    ============================================================ */
 
-const openingStart = $('#opening-start');
+const loadingScreen = $('#loading-screen');
+const openCard = $('#open-card');
+const openBtn = $('#open-btn');
 const groove = $('#groove-reveal');
 const opening = $('#opening');
 const site = $('#site');
+const pctLabel = $('#loading-pct');
 
-// Real assets to warm the cache — the hero photo shown right after
-// the needle drops. Doesn't gate the opening in any way.
-const assetsToPreload = ['assets/web/IMG_4638.jpg'];
+const assetsToPreload = [];
 
 function preload(urls) {
-  urls.forEach((src) => {
+  if (!urls.length) return Promise.resolve();
+  return Promise.all(urls.map((src) => new Promise((resolve) => {
     const img = new Image();
+    img.onload = img.onerror = resolve;
     img.src = src;
-  });
+  })));
 }
-preload(assetsToPreload);
 
-let openSequenceStarted = false;
+let pct = 0;
+const loadingTimer = setInterval(() => {
+  pct = Math.min(100, pct + Math.round(4 + Math.random() * 10));
+  pctLabel.textContent = `${pct}%`;
+  if (pct >= 100) clearInterval(loadingTimer);
+}, 150);
+
+preload(assetsToPreload).then(() => {
+  const finish = () => {
+    loadingScreen.hidden = true;
+    openCard.hidden = false;
+  };
+  const waitForCount = setInterval(() => {
+    if (pct >= 100) {
+      clearInterval(waitForCount);
+      setTimeout(finish, 250);
+    }
+  }, 100);
+});
 
 function enterSite() {
   if (Music.playing) Music.resumeCurrent();
@@ -432,80 +449,40 @@ function enterSite() {
   if (heroContent) heroContent.focus({ preventScroll: true });
 }
 
-/* ---- record + needle-drop groove reveal ----
-   Auto-plays on load, no tap required: the tonearm drops, the groove
-   ripples out from the record to flood the screen, and enterSite()
-   fires right as the ripple finishes covering it — so nothing dark or
-   half-transitioned is ever visible. Reduced-motion guests skip
-   straight to a quick, plain hand-off with no spin/drop/ripple at all.
-
-   Autoplay-with-sound is blocked by browsers without a user gesture,
-   so the music start attempted here may be silently deferred by the
-   browser; installMusicUnlock() (see BOOT) retries on the guest's
-   first tap/scroll/keypress so sound starts as soon as it's allowed. */
-function installOpeningStart() {
-  if (!openingStart) {
-    enterSite();
-    return;
-  }
-  // The reveal itself always auto-plays (see below) — this click is
-  // purely a guaranteed, one-tap way to make the song audible, using
-  // the exact same Music.toggle() the persistent music-toggle button
-  // uses once the site is revealed.
-  openingStart.addEventListener('click', (event) => {
-    event.stopPropagation();
-    Music.toggle();
-  });
-  // Give the record a frame to paint before animating it.
-  requestAnimationFrame(() => requestAnimationFrame(startOpening));
-}
-
-function startOpening() {
-  if (openSequenceStarted) return;
-  openSequenceStarted = true;
-
-  showMusicToggle();
-  startMusicBestEffort({ restart: true });
-
-  if (prefersReducedMotion || !hasGSAP) {
-    openingStart.classList.add('is-hidden');
-    // No spin, no needle-drop, no ripple — just a quick, clean
-    // hand-off straight to the hero.
-    setTimeout(enterSite, 200);
-    return;
-  }
+/* ---- record tap -> groove reveal ----
+   The spinning record is the open button. The tap is also a real user
+   gesture — the one guaranteed way to start the song audibly, since
+   autoplay alone is blocked by browsers. Reduced-motion guests skip
+   straight to a clean hand-off with no spin/bob/groove at all. */
+openBtn.addEventListener('click', () => {
+  if (openBtn.disabled) return;
+  openBtn.disabled = true;
 
   // centre the groove ripple on the record itself
-  const rect = openingStart.getBoundingClientRect();
+  const rect = openBtn.getBoundingClientRect();
   const originX = rect.left + rect.width / 2;
   const originY = rect.top + rect.height / 2;
   groove.style.left = `${originX}px`;
   groove.style.top = `${originY}px`;
 
+  openCard.hidden = true;
+
+  try { Music.start(); } catch (err) { console.warn('Music unavailable:', err); }
+
+  if (prefersReducedMotion || !hasGSAP) {
+    enterSite();
+    return;
+  }
+
   // scale big enough that the circle floods every screen corner
-  const diag = Math.hypot(window.innerWidth, window.innerHeight);
-  const grooveScale = (diag * 1.15) / 24;
-
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-  // t=0.00–0.40s: the tonearm drops onto the record
-  tl.to('.opening-needle', { rotate: 0, duration: 0.4, ease: 'power2.inOut' }, 0)
-    // t=0.05–0.30s / t=0.30–0.60s: the record wrapper settles with a
-    // little life (scaling the wrapper, not .record itself, so this
-    // doesn't fight the CSS spin keyframe already animating .record)
-    .to('.opening-record', { scale: 1.06, duration: 0.25 }, 0.05)
-    .to('.opening-record', { scale: 1, duration: 0.3 }, 0.3)
-    // t=0.15–0.50s: the label copy fades up and out as the groove takes over
-    .to(['.opening-start-text', '.opening-start-hint', '.opening-eyebrow'], {
-      opacity: 0, y: -6, duration: 0.35,
-    }, 0.15)
-    // t=0.30–1.15s: the groove ripples out from the record and floods
-    // the screen; enterSite() fires the instant it's fully covered
-    .to(groove, {
-      scale: grooveScale, duration: 0.85, ease: 'power3.out',
-      onComplete: enterSite,
-    }, 0.3);
-}
+  const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.2;
+  gsap.to(groove, {
+    scale: maxDim / 20,
+    duration: 0.9,
+    ease: 'power3.out',
+    onComplete: enterSite,
+  });
+});
 
 function showMusicToggle() {
   if (!musicToggle.hidden && musicToggle.classList.contains('is-ready')) return;
@@ -851,7 +828,8 @@ momentCards.forEach((card) => {
    ============================================================ */
 Music.init();
 installMusicUnlock();
-installOpeningStart();
+// The #open-btn tap handler is wired above; installMusicUnlock() covers
+// every other first gesture so sound starts as soon as the browser allows.
 
 // If JS runs but GSAP/CDN failed, reveal content & controls anyway
 if (!hasGSAP) {
