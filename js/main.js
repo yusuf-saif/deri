@@ -300,7 +300,7 @@ const siteOld = $('#site');
 // the envelope, and the video poster for an instant first frame.
 // None of these gate the opening: the envelope plays immediately,
 // straight off the poster if the clip itself is still buffering.
-const assetsToPreloadOld = ['assets/web/IMG_4638.jpg', 'assets/web/envelope-open-poster.jpg'];
+const assetsToPreloadOld = ['assets/deri-dose1.JPG', 'assets/web/envelope-open-poster.jpg'];
 
 function preloadOld(urls) {
   urls.forEach((src) => {
