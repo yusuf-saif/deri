@@ -1499,6 +1499,48 @@ end of "OPENING SEQUENCE — OLD" block ============================ */
 }
 
 /* ============================================================
+   THE 100'S DRESS STYLE
+   ============================================================ */
+.dress-style-showcase {
+  margin: 2.8rem auto 0;
+  max-width: 460px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dress-style-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.3rem);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--brown-deep);
+  margin-bottom: 1.1rem;
+  letter-spacing: 0.02em;
+}
+.dress-style-frame {
+  margin: 0;
+  width: 100%;
+  background: var(--paper);
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(242, 213, 126, 0.6);
+  box-shadow: var(--shadow-card), 0 16px 40px -16px rgba(47, 58, 42, 0.28);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+.dress-style-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 48px -14px rgba(47, 58, 42, 0.35), 0 0 0 1px var(--gold);
+}
+.dress-style-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* ============================================================
    IMPORTANT DATES
    ============================================================ */
 .dates {
